@@ -2,7 +2,7 @@ fandomstats
 ===========
 
 #### Dependencies:
-*python
+* python
 * pip: python get-pip.py
 * flask: pip install Flask
 
