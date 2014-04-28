@@ -1,10 +1,10 @@
 fandomstats
 ===========
 
-### Dependencies:
-* python
+#### Dependencies:
+*python
 * pip: python get-pip.py
 * flask: pip install Flask
 
-### Run the app:
+#### Run the app:
 python fandomstats.py
