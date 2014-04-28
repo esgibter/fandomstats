@@ -26,6 +26,7 @@ class AO3data:
       except:
         # TODO: flask error handling
         # print "ERROR: failure to fetch URL: ", self.searchURL
+        return
     else:
       return self.htmlData
 
