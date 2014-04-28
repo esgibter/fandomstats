@@ -12,10 +12,6 @@ class AO3data:
   categories = {"rating": {"num": 5, "top": {}}, "warning": {"num": 6, "top": {}}, "category": {"num": 6, "top": {}}, "fandom": {"num": 10, "top": {}}, "character": {"num": 10, "top": {}}, "relationship": {"num": 10, "top": {}}, "freeform": {"num": 10, "top": {}}}
   htmlData = {}
 
-  def statsToJSON(self):
-    self.stats = {}
-    print self.categories
-
   # METHOD: fetchHTML
   def fetchHTML(self):
     if self.htmlData == {}:            
@@ -28,7 +24,8 @@ class AO3data:
         self.htmlData = soup
         return soup
       except:
-        print "ERROR: failure to fetch URL: ", self.searchURL
+        # TODO: flask error handling
+        # print "ERROR: failure to fetch URL: ", self.searchURL
     else:
       return self.htmlData
 
