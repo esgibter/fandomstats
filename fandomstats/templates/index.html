@@ -1,4 +1,98 @@
 <!DOCTYPE HTML>
 <title>Fandom Stats</title>
-<h1>Our homepage</h1>
-<h3>Where our graphs will go</h3>
+<script type="text/javascript" src="{{ url_for('static', filename='d3.min.js') }}"></script>
+<style>
+body {
+  font: 10px sans-serif;
+}
+.bar {
+  fill: steelblue;
+}
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #666;
+  shape-rendering: crispEdges;
+}
+</style>
+<body>
+  <h2>Top Stats For:</h2>
+  <input type="text" id="statInput" value="Angst" />
+  <button>Go</button>
+  <div id="graphs"></div>
+<script>
+var url = "/api/v1.0/stats/tag/";
+
+var margin = {top: 20, right: 20, bottom: 20, left: 170},
+    width = 450 - margin.left - margin.right,
+    height = 160 - margin.top - margin.bottom;
+
+var x = d3.scale.linear()
+    .range([0, width]);
+
+var y = d3.scale.ordinal()
+    .rangeRoundBands([0, height], .15);
+
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom")
+    .ticks(4);
+
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left");
+
+var types = ["category", "character", "fandom", "freeform", "rating", "relationship", "warning"];
+
+var fetchData = function(url) {
+  d3.json(url, function(error, data) {
+    types.forEach(function(type) {
+      var svg = d3.select("#graphs").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        
+      svg.append("text")
+          .attr("class", "title")
+          .attr("x", width)
+          .attr("dy", ".3em")
+          .style("text-anchor", "end")
+          .text(type);
+
+      drawGraph(svg, data["stats"][type]["top"]);
+    });
+  });
+
+  var drawGraph = function(svg, data) {
+    x.domain([0, d3.max(data, function(d) { return d.value })]);
+    y.domain(data.map(function(d) { return d.name }));
+
+    svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis);
+
+    svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+    
+    svg.selectAll(".bar")
+      .data(data)
+    .enter().append("rect")
+      .attr("class", "bar")
+      .attr("x", function(d) { return 0; })
+      .attr("width", function(d) { return x(d.value) })
+      .attr("y", function(d) { return y(d.name); })
+      .attr("height", y.rangeBand());
+  }
+}
+
+fetchData(url + d3.select("#statInput").property("value"));
+
+d3.select("button").on("click", function() {
+  // TODO: redraw and animate instead of appending more graphs
+  fetchData(url + d3.select("#statInput").property("value"));
+});
+
+</script>
