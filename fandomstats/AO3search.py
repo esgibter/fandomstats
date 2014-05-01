@@ -33,7 +33,7 @@ class AO3data:
   # METHOD: getTopInfo -- scrape the top 10 ratings, etc from sidebar
   def getTopInfo(self):
     for k in self.categories.keys():
-      self.categories[k]["top"] = {}
+      self.categories[k]["top"] = []
 
     soup = self.fetchHTML()
 
@@ -57,7 +57,7 @@ class AO3data:
       for L in labels:
         tmp = re.compile('(.*) \(([0-9]+)\)')
         m = tmp.match(L.text)
-        self.categories[k]["top"][m.group(1)] = int(m.group(2))
+        self.categories[k]["top"].append({ "name" : m.group(1), "value": int(m.group(2)) });
  
   # METHOD: createSearchURL
   def createSearchURL(self):
