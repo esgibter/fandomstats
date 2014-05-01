@@ -4,9 +4,10 @@ fandomstats
 #### Dependencies:
 * python
 * pip: `python get-pip.py`
-* flask: `pip install Flask`
+* flask: `pip install urllib3 beautifulsoup4 Flask`
 
 #### Run the app:
 ```
-python fandomstats.py
+python run.py
 ```
+
