@@ -1,12 +1,7 @@
-"""
-  Fandom Stats
-"""
-
-from flask import Flask, request, render_template, jsonify
-import AO3search
-
-# Create app
-app = Flask(__name__)
+#TODO: put this into proper models/views folder structure before it gets messy.
+from flask import render_template, jsonify, request
+from fandomstats import app
+from fandomstats import AO3search
 
 # Homepage
 @app.route("/")
@@ -22,8 +17,3 @@ def getTagStats(tag_id):
   s.createSearchURL()
   s.getTopInfo()
   return jsonify({ 'stats': s.categories })
-
-# Run app
-if __name__ == "__main__":
-  app.debug = True 
-  app.run()
