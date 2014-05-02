@@ -91,7 +91,7 @@ var fetchData = function(url) {
 fetchData(url + d3.select("#statInput").property("value"));
 
 d3.select("button").on("click", function() {
-  // TODO: redraw and animate instead of appending more graphs
+  d3.selectAll("svg").remove();
   fetchData(url + d3.select("#statInput").property("value"));
 });
 
