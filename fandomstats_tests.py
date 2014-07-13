@@ -45,20 +45,19 @@ class FandomstatsTestCase(unittest.TestCase):
             "type":"works",
             "params": {
               "page":3,
-              "tag_id":"Harry Potter",
+              "tag_id":"Draco Malfoy/Harry Potter",
               "work_search": {
                 "sort_column": "revised_at",
-                "rating_ids": [11],
-                "warning_ids": [16,14,18],
-                "relationship_ids":[11006,5672,264659],
-                "other_tag_names":[],
-                "language_id":"",
-                "query":"Hermione",
-                "complete":1
+                "rating_ids": [13],
+                "category_ids": [23],
+                "fandom_ids":[136512],
+                "character_ids":[1803,1589,1048],
+                "other_tag_names":"Draco Malfoy",
+                "complete":0
               }
             }
           }
-      expected = 'http://archiveofourown.org/works?work_search%5Blanguage_id%5D=&work_search%5Bwarning_ids%5D%5B%5D=16&work_search%5Bwarning_ids%5D%5B%5D=14&work_search%5Bwarning_ids%5D%5B%5D=18&work_search%5Bcomplete%5D=1&work_search%5Bquery%5D=Hermione&work_search%5Bsort_column%5D=revised_at&work_search%5Brating_ids%5D%5B%5D=11&work_search%5Brelationship_ids%5D%5B%5D=11006&work_search%5Brelationship_ids%5D%5B%5D=5672&work_search%5Brelationship_ids%5D%5B%5D=264659&page=3&tag_id=Harry+Potter'
+      expected = 'http://archiveofourown.org/works?work_search%5Bcomplete%5D=0&work_search%5Bsort_column%5D=revised_at&work_search%5Bcategory_ids%5D%5B%5D=23&work_search%5Bcharacter_ids%5D%5B%5D=1803&work_search%5Bcharacter_ids%5D%5B%5D=1589&work_search%5Bcharacter_ids%5D%5B%5D=1048&work_search%5Bfandom_ids%5D%5B%5D=136512&work_search%5Bother_tag_names%5D=Draco+Malfoy&work_search%5Brating_ids%5D%5B%5D=13&page=3&tag_id=Draco+Malfoy%2FHarry+Potter'
       a = AO3url.AO3url(t)
       url = a.getUrl()
       self.assertEqual(url, expected)
