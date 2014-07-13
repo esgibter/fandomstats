@@ -2,6 +2,7 @@
 from flask import render_template, jsonify, request
 from fandomstats import app
 from fandomstats import AO3search
+from fandomstats import AO3url
 
 # Homepage
 @app.route("/")
