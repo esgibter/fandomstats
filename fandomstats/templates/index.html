@@ -1,4 +1,27 @@
-<!DOCTYPE HTML>
-<title>Fandom Stats</title>
-<h1>Our homepage</h1>
-<h3>Where our graphs will go</h3>
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+	<h1>AO3 tag statistics</h1>
+</div>
+<div class="row">
+	<div id="main"  class="panel">
+			<p>
+    	This app will analyze given tag and return basic info about it.
+    	</p>
+		<div  class="row">	
+			<div class="large-12 columns">
+		        <div class="row">
+		          <div class="large-10 columns">
+		          <input type="text" placeholder="e.g. Harry Potter, fluff..." />
+		          </div>
+		          <div class="large-2 columns">
+		          	<a href="#" id="tag-form-submit" class="small button">Analyze!</a>
+		          </div>
+		        </div>
+		      </div>
+		</div>	
+	</div>
+</div>
+
+
+{% endblock %}

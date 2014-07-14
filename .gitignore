@@ -2,3 +2,5 @@
 *.swp
 .project
 .pydevproject
+/venv/
+.sass-cache

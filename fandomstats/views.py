@@ -6,7 +6,7 @@ from fandomstats import AO3search
 # Homepage
 @app.route("/")
 def index():
-  return render_template('index.html')
+    return render_template('index.html')
 
 # Tag Stats
 @app.route("/api/v1.0/stats/tag/<tag_id>", methods=['GET'])
