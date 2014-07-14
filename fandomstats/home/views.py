@@ -1,7 +1,7 @@
 from flask import render_template, jsonify, request
-from fandomstats import app
+from fandomstats.home import home
 
 # Homepage
-@app.route("/")
+@home.route("/")
 def index():
   return render_template('index.html')

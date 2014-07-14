@@ -1,13 +1,14 @@
-#TODO: put this into proper models/views folder structure before it gets messy.
 from flask import render_template, jsonify, request
-from api import api
-from fandomstats import AO3search
+from fandomstats.api import api
+from models import AO3data
+
+version_base = '/v1.0' 
 
 # Tag Stats
-@api.route("/api/v1.0/stats/tag/<tag_id>", methods=['GET'])
+@api.route(version_base+"/stats/tag/<tag_id>", methods=['GET'])
 def getTagStats(tag_id):
   # todo: add error handling for empty tagid
-  s = AO3search.AO3data()
+  s = AO3data()
   s.tag_id = tag_id
   s.createSearchURL()
   s.getTopInfo()

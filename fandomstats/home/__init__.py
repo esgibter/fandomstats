@@ -7,7 +7,4 @@ home = Blueprint(
     static_folder='static'
 )
 
-# Homepage
-@home.route("/")
-def index():
-  return render_template('index.html')
+import views
