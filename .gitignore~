@@ -2,4 +2,3 @@
 *.swp
 .project
 .pydevproject
-/venv/
