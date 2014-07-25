@@ -6,15 +6,19 @@ import sys
 import re
 from bs4 import BeautifulSoup
 import urllib3
+import urllib
 import pdb
 
 api = Api(restful_api)
+parser = reqparse.RequestParser()
+parser.add_argument('complete', type=str,dest='work_search[complete]',default='') 
+#this thing is generally a filter that stores only the allowed query params (also good for "translating" into the AO3 param names?)
 
 class TagStats(Resource):
   # ********* DATA FIELDS
-  searchParams = {}
+  searchParams = {} #this isn't used anywhere, is it?
   numworks = -1
-  popularity = {"kudos": -1, "hits": -1, "comments": -1, "bookmarks": -1}
+  popularity = {"kudos": -1, "hits": -1, "comments": -1, "bookmarks": -1} #not this either
   categories = {"rating": {"num": 5, "top": {}}, "warning": {"num": 6, "top": {}}, "category": {"num": 6, "top": {}}, "fandom": {"num": 10, "top": {}}, "character": {"num": 10, "top": {}}, "relationship": {"num": 10, "top": {}}, "freeform": {"num": 10, "top": {}}}
   htmlData = {}
 
@@ -38,7 +42,9 @@ class TagStats(Resource):
 
   # METHOD: getTopInfo -- scrape the top 10 ratings, etc from sidebar
   def get(self,tag_id):
-    searchURL = self.createSearchURL(tag_id)
+    args = parser.parse_args()
+    searchURL = self.createSearchURL(tag_id,args)
+    #return searchURL
     for k in self.categories.keys():
       self.categories[k]["top"] = {}
 
@@ -69,8 +75,8 @@ class TagStats(Resource):
     return self.categories
  
   # METHOD: createSearchURL
-  def createSearchURL(self,tag_id):
-    url = unicode('http://archiveofourown.org/works?tag_id=') + unicode(tag_id)
+  def createSearchURL(self,tag_id,args): 
+    url = unicode('http://archiveofourown.org/works?tag_id=') + unicode(tag_id) +"&" + urllib.urlencode(args) #this adds all the parsed arguments and endcodes them
     return url.encode('utf-8')
 
 
