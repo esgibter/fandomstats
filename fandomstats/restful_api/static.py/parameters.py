@@ -1,0 +1,20 @@
+{
+    "English": 1,
+    "Chinese": 40,
+    "General": 10,
+    "Teen": 11,
+    "Mature": 12,
+    "Explicit": 13,
+    "Choose": 14,
+    "No": 16,
+    "Violence": 17,
+    "Death": 18,
+    "Rape": 19,
+    "Underage": 20,
+    "Gen": 21,
+    "F/M": 22,
+    "M/M": 23,
+    "Other": 24,
+    "F/F": 116,
+    "Multi": 2246
+    }

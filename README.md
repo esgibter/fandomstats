@@ -8,6 +8,7 @@ fandomstats
 
 #### Run the app:
 ```
+. venv/bin/activate (optional if you're using virtualenv)
 python run.py
 ```
 
