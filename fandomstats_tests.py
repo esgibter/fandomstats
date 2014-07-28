@@ -2,7 +2,7 @@ import os
 import fandomstats
 import unittest
 import tempfile
-from fandomstats import AO3url
+from fandomstats.api import url_models 
 
 class FandomstatsTestCase(unittest.TestCase):
     
@@ -18,7 +18,7 @@ class FandomstatsTestCase(unittest.TestCase):
             }
           }
       expected = "http://archiveofourown.org/works?tag_id=Harry+Potter"
-      a = AO3url.AO3url(t)
+      a = url_models.AO3url(t)
       url = a.getUrl()
       self.assertEqual(url, expected)
         
@@ -36,7 +36,7 @@ class FandomstatsTestCase(unittest.TestCase):
             }
           }
       expected = "http://archiveofourown.org/works?work_search%5Bsort_column%5D=hits&work_search%5Bwarning_ids%5D%5B%5D=16&work_search%5Bwarning_ids%5D%5B%5D=14&work_search%5Bwarning_ids%5D%5B%5D=18&work_search%5Brating_ids%5D%5B%5D=11&work_search%5Bcomplete%5D=1&tag_id=Harry+Potter"
-      a = AO3url.AO3url(t)
+      a = url_models.AO3url(t)
       url = a.getUrl()
       self.assertEqual(url, expected)
 
@@ -58,7 +58,7 @@ class FandomstatsTestCase(unittest.TestCase):
             }
           }
       expected = 'http://archiveofourown.org/works?work_search%5Bcomplete%5D=0&work_search%5Bsort_column%5D=revised_at&work_search%5Bcategory_ids%5D%5B%5D=23&work_search%5Bcharacter_ids%5D%5B%5D=1803&work_search%5Bcharacter_ids%5D%5B%5D=1589&work_search%5Bcharacter_ids%5D%5B%5D=1048&work_search%5Bfandom_ids%5D%5B%5D=136512&work_search%5Bother_tag_names%5D=Draco+Malfoy&work_search%5Brating_ids%5D%5B%5D=13&page=3&tag_id=Draco+Malfoy%2FHarry+Potter'
-      a = AO3url.AO3url(t)
+      a = url_models.AO3url(t)
       url = a.getUrl()
       self.assertEqual(url, expected)
 

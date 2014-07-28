@@ -1,6 +1,6 @@
 from flask import render_template, jsonify, request
 from fandomstats.api import api
-from models import AO3data
+from scraper_models import AO3data
 
 version_base = '/v1.0' 
 
