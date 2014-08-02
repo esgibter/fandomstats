@@ -1,47 +1,82 @@
 import sys
 import re
 from bs4 import BeautifulSoup
-import urllib
 import urllib3
+import urllib
 import pdb
 
 class AO3url:
-  ''' 
-  filters object:
-  {
-    "type": "works" #either works or tags
+  # default filters object
+  filters = {
+    "type":"works",
     "params": {
       "tag_id": "",
+      "page": 1,
+      "sort_direction": "asc",
       "work_search": {
-        "sort_column": "",
-        "warning_ids": []
+        "query": "",
+        "title": "",
+        "creator": "",
+        "revised_at": "",
+        "complete": 0,
+        "single_chapter": 0,
+        "rating_ids": [],
+        "warning_ids": [],
+        "category_ids": [],
+        "fandom_names": [],
+        "fandom_ids": [],
+        "character_names": [],
+        "character_ids": [],
+        "relationship_names": [],
+        "relationship_ids": [],
+        "freeform_names": [],
+        "freeform_ids": [],
+        "other_tag_names": [],
+        "other_tag_ids": [],
+        "sort_column": ""
       }
     }
   }
-  '''
 
-  def __init__(self, filters):
-    self.filters = filters
+  def getFilters(self):
+    return self.filters
 
-  def getUrl(self):
+  def getUrl(self, filters=None):
+    if filters is None:
+      filters = self.filters
+    else:
+      self.filters = filters
+    # Creates URL from search parameters
     url = "http://archiveofourown.org/"
     url += self.filters['type'] + "?"
     for k, v in self.filters['params'].iteritems():
       if type(v) is dict:
         for wk, wv in v.iteritems():
           if type(wv) is list:
+            # go through each value in the list
             for xv in wv:
-              # go through each value
-              url += urllib.quote_plus("work_search[" + wk + "][]") + "=" + urllib.quote_plus(str(xv)) + "&"
+              url += urllib.quote_plus("work_search[" + wk + "][]") + "=" + urllib.quote_plus(str(xv), '+') + "&"
           else:
-            url += urllib.quote_plus("work_search[" + wk + "]") + "=" + urllib.quote_plus(str(wv)) + "&"
+            url += urllib.quote_plus("work_search[" + wk + "]") + "=" + urllib.quote_plus(str(wv), '+') + "&"
       else:
-        url += k + "=" + urllib.quote_plus(str(v)) + "&" 
+        url += k + "=" + urllib.quote_plus(str(v), '+') + "&" 
     return url[:-1]
+ 
+  def setFilters(self, urlArgs):
+    # This sets the filters object from a list of URL arguments
+    # Params in lists need special treatment
+    list_filters = ["rating_ids", "warning_ids","category_ids","fandom_names","fandom_ids","character_names","character_ids","freeform_ids","other_tag_names","other_tag_ids"]
+    for f in list_filters:
+      self.filters["params"]["work_search"][f] = urlArgs.getlist(f)
+    for k, v in urlArgs.to_dict().iteritems():
+      if k not in list_filters:
+        if k == "tag_id" or k == "page" or k == "sort_direction":
+          self.filters["params"][k] = v
+        else:
+          self.filters["params"]["work_search"][k] = v
 
 class AO3data:
   # ********* DATA FIELDS
-  searchParams = {}
   numworks = -1
   popularity = {"kudos": -1, "hits": -1, "comments": -1, "bookmarks": -1}
   categories = {"rating": {"num": 5, "top": {}}, "warning": {"num": 6, "top": {}}, "category": {"num": 6, "top": {}}, "fandom": {"num": 10, "top": {}}, "character": {"num": 10, "top": {}}, "relationship": {"num": 10, "top": {}}, "freeform": {"num": 10, "top": {}}}
@@ -93,8 +128,3 @@ class AO3data:
         tmp = re.compile('(.*) \(([0-9]+)\)')
         m = tmp.match(L.text)
         self.categories[k]["top"][m.group(1)] = int(m.group(2))
- 
-  # METHOD: createSearchURL
-  def createSearchURL(self):
-    url = unicode('http://archiveofourown.org/works?tag_id=') + unicode(self.tag_id)
-    self.searchURL = url.encode('utf-8')
