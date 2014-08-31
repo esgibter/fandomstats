@@ -64,12 +64,8 @@ class AO3url:
  
   def setFilters(self, urlArgs):
     # This sets the filters object from a list of URL arguments
-    # Params in lists need special treatment
-    list_filters = ["rating_ids", "warning_ids","category_ids","fandom_names","fandom_ids","character_names","character_ids","freeform_ids","other_tag_names","other_tag_ids"]
-    for f in list_filters:
-      self.filters["params"]["work_search"][f] = urlArgs.getlist(f)
-    for k, v in urlArgs.to_dict().iteritems():
-      if k not in list_filters:
+    for k, v in urlArgs.iteritems():
+      if v != None:
         if k == "tag_id" or k == "page" or k == "sort_direction":
           self.filters["params"][k] = v
         else:
