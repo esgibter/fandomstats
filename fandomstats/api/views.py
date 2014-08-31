@@ -32,6 +32,11 @@ parser.add_argument("freeform_names", type=str, action="append")
 parser.add_argument("freeform_ids", type=int, action="append")
 parser.add_argument("other_tag_names", type=str, action="append")
 parser.add_argument("other_tag_ids", type=int, action="append")
+parser.add_argument("word_count", type=str)
+parser.add_argument("hits", type=str)
+parser.add_argument("kudos_count", type=str)
+parser.add_argument("comments_count", type=str)
+parser.add_argument("bookmarks_count", type=str)
 
 class Stats(Resource):
   
