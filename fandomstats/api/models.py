@@ -73,54 +73,68 @@ class AO3url:
 
 class AO3data:
   # ********* DATA FIELDS
-  numworks = -1
-  popularity = {"kudos": -1, "hits": -1, "comments": -1, "bookmarks": -1}
-  categories = {"rating": {"num": 5, "top": {}}, "warning": {"num": 6, "top": {}}, "category": {"num": 6, "top": {}}, "fandom": {"num": 10, "top": {}}, "character": {"num": 10, "top": {}}, "relationship": {"num": 10, "top": {}}, "freeform": {"num": 10, "top": {}}}
+  topInfo = {
+    "numworks": -1,
+    "stats": {
+      "rating": {},
+      "warning": {},
+      "category": {},
+      "fandom": {},
+      "character": {},
+      "relationship": {},
+      "freeform": {}
+    }
+  }
   htmlData = {}
 
   # METHOD: fetchHTML
-  def fetchHTML(self):
+  def fetchHTML(self, url):
     if self.htmlData == {}:            
       http = urllib3.PoolManager()
       r = {}
       try:
-        r = http.request('GET', self.searchURL)
+        r = http.request('GET', url)
         soup = BeautifulSoup(r.data)
         soup.prettify()                
         self.htmlData = soup
         return soup
       except:
         # TODO: flask error handling
-        # print "ERROR: failure to fetch URL: ", self.searchURL
+        # print "ERROR: failure to fetch URL: ", url 
         return
     else:
       return self.htmlData
 
-  # METHOD: getTopInfo -- scrape the top 10 ratings, etc from sidebar
-  def getTopInfo(self):
-    for k in self.categories.keys():
-      self.categories[k]["top"] = {}
+  # Scrape the top 10 ratings, etc from sidebar
+  def getTopInfo(self, url):
+    soup = self.fetchHTML(url)
 
-    soup = self.fetchHTML()
-
-    for k in self.categories.keys():
+    for k in self.topInfo["stats"].keys():
       idstring = "tag_category_" + k
 
       try:
-        topList = soup.findAll("dd", {"id" : idstring})
+        top = soup.findAll("dd", {"id" : idstring})[0]
       except AttributeError:
-        # print "ERROR: empty HTML data: ", self.searchURL
-        self.numworks = -2
-        return
-      
-      try:
-        top = topList[0]
-      except:
-        # print "ERROR! " + k  
+        # TODO: flask error handling
+        # print "ERROR: empty HTML data"
         return
       
       labels = top.find_all("label")
       for L in labels:
         tmp = re.compile('(.*) \(([0-9]+)\)')
         m = tmp.match(L.text)
-        self.categories[k]["top"][m.group(1)] = int(m.group(2))
+        self.topInfo["stats"][k][m.group(1)] = int(m.group(2))
+
+    # Scrape the number of works returned
+    try:
+      tag = soup.find_all(text=re.compile("Work(s)*( found)* in"))[0]
+    except AttributeError:
+      # TODO: flask error handling
+      # print "ERROR: empty HTML data"
+      self.topInfo["numworks"] = -2
+      return
+
+    nums = re.findall('([0-9]+)', tag)
+    self.topInfo["numworks"] = nums[-1]
+
+    return self.topInfo

@@ -41,9 +41,7 @@ class Stats(Resource):
     s = AO3data()
     url = AO3url()
     url.setFilters(parser.parse_args())
-    s.searchURL = url.getUrl()
-    s.getTopInfo()
-    return { 'stats': s.categories }
+    return s.getTopInfo(url.getUrl())
 
 class TagStats(Resource):
 
@@ -58,9 +56,8 @@ class TagStats(Resource):
       } 
     }
     s = AO3data()
-    s.searchURL = AO3url().getUrl(params) 
-    s.getTopInfo()
-    return { 'stats': s.categories }
+    url = AO3url().getUrl(params) 
+    return s.getTopInfo(url)
 
 # API routing
 a.add_resource(Stats, "/stats")
