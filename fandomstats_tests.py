@@ -76,26 +76,8 @@ class FandomstatsTestCase(unittest.TestCase):
           "tag_id": "Harry Potter",
           "sort_direction":"desc",
           "work_search": {
-            "query": "",
-            "title": "",
-            "creator": "",
-            "revised_at": "",
             "complete": 1,
-            "single_chapter": 0,
             "rating_ids": [12, 13],
-            "warning_ids": [],
-            "category_ids": [],
-            "fandom_names": [],
-            "fandom_ids": [],
-            "character_names": [],
-            "character_ids": [],
-            "relationship_names": [],
-            "relationship_ids": [],
-            "freeform_names": [],
-            "freeform_ids": [],
-            "other_tag_names": [],
-            "other_tag_ids": [],
-            "sort_column": ""
           }
         } 
       }
