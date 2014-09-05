@@ -55,13 +55,13 @@ class AO3data:
   topInfo = {
     "numworks": -1,
     "stats": {
-      "rating": {},
-      "warning": {},
-      "category": {},
-      "fandom": {},
-      "character": {},
-      "relationship": {},
-      "freeform": {}
+      "rating": [],
+      "warning": [],
+      "category": [],
+      "fandom": [],
+      "character": [],
+      "relationship": [],
+      "freeform": []
     }
   }
   htmlData = {}
@@ -102,7 +102,7 @@ class AO3data:
       for L in labels:
         tmp = re.compile('(.*) \(([0-9]+)\)')
         m = tmp.match(L.text)
-        self.topInfo["stats"][k][m.group(1)] = int(m.group(2))
+        self.topInfo["stats"][k].append({ "name": m.group(1), "value": int(m.group(2)) })
 
     # Scrape the number of works returned
     try:
