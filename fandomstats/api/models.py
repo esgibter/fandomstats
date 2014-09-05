@@ -135,6 +135,6 @@ class AO3data:
       return
 
     nums = re.findall('([0-9]+)', tag)
-    self.topInfo["numworks"] = nums[-1]
+    self.topInfo["numworks"] = int(nums[-1])
 
     return self.topInfo
