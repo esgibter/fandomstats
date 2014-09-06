@@ -13,28 +13,7 @@ class AO3url:
       "tag_id": "",
       "page": 1,
       "sort_direction": "asc",
-      "work_search": {
-        "query": "",
-        "title": "",
-        "creator": "",
-        "revised_at": "",
-        "complete": 0,
-        "single_chapter": 0,
-        "rating_ids": [],
-        "warning_ids": [],
-        "category_ids": [],
-        "fandom_names": [],
-        "fandom_ids": [],
-        "character_names": [],
-        "character_ids": [],
-        "relationship_names": [],
-        "relationship_ids": [],
-        "freeform_names": [],
-        "freeform_ids": [],
-        "other_tag_names": [],
-        "other_tag_ids": [],
-        "sort_column": ""
-      }
+      "work_search": {}
     }
   }
 
