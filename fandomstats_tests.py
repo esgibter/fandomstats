@@ -62,14 +62,13 @@ class FandomstatsTestCase(unittest.TestCase):
       self.assertEqual(url, expected)
 
     def test_create_filters(self):
-      args = datastructures.ImmutableMultiDict([
-        ("page",3),
-        ("tag_id","Harry Potter"),
-        ("rating_ids",12),
-        ("rating_ids",13),
-        ("complete",1),
-        ("sort_direction","desc")
-      ])
+      args = { 
+        "page":3,
+        "tag_id":"Harry Potter",
+        "rating_ids":[12,13],
+        "complete":1,
+        "sort_direction":"desc"
+      }
       expected = {
         "type":"works",
         "params": {
