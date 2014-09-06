@@ -32,6 +32,11 @@ parser.add_argument("freeform_names", type=str, action="append")
 parser.add_argument("freeform_ids", type=int, action="append")
 parser.add_argument("other_tag_names", type=str, action="append")
 parser.add_argument("other_tag_ids", type=int, action="append")
+parser.add_argument("word_count", type=str)
+parser.add_argument("hits", type=str)
+parser.add_argument("kudos_count", type=str)
+parser.add_argument("comments_count", type=str)
+parser.add_argument("bookmarks_count", type=str)
 
 class Stats(Resource):
   
@@ -41,9 +46,7 @@ class Stats(Resource):
     s = AO3data()
     url = AO3url()
     url.setFilters(parser.parse_args())
-    s.searchURL = url.getUrl()
-    s.getTopInfo()
-    return { 'stats': s.categories }
+    return s.getTopInfo(url.getUrl())
 
 class TagStats(Resource):
 
@@ -58,9 +61,8 @@ class TagStats(Resource):
       } 
     }
     s = AO3data()
-    s.searchURL = AO3url().getUrl(params) 
-    s.getTopInfo()
-    return { 'stats': s.categories }
+    url = AO3url().getUrl(params) 
+    return s.getTopInfo(url)
 
 # API routing
 a.add_resource(Stats, "/stats")
