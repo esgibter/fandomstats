@@ -11,3 +11,7 @@ fandomstats
 python run.py
 ```
 
+#### Run the tests:
+```
+python fandomstats_tests.py
+```
