@@ -12,6 +12,15 @@ body {
 	text-align:center;
 }
 
+#footer {
+	color:#aaa;
+	text-align:right;
+}
+
+#footer, #footer a {
+	font-size:0.8rem;
+}
+
 #simple .submit {
 	float:right;
 	line-height:0.6rem;
