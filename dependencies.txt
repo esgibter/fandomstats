@@ -1,0 +1,8 @@
+# Development environment pip dependencies file
+# Install via 'pip install -r dependencies.txt'
+Flask==0.10
+Pillow
+jinja2
+urllib3
+beautifulsoup4
+flask-restful
