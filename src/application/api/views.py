@@ -1,6 +1,6 @@
 from flask import render_template, jsonify, request
 from flask.ext.restful import reqparse, abort, Api, Resource 
-from fandomstats.api import api 
+from application.api import api 
 from models import AO3data, AO3url
 
 version_base = '/v1.0'

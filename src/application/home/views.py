@@ -1,5 +1,5 @@
 from flask import render_template, jsonify, request
-from fandomstats.home import home
+from application.home import home
 
 # Homepage
 @home.route("/")

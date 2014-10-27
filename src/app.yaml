@@ -21,3 +21,9 @@ libraries:
 handlers:
 - url: .*
   script: run.application.app
+
+- url: /gae_mini_profiler/static
+  static_dir: lib/gae_mini_profiler/static
+
+- url: /gae_mini_profiler/.*
+  script: lib.gae_mini_profiler.main.application
