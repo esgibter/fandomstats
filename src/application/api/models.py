@@ -52,18 +52,6 @@ class AO3url:
 
 class AO3data:
   # ********* DATA FIELDS
-  topInfo = {
-    "numworks": -1,
-    "stats": {
-      "rating": {},
-      "warning": {},
-      "category": {},
-      "fandom": {},
-      "character": {},
-      "relationship": {},
-      "freeform": {}
-    }
-  }
   htmlData = {}
 
   # METHOD: fetchHTML
@@ -86,9 +74,22 @@ class AO3data:
 
   # Scrape the top 10 ratings, etc from sidebar
   def getTopInfo(self, url):
+    topInfo = {
+      "numworks": -1,
+      "stats": {
+        "rating": {},
+        "warning": {},
+        "category": {},
+        "fandom": {},
+        "character": {},
+        "relationship": {},
+        "freeform": {}
+      }
+    }
+
     soup = self.fetchHTML(url)
 
-    for k in self.topInfo["stats"].keys():
+    for k in topInfo["stats"].keys():
       idstring = "tag_category_" + k
 
       try:
@@ -102,7 +103,7 @@ class AO3data:
       for L in labels:
         tmp = re.compile('(.*) \(([0-9]+)\)')
         m = tmp.match(L.text)
-        self.topInfo["stats"][k][m.group(1)] = int(m.group(2))
+        topInfo["stats"][k][m.group(1)] = int(m.group(2))
 
     # Scrape the number of works returned
     try:
@@ -110,10 +111,10 @@ class AO3data:
     except AttributeError:
       # TODO: flask error handling
       # print "ERROR: empty HTML data"
-      self.topInfo["numworks"] = -2
+      topInfo["numworks"] = -2
       return
 
     nums = re.findall('([0-9]+)', tag)
-    self.topInfo["numworks"] = int(nums[-1])
+    topInfo["numworks"] = int(nums[-1])
 
-    return self.topInfo
+    return topInfo
