@@ -14,6 +14,7 @@ Fandomstats runs on Google App Engine.
 ```
 dev_appserver.py src/
 ```
+Environment runs at http://localhost:8080
 
 ### Run tests:
 ```
