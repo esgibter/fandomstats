@@ -42,7 +42,7 @@ $("#json-field").click(function(){
 $("#search-btn").click(function(){
 	var button = $(this);
 	var buttonContent = button.html();
-	button.html($(".spinner").clone());
+	button.html($(".spinner").clone().show());
 	var tagAPI = {};
 	tagAPI.url = "/api/v1.0/stats/tag/";
 	var tag = $("#search-string").val();
