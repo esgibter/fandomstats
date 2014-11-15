@@ -1,3 +1,23 @@
+/* color style */
+
+a, h1 {
+	color:#990000;
+}
+
+.button {
+	background-color:#990000;
+}
+
+a:hover, a:focus {
+	color:#cc0000;
+}
+
+.button:hover {
+	background-color:#cc0000;
+}
+
+/* layout */
+
 body {
 	background-color:#f0f0f0;
 }
@@ -46,5 +66,8 @@ legend a.selected {
 a.more {
 	display:none;
 }
+
+
+
 
 /* missing javascript clean-up*/
