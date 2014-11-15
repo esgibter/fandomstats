@@ -76,13 +76,12 @@ a.more {
 	margin-bottom:0;
 }
 
-@media only screen {
-	.graph {
-		padding:1rem;
-	}
+.graph {
+	padding:1rem;
 }
 
-@media only screen and (min-width: 64.063em) {
+
+@media only screen and (min-width: 90.063em) { 
 	.graph:nth-child(odd) {
 		padding-right:0.5rem;
 	}
@@ -90,7 +89,7 @@ a.more {
 	.graph:nth-child(even) {
 		padding-left:0.5rem;
 	}	
-} /* min-width 641px, large screens; shiv to collapse central gutter */
+} /* min-width 1441px, xlarge screens; shiv to collapse central gutter */
 
 .graph div {
 	width:100%;
