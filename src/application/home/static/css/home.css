@@ -33,11 +33,41 @@ body {
 	text-align:center;
 }
 
+#simple .submit {
+	float:right;
+	line-height:0.6rem;
+}
+
+.spinner img {
+	display:none;
+}
+
+legend {
+	color:#ccc;
+}
+
+legend a {
+	font-weight:normal;
+}
+
+legend a.selected {
+	font-weight:bold;
+}
+
+
+.variant {
+	clear:both;
+}
+
+a.more {
+	display:none;
+}
+
 /*--------------------------- graph area */
 
 
 #graph-area {
-	/*display:none;*/
+	display:none;
 	border:1px solid #ddd;
 	padding-top:1rem;
 }
@@ -88,31 +118,7 @@ body {
 	font-size:0.8rem;
 }
 
-#simple .submit {
-	float:right;
-	line-height:0.6rem;
-}
 
-legend {
-	color:#ccc;
-}
-
-legend a {
-	font-weight:normal;
-}
-
-legend a.selected {
-	font-weight:bold;
-}
-
-
-.variant {
-	clear:both;
-}
-
-a.more {
-	display:none;
-}
 
 
 

@@ -20,7 +20,7 @@
 					<div id="simple" class="variant selected">
 						<div class="row collapse">
 					        <div class="large-10 medium-9 small-12 columns">
-					          <input type="text" placeholder="tag name, e.g. 'Harry Potter' or 'fluff'">
+					          <input id="search-string" type="text" placeholder="tag name, e.g. 'Harry Potter' or 'fluff'">
 					    	</div>
 					    	<div class="large-2 medium-3 small-12 columns">
 					          <a href="#" id="search-btn" class="button postfix">Go</a>
@@ -77,6 +77,7 @@
 	      $("body").toggleClass("no-js");	      
 	    </script>
 	    <script src="{{ url_for('home.static', filename='js/home.js') }}"></script>
+	    <img src="{{ url_for('home.static', filename='img/spinner.gif') }}" class="spinner" />
 	</body>
 </html>
 

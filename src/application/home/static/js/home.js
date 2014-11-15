@@ -40,14 +40,24 @@ $("#json-field").click(function(){
 });
 
 $("#search-btn").click(function(){
-	//$("#graph-area").show('fast');
+	var button = $(this);
+	var buttonContent = button.html();
+	button.html($(".spinner").clone());
 	var tagAPI = {};
 	tagAPI.url = "/api/v1.0/stats/tag/";
-	var tag = "Harry+Potter";
+	var tag = $("#search-string").val();
 	var params = {};
 	$.getJSON(tagAPI.url+tag, params, function(result, status, object){
-		console.log(object);
-		$("#json-field").val(object.responseText);
+		console.log("status: "+status);
+		button.html(buttonContent); //loader back to text	
+		if (status=="success") {
+			$("#graph-area").show('fast');
+			console.log(object);
+			$("#json-field").val(object.responseText); 
+		} else {
+			//thow an error (maybe a notification area?)
+		}
+		
 	} );
 	return false;
 });
