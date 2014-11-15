@@ -1,0 +1,50 @@
+body {
+	background-color:#f0f0f0;
+}
+
+#main {
+	border:1px solid #ddd;
+	margin-top:1rem;
+	background-color:white;
+}
+
+#main h1 {
+	text-align:center;
+}
+
+#footer {
+	color:#aaa;
+	text-align:right;
+}
+
+#footer, #footer a {
+	font-size:0.8rem;
+}
+
+#simple .submit {
+	float:right;
+	line-height:0.6rem;
+}
+
+legend {
+	color:#ccc;
+}
+
+legend a {
+	font-weight:normal;
+}
+
+legend a.selected {
+	font-weight:bold;
+}
+
+
+.variant {
+	clear:both;
+}
+
+a.more {
+	display:none;
+}
+
+/* missing javascript clean-up*/

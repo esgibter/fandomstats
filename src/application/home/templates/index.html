@@ -1,4 +1,83 @@
 <!DOCTYPE HTML>
-<title>Fandom Stats</title>
-<h1>Our homepage</h1>
-<h3>Where our graphs will go</h3>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Fandom Stats</title>
+		
+	    <link rel="stylesheet" href="{{ url_for('static', filename='css/normalize.css') }}" />
+	    <link rel="stylesheet" href="{{ url_for('static', filename='css/foundation.min.css') }}" />
+	    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}" />
+	    <script src="{{ url_for('static', filename='js/vendor/modernizr.js') }}"></script>
+  </head>
+	<body class="no-js">
+		<div class="row">
+			<div id="main" class="large-12 columns">
+				<h1>AO3 Analytics Tool</h1>
+				<p>Short introduction text. Explanation of the tool. What else goes here? Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ligula magna, ultrices quis cursus accumsan, pulvinar quis nisi. <span class="more-text">Mauris fringilla ac orci sodales efficitur. Vivamus consequat sem auctor risus eleifend fermentum ut at orci. Aenean mollis pretium dui, id dictum justo eleifend eget. Morbi commodo diam nec ipsum hendrerit, ut scelerisque lectus tempus. Etiam eu felis tellus. Vivamus ut odio elit.</span> <a href="" class="more">more&raquo;</a></p>	
+				<fieldset>
+					<legend><a href="#simple" class="selected" id="simple-toggle">Simple</a>/<a href="#advanced" class="" id="simple-toggle">Advanced</a></legend>
+					<div id="simple" class="variant selected">
+						<div class="row collapse">
+					        <div class="small-10 columns">
+					          <input type="text" placeholder="tag name, e.g. 'Harry Potter' or 'fluff'">
+					    	</div>
+					    	<div class="small-2 columns">
+					          <a href="#" class="button postfix">Go</a>
+				        	</div>
+			      		</div>
+					</div>
+					<div id="advanced" class="variant">
+						much fields, very search.			
+					</div>
+				</fieldset>
+			</div>
+			<div class="row" id="footer"> 				
+				<div class="large-12 columns">
+					Footer? Stuff? Links???
+				</div>
+			</div>
+		</div>
+		<script src="{{ url_for('static', filename='js/vendor/jquery.js') }}"></script>
+	    <script src="{{ url_for('static', filename='js/foundation.min.js') }}"></script>
+	    <script>
+	      $(document).foundation();
+	      $("body").toggleClass("no-js");
+	      
+	      $(".variant").hide();
+	      $(".variant.selected").show();
+	      
+	      //form tabs
+	      $("legend a").click(function(){
+	      	toggle = $(this);
+	      	var target = toggle.attr("href").replace("#","");
+	      	$("legend a").removeClass("selected");
+	      	toggle.addClass("selected");
+	      	$(".variant").removeClass("selected").hide();
+	      	$("#"+target).addClass("selected").show();
+	      	return false;
+	      });
+	      
+	      //more link in description 
+	      moreDesc = $(".more-text");
+	      moreDesc.hide();
+	      descOpen = false;
+	      $("a.more").show().click(function(){
+	      	var moreLink = $(this);
+	      	if(descOpen) {	      	
+		      	moreDesc.fadeOut("slow",function(){
+		      		moreLink.html("more&raquo;");	
+		      	});
+		      	descOpen = false;
+	      	} else {
+	      		moreLink.html("&laquo;less");	      		
+	      		moreDesc.fadeIn("slow");
+	      		descOpen = true;
+	      	}
+	      	return false;
+	      });	      
+	    </script>
+	</body>
+</html>
+
+
