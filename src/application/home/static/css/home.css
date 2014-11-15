@@ -1,22 +1,22 @@
-/* color style */
+/*************************** COLORS *****************************/
 
 a, h1 {
-	color:#990000;
+	color:#900;
 }
 
-.button {
-	background-color:#990000;
+.button,.button:focus {
+	background-color:#900;
 }
 
 a:hover, a:focus {
-	color:#cc0000;
+	color:#c00;
 }
 
 .button:hover {
-	background-color:#cc0000;
+	background-color:#c00;
 }
 
-/* layout */
+/*************************** LAYOUT ******************************/
 
 body {
 	background-color:#f0f0f0;
@@ -26,11 +26,58 @@ body {
 	border:1px solid #ddd;
 	margin-top:1rem;
 	background-color:white;
+	padding-bottom:1rem;
 }
 
 #main h1 {
 	text-align:center;
 }
+
+/*--------------------------- graph area */
+
+
+#graph-area {
+	/*display:none;*/
+	border:1px solid #ddd;
+	padding-top:1rem;
+}
+
+#graph-intro p:last-child {
+	margin-bottom:0;
+}
+
+@media only screen {
+	.graph {
+		padding:1rem;
+	}
+}
+
+@media only screen and (min-width: 64.063em) {
+	.graph:nth-child(odd) {
+		padding-right:0.5rem;
+	}
+	
+	.graph:nth-child(even) {
+		padding-left:0.5rem;
+	}	
+} /* min-width 641px, large screens; shiv to collapse central gutter */
+
+.graph div {
+	width:100%;
+	border:1px solid #ddd;
+}
+
+#json-field {
+	width:100%;
+	height:10rem;
+	font-size:small;
+	background-color:#eee;
+}
+
+
+
+
+/*------------------------------ footer */
 
 #footer {
 	color:#aaa;
