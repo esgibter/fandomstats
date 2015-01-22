@@ -67,7 +67,7 @@ a.more {
 
 
 #graph-area {
-	display:none;
+	/*display:none;*/
 	border:1px solid #ddd;
 	padding-top:1rem;
 }
@@ -78,6 +78,18 @@ a.more {
 
 .graph {
 	padding:1rem;
+}
+
+#graph-area svg {
+	width:100%;
+}
+
+#graph1 {
+	border:1px solid magenta;
+}
+
+#testdiv {
+	border:1px solid maroon;
 }
 
 
