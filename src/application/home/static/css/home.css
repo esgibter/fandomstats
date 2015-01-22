@@ -81,15 +81,7 @@ a.more {
 }
 
 #graph-area svg {
-	width:100%;
-}
-
-#graph1 {
-	border:1px solid magenta;
-}
-
-#testdiv {
-	border:1px solid maroon;
+	border:1px solid #ddd;
 }
 
 
