@@ -47,17 +47,36 @@ $("#search-btn").click(function(){
 	tagAPI.url = "/api/v1.0/stats/tag/";
 	var tag = $("#search-string").val();
 	var params = {};
-	$.getJSON(tagAPI.url+tag, params, function(result, status, object){
-		console.log("status: "+status);
-		button.html(buttonContent); //loader back to text	
-		if (status=="success") {
+	$.ajax({
+		url:tagAPI.url+tag,
+		success: function(result,status, object){
 			$("#graph-area").show('fast');
 			console.log(object);
 			$("#json-field").val(object.responseText); 
-		} else {
-			//thow an error (maybe a notification area?)
+		},
+		error: function(object,exception) {
+			if (object.status === 0) {
+				//connection error
+			} else if (object.status == 404) {
+				//not found
+			} else if (object.status == 500){
+				alert("blerp 500");
+				//internal error
+			} else if (exception === 'parsererror') {
+				//request failed
+			} else if (exception === 'timeout') {
+				//timeout error
+			} else if (exception === 'abort') {
+				//aborted
+			} else {
+				//something else
+				//echo object.responseText
+			}
+		},
+		complete:function(object,status) {
+			console.log("status: "+status);
+			button.html(buttonContent); //loader back to text
 		}
-		
-	} );
+	});
 	return false;
 });
