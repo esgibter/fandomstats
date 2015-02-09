@@ -1,17 +1,6 @@
 $(".variant").hide();
 $(".variant.selected").show();
   
-//form tabs
-$("legend a").click(function(){
-	toggle = $(this);
-	var target = toggle.attr("href").replace("#","");
-	$("legend a").removeClass("selected");
-	toggle.addClass("selected");
-	$(".variant").removeClass("selected").hide();
-	$("#"+target).addClass("selected").show();
- 	return false;
-});
-  
 //more link in description 
 moreDesc = $(".more-text");
 moreDesc.hide();
@@ -39,8 +28,9 @@ $("#json-field").click(function(){
 	this.select();
 });
 
-$("#search-btn").click(function(){
-	var button = $(this);
+$("#searchform").submit(function(e){
+	e.preventDefault();
+	var button = $("#search-btn");
 	var buttonContent = button.html();
 	button.html($(".spinner").clone().show());
 	var tagAPI = {};
@@ -78,5 +68,11 @@ $("#search-btn").click(function(){
 			button.html(buttonContent); //loader back to text
 		}
 	});
+	
+});
+
+$("#search-btn").click(function(e){
+	e.preventDefault();
+	$("#searchform").submit();
 	return false;
 });
