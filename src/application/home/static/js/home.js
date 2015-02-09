@@ -34,11 +34,14 @@ $("#searchform").submit(function(e){
 	var buttonContent = button.html();
 	button.html($(".spinner").clone().show());
 	var tagAPI = {};
-	tagAPI.url = "/api/v1.0/stats/tag/";
+	tagAPI.url = "/api/v1.0/stats";
 	var tag = $("#search-string").val();
 	var params = {};
 	$.ajax({
-		url:tagAPI.url+tag,
+		url:tagAPI.url,
+		data:{
+			tag_id:tag,
+		},
 		success: function(result,status, object){
 			$("#graph-area").show('fast');
 			console.log(object);
