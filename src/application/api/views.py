@@ -46,6 +46,7 @@ class Stats(Resource):
     s = AO3data()
     url = AO3url()
     url.setFilters(parser.parse_args())
+    print url.getUrl()
     return s.getTopInfo(url.getUrl())
 
 class TagStats(Resource):
