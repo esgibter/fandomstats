@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 import urllib3
 import urllib
 import pdb
+from flask.ext.restful import abort 
 
 class AO3url:
   # default filters object
@@ -66,9 +67,7 @@ class AO3data:
         self.htmlData = soup
         return soup
       except:
-        # TODO: flask error handling
-        # print "ERROR: failure to fetch URL: ", url 
-        return
+        abort(500, status=500, message="HTTP request failed when trying to scrape Ao3!")
     else:
       return self.htmlData
 
@@ -94,11 +93,9 @@ class AO3data:
 
       try:
         top = soup.findAll("dd", {"id" : idstring})[0]
-      except AttributeError:
-        # TODO: flask error handling
-        # print "ERROR: empty HTML data"
-        return
-      
+      except:
+        abort(400, status=400, message="Malformed Ao3 URL. No results found at {}".format(url))
+
       labels = top.find_all("label")
       for L in labels:
         tmp = re.compile('(.*) \(([0-9]+)\)')
@@ -109,8 +106,6 @@ class AO3data:
     try:
       tag = soup.find_all(text=re.compile("Work(s)*( found)* in"))[0]
     except AttributeError:
-      # TODO: flask error handling
-      # print "ERROR: empty HTML data"
       topInfo["numworks"] = -2
       return
 
