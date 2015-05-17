@@ -30,40 +30,10 @@
      url = url + "&bookmark_search%5Bwith_notes%5D=1";
      }
      text = "URL: " + url;
-//     bookmarkDisplay = "<iframe width=800 height =600 src=" + 
+     bookmarkDisplay = "<iframe width=800 height =600 src=" + 
 							   url + "></iframe>";
-//     document.getElementById("bookmarks").innerHTML = bookmarkDisplay;;
-     alert(getResponse(url));
-     }
-
-// code below modified from http://stackoverflow.com/questions/6086083/html-javascript-get-text-from-online-file
-
-     function getResponse(url) {
-     var xmlhttp;
-     if (window.XMLHttpRequest)
-     {// code for IE7+, Firefox, Chrome, Opera, Safari
-     xmlhttp=new XMLHttpRequest();
-     }
-     else
-     {// code for IE6, IE5
-     xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-     }
-     console.log(xmlhttp.responseText);
-     xmlhttp.open("GET",url,true);
-     xmlhttp.send();
-     return xmlhttp.responseText;
-
-//     var xhr = new XMLHttpRequest();
-//     xhr.onreadystatechange = process;
-//     if (xhr.readyState == 4) {
-//     var resp = JSON.parse(xhr.responseText);
-//     xhr.open("GET", url, true);
-//     xhr.send();
-//     }
-//     return xhr.responseText; 
-//     return url;
-     }
-     
+     document.getElementById("bookmarks").innerHTML = bookmarkDisplay;
+ }
 </script>
 
 </body>
