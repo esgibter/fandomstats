@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>Show me recent public AO3 bookmarks of my fanworks</h1>
+
+    <p>Please input your AO3 username:<br>
+<input id="author" type="text"></p>
+<p><input type="checkbox" id="recs"> Recommendations only?<br>
+<input type="checkbox" id="notes"> Bookmarks with notes only? </p>
+<p><button type="button" onclick="showBookmarks()">Submit</button></p>
+
+<p id="bookmarks"></p>
+
+<script>
+     function showBookmarks() {
+     var authorName, url, text, bookmarkDisplay;
+
+     // Get the value of the input field with id="author"
+     authorName = document.getElementById("author").value;
+
+     // Create URL
+     url = "http://archiveofourown.org/bookmarks/search?bookmark_search%5Bbookmarker%5D=-" + 
+     authorName + "&bookmark_search%5Bquery%5D=" + 
+     authorName + "&bookmark_search%5Bsort_column%5D=created_at";
+     if (document.getElementById("recs").checked == true) {
+     url = url + "&bookmark_search%5Brec%5D=1";
+     }
+     if (document.getElementById("notes").checked == true) {
+     url = url + "&bookmark_search%5Bwith_notes%5D=1";
+     }
+     text = "URL: " + url;
+//     bookmarkDisplay = "<iframe width=800 height =600 src=" + 
+							   url + "></iframe>";
+//     document.getElementById("bookmarks").innerHTML = bookmarkDisplay;;
+     alert(getResponse(url));
+     }
+
+// code below modified from http://stackoverflow.com/questions/6086083/html-javascript-get-text-from-online-file
+
+     function getResponse(url) {
+     var xmlhttp;
+     if (window.XMLHttpRequest)
+     {// code for IE7+, Firefox, Chrome, Opera, Safari
+     xmlhttp=new XMLHttpRequest();
+     }
+     else
+     {// code for IE6, IE5
+     xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+     }
+     console.log(xmlhttp.responseText);
+     xmlhttp.open("GET",url,true);
+     xmlhttp.send();
+     return xmlhttp.responseText;
+
+//     var xhr = new XMLHttpRequest();
+//     xhr.onreadystatechange = process;
+//     if (xhr.readyState == 4) {
+//     var resp = JSON.parse(xhr.responseText);
+//     xhr.open("GET", url, true);
+//     xhr.send();
+//     }
+//     return xhr.responseText; 
+//     return url;
+     }
+     
+</script>
+
+</body>
+</html> 
