@@ -1,0 +1,129 @@
+/*************************** COLORS *****************************/
+
+a, h1 {
+	color:#900;
+}
+
+.button,.button:focus {
+	background-color:#900;
+}
+
+a:hover, a:focus {
+	color:#c00;
+}
+
+.button:hover {
+	background-color:#c00;
+}
+
+/*************************** LAYOUT ******************************/
+
+body {
+	background-color:#f0f0f0;
+}
+
+#main {
+	border:1px solid #ddd;
+	margin-top:1rem;
+	background-color:white;
+	padding-bottom:1rem;
+}
+
+#main h1 {
+	text-align:center;
+}
+
+#simple .submit {
+	float:right;
+	line-height:0.6rem;
+}
+
+.spinner {
+	display:none;
+}
+
+legend {
+	color:#ccc;
+}
+
+legend a {
+	font-weight:normal;
+}
+
+legend a.selected {
+	font-weight:bold;
+}
+
+
+.variant {
+	clear:both;
+}
+
+a.more {
+	display:none;
+}
+
+/*--------------------------- graph area */
+
+
+#graph-area {
+	/*display:none;*/
+	border:1px solid #ddd;
+	padding-top:1rem;
+}
+
+#graph-intro p:last-child {
+	margin-bottom:0;
+}
+
+.graph {
+	padding:1rem;
+}
+
+#graph-area svg {
+	border:1px solid #ddd;
+}
+
+
+@media only screen and (min-width: 90.063em) { 
+	.graph:nth-child(odd) {
+		padding-right:0.5rem;
+	}
+	
+	.graph:nth-child(even) {
+		padding-left:0.5rem;
+	}	
+} /* min-width 1441px, xlarge screens; shiv to collapse central gutter */
+
+.graph div {
+	width:100%;
+	border:1px solid #ddd;
+}
+
+#json-field {
+	width:100%;
+	height:10rem;
+	font-size:small;
+	background-color:#eee;
+}
+
+
+
+
+/*------------------------------ footer */
+
+#footer {
+	color:#aaa;
+	text-align:right;
+}
+
+#footer, #footer a {
+	font-size:0.8rem;
+}
+
+
+
+
+
+
+/* missing javascript clean-up*/
