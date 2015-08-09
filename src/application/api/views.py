@@ -43,6 +43,8 @@ class Stats(Resource):
   # Stats for any search filter
   def get(self):
     # Returns stats for any list of search arguments
+    print "-------------------------"
+    print "======= NEW CYCLE ======="
     s = AO3data()
     url = AO3url()
     url.setFilters(parser.parse_args())

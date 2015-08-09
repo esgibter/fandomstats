@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 import urllib3
 import urllib
 import pdb
+import inspect
 from flask.ext.restful import abort
 
 class AO3url:
@@ -61,8 +62,20 @@ class AO3data:
       http = urllib3.PoolManager()
       r = {}
       try:
-        r = http.request('GET', url)
+        r = http.request('GET', url,redirect=False)
+        #status = r.getcode()
+        status = r.getheader('status')
+        location = r.getheader('location')
+        print ""
+        print "status: " + status
+        print "proper location: " + location
+        print ""
+        #urllib3.response.HTTPResponse
         soup = BeautifulSoup(r.data)
+        #ret = r.get_redirect_location()
+        #headers = r.getheaders()
+        #print dir(r) #all methods/params of an object
+        #print inspect.ismethod(r.get_redirect_location)
         soup.prettify()                
         self.htmlData = soup
         return soup
