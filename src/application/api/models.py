@@ -4,19 +4,10 @@ from bs4 import BeautifulSoup
 import urllib3
 import urllib
 import pdb
-from flask.ext.restful import abort 
+from flask.ext.restful import abort
 
 class AO3url:
   # default filters object
-  filters = {
-    "type":"works",
-    "params": {
-      "tag_id": "",
-      "page": 1,
-      "sort_direction": "asc",
-      "work_search": {}
-    }
-  }
 
   def getFilters(self):
     return self.filters
@@ -44,6 +35,15 @@ class AO3url:
  
   def setFilters(self, urlArgs):
     # This sets the filters object from a list of URL arguments
+    self.filters = {
+               "type":"works",
+               "params": {
+                          "tag_id": "",
+                          "page": 1,
+                          "sort_direction": "asc",
+                          "work_search": {}
+                          }
+               }    
     for k, v in urlArgs.iteritems():
       if v != None:
         if k == "tag_id" or k == "page" or k == "sort_direction":
