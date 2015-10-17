@@ -63,24 +63,50 @@ class AO3data:
       r = {}
       try:
         r = http.request('GET', url,redirect=False)
-        #status = r.getcode()
         status = r.getheader('status')
-        location = r.getheader('location')
         print ""
         print "status: " + status
-        print "proper location: " + location
-        print ""
+        
+        #now, we need to either re-run the request, or die gracefully. 
+        if status == "200 OK":
+            print "-- okay, proceed"
+            soup = BeautifulSoup(r.data)
+            soup.prettify()                
+            self.htmlData = soup
+        elif status == "302 Found":
+            canonical_url = r.getheader('location')
+            canonical_list = canonical_url.split("/") 
+            canonical_tag = canonical_list[len(canonical_list)-2]
+            print "this is the canonical tag: {}".format(canonical_tag)
+            raise Exception(302,canonical_tag)
+            #get the canonical tag
+            #rerun the search with proper url 
+        elif status == "404 Not Found":
+            #I can't abort from a try..catch block (http://stackoverflow.com/questions/17746897/flask-abort-inside-try-block-behaviour), so I'll throw an exception and handle that later.
+            print "-- nope, malformed url: {}".format(url)
+            raise Exception(400,"")
+        else:
+            print "-- nope, some other non-200 status code"
+            raise Exception(500,"")
+        
+        #Returning from the if DOES NOT WORK. It has to be here. I DON'T KNOW WHY. #blackmagiccode
+        return self.htmlData
+            
         #urllib3.response.HTTPResponse
-        soup = BeautifulSoup(r.data)
+        
         #ret = r.get_redirect_location()
         #headers = r.getheaders()
         #print dir(r) #all methods/params of an object
         #print inspect.ismethod(r.get_redirect_location)
-        soup.prettify()                
-        self.htmlData = soup
-        return soup
-      except:
-        abort(500, status=500, message="HTTP request failed when trying to scrape Ao3!")
+        
+      except Exception as err:
+          code, canonical = err.args
+          if code ==302:
+              abort(400, status=400, message="Canonical tag: {}".format(canonical))              
+          elif code == 400:
+              abort(400, status=400, message="Malformed Ao3 URL. No results found at {}".format(url))
+          else:
+              abort(500, status=500, message="HTTP request failed when trying to scrape Ao3!")
     else:
       return self.htmlData
 
@@ -100,7 +126,7 @@ class AO3data:
     }
 
     soup = self.fetchHTML(url)
-
+   
     for k in topInfo["stats"].keys():
       idstring = "tag_category_" + k
 
