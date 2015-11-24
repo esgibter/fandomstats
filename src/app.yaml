@@ -19,6 +19,9 @@ libraries:
   version: "0.15"
 
 handlers:
+- url: /tools
+  static_dir: tools
+
 - url: .*
   script: run.application.app
 
