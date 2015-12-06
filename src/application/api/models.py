@@ -79,6 +79,7 @@ class AO3data:
             canonical_url = r.getheader('location')
             canonical_list = canonical_url.split("/") 
             canonical_tag = canonical_list[len(canonical_list)-2]
+            canonical_tag = urllib.unquote_plus(canonical_tag)
             raise Exception(302,canonical_tag) 
         elif status == "404 Not Found": # = malformed url or the tag doesn't exist
             #you can't abort from a try..catch block (http://stackoverflow.com/questions/17746897/flask-abort-inside-try-block-behaviour), so I'll throw an exception and handle that later.
