@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8" />
+	    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>
+			{% if title %}
+				{% block title %}{% endblock %} -- Fandom Stats
+			{% else %}
+				Fandom Stats
+			{% endif %}			
+			</title>
+		
+	    <link rel="stylesheet" href="{{ url_for('static', filename='css/normalize.css') }}" />
+	    <link rel="stylesheet" href="{{ url_for('static', filename='css/foundation.min.css') }}" />
+	    <link rel="stylesheet" href="{{ url_for('home.static', filename='css/home.css') }}" />
+	    <script src="{{ url_for('home.static', filename='js/vendor/modernizr.js') }}"></script>
+  </head>
+	<body class="no-js">
+		<nav id="main-nav" class="row">
+			<ul>
+				<li id="sitename"><h1><a href="">Fandom Stats</a></h1></li>
+				<li><a href="">AO3 Tag Stats API</a></li>
+				<li><a href="">AO3 Bookmarks Viewer</a></li>
+				<li><a href="">Fandom Tools Directory</a></li>
+				<li class="last"><a href="">About Fandom Stats</a></li>
+			</ul>
+		</nav>
+		<div id="wrapper">
+			<div class="row">
+				<div id="main" class="large-12 columns {% block class %}{% endblock %}">
+					{% block content %}{% endblock %}
+				</div>
+					
+			</div>
+		</div>
+		<div class="row" id="footer"> 				
+			<div class="large-12 columns">
+				Footer? Stuff? Links???
+			</div>
+		</div>
+		<script src="{{ url_for('static', filename='js/vendor/jquery.js') }}"></script>
+	    <script src="{{ url_for('static', filename='js/foundation.min.js') }}"></script>
+	    <script>
+	      $(document).foundation();
+	      $("body").toggleClass("no-js");	      
+	    </script>
+	    <script src="{{ url_for('home.static', filename='js/home.js') }}"></script>
+	    <img src="{{ url_for('home.static', filename='img/spinner.gif') }}" class="spinner" />
+	</body>
+</html>
+
+

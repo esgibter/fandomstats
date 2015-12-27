@@ -18,19 +18,92 @@ a:hover, a:focus {
 
 /*************************** LAYOUT ******************************/
 
+.textright {
+	text-align:right;
+}
+
 body {
 	background-color:#f0f0f0;
 }
 
-#main {
-	border:1px solid #ddd;
+#main-nav {
 	margin-top:1rem;
-	background-color:white;
-	padding-bottom:1rem;
 }
 
-#main h1 {
+#main-nav ul {
+	margin:0;
+	padding:0;
+	list-style: none;	
+}
+
+#main-nav ul li {
+	display:inline-block;
+	font-size:0.8rem;
+}
+
+#main-nav ul li a {
+	color:inherit;
+}
+
+#main-nav ul li a:hover {
+	color:#c00;
+}
+
+#main-nav ul li:after {
+	content: " / ";
+}
+
+#main-nav ul li#sitename:after {
+	font-weight:bold;
+}
+
+#main-nav ul li.last:after {
+	content: "";
+}
+
+#main-nav ul li#sitename {
+	font-size:1.5rem;
+	font-weight:bold;
+}
+
+#sitename h1 {
+	display:inline;
+	font-size:inherit;
+	font-weight:inherit;
+}
+
+#main {
+	border:1px solid #ddd;
+	background-color:white;
+	padding-bottom:1rem;
+	padding-top:1.5rem;
+}
+
+#main h1,h2 {
 	text-align:center;
+}
+
+#main h3 {
+	font-size:1.2em;
+	font-weight:bold;
+	color:#900;
+}
+
+#homepage-linklist {
+	font-size:0.8rem;
+}
+
+#main.homepage hr.splitter {
+	width:60%;
+	margin:3rem auto;
+	color:#900;
+	border-color:#900;
+}
+
+#api-header {
+	color: #900;
+	text-align:center;
+	margin-bottom: 2rem;
 }
 
 #simple .submit {
@@ -63,6 +136,14 @@ a.more {
 	display:none;
 }
 
+#api-results {
+	display:none;
+}
+
+#learnmore {
+	text-align: right;
+	margin-top:-1rem;
+}
 /*--------------------------- graph area */
 
 

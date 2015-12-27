@@ -43,7 +43,7 @@ $("#searchform").submit(function(e){
 			tag_id:tag,
 		},
 		success: function(result,status, object){
-			$("#graph-area").show('fast');
+			$("#api-results").show('fast');
 			console.log(object);
 			$("#json-field").val(object.responseText); 
 		},
