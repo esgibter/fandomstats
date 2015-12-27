@@ -17,6 +17,13 @@ Fandomstats runs on Google App Engine.
   6. if not, install them with `gcloud components update pkg-python`
 
 #### Run the app:
+
+```
+gcloud preview app run src/app.yaml
+```
+(it might ask you to 'set your project' - use the application ID in app.yaml)
+
+Old way of doing this (might work if you haven't updated GAE recently):
 ```
 dev_appserver.py src/
 ```
