@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% set page_id = "ao3-tag-stats" %}
+{% block title %}AO3 Tag Stats API{% endblock %}
+{% block content %}
+	<h2>AO3 Tag Stats Tool</h2>
+	<p class="intro">Short introduction text. Explanation of the tool. What else goes here? Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ligula magna, ultrices quis cursus accumsan, pulvinar quis nisi. <span class="more-text">Mauris fringilla ac orci sodales efficitur. Vivamus consequat sem auctor risus eleifend fermentum ut at orci. Aenean mollis pretium dui, id dictum justo eleifend eget. Morbi commodo diam nec ipsum hendrerit, ut scelerisque lectus tempus. Etiam eu felis tellus. Vivamus ut odio elit.</span> <a href="" class="more">more&raquo;</a></p>	
+	<form id="searchform" class="row collapse bigform">
+		<div class="large-10 medium-9 small-12 columns">
+	          <input id="search-string" type="text" placeholder="tag name, e.g. 'Harry Potter' or 'fluff'">
+    	</div>
+    	<div class="large-2 medium-3 small-12 columns">
+          <a href="#" id="search-btn" class="button postfix">Go</a>
+    	</div>
+    	<!--
+    	<div class="large-2 medium-3 small-12 columns">
+          <a href="#" id="add-searchword"> + add search tag</a>
+    	</div>
+    	-->
+	</form>
+	<div class="row collapse">
+		<div class="small-12 columns">
+			<h3>How it works</h3>
+			<p>tramtadada</p>
+			<h3>What is it for</h3>
+			<p>thang</p>
+		</div>	
+	</div>
+	<div class="row collapse">
+		<div id="graph-area" class="large-12 columns api-results">
+			<div class="row">
+				<div id="json-export" class="large-12 column">
+					<p></p>
+					<label>copy results as JSON:</label>
+					<textarea placeholder="" id="json-field" readonly="readonly">
+					</textarea>
+				</div>							
+			</div>
+			
+		</div>
+							
+	</div>
+{% endblock %}

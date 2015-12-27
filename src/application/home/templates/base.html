@@ -4,7 +4,7 @@
 		<meta charset="utf-8" />
 	    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>
-			{% if title %}
+			{% if title != "" %}
 				{% block title %}{% endblock %} -- Fandom Stats
 			{% else %}
 				Fandom Stats
@@ -17,18 +17,26 @@
 	    <script src="{{ url_for('home.static', filename='js/vendor/modernizr.js') }}"></script>
   </head>
 	<body class="no-js">
+		{% set navbar = [
+		    ('ao3-tag-stats', 'AO3 Tag Stats API',false),
+		    ('ao3-bookmark-viewer', 'AO3 Bookmarks Viewer',false),
+		    ('about', 'About Fandom Stats',true),
+		] -%}
+		{% set active_page = page_id|default('') -%}
+		
 		<nav id="main-nav" class="row">
 			<ul>
-				<li id="sitename"><h1><a href="">Fandom Stats</a></h1></li>
-				<li><a href="">AO3 Tag Stats API</a></li>
-				<li><a href="">AO3 Bookmarks Viewer</a></li>
-				<li><a href="">Fandom Tools Directory</a></li>
-				<li class="last"><a href="">About Fandom Stats</a></li>
+				<li id="sitename"><h1><a href="/">Fandom Stats</a></h1></li>
+				{% for id, caption, last in navbar %}
+				  <li {% if id == active_page %}class="active"{% endif
+				  %} {% if last %}class="last"{% endif
+				  %} ><a href="{{ id|e }}">{{ caption|e }}</a></li>
+				{% endfor %}
 			</ul>
 		</nav>
 		<div id="wrapper">
 			<div class="row">
-				<div id="main" class="large-12 columns {% block class %}{% endblock %}">
+				<div id="main" class="large-12 columns {{ page_id|e }}">
 					{% block content %}{% endblock %}
 				</div>
 					

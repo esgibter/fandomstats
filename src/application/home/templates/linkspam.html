@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% set page_id = "homepage" %}
+{% block class %}homepage{% endblock %}
 {% block content %}
 	<div class="row collapse">
 		<div class="large-6 medium-6 small-12 columns">
@@ -9,16 +9,16 @@
 		<aside id="homepage-linklist" class="medium-5 columns">
 			<h4>Where to go</h4>
 			<ul >
-				<li><a href="/ao3-bookmark-viewer">Try the AO3 Bookmark Viewer</a></li>
-				<li><a href="/ao3-tag-stats">Learn more about the Tag Stats API, and what is it for</a></li>
-				<li><a href="/fandom-research-directory">Find more fandom research projects like this one</a></li>
-				<li><a href="/about">Read about the people behind this</a></li>
+				<li><a href="">Try the AO3 Bookmark Viewer</a></li>
+				<li><a href="">Learn more about the Tag Stats API, and what is it for</a></li>
+				<li><a href="">Find more fandom research projects like this one</a></li>
+				<li><a href="">Read about the people behind this</a></li>
 			</ul>
 		</aside>
 	</div>
 	<hr class="splitter" />
 	<h3 id="api-header">Try the thing</h3>
-	<form id="searchform" class="row collapse bigform">
+	<form id="searchform" class="row collapse">
 		<div class="large-10 medium-9 small-12 columns">
 	          <input id="search-string" type="text" placeholder="tag name, e.g. 'Harry Potter' or 'fluff'" autocomplete="off">
     	</div>

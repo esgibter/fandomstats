@@ -4,7 +4,7 @@ a, h1 {
 	color:#900;
 }
 
-.button,.button:focus {
+#main button, #main .button,#main .button:focus {
 	background-color:#900;
 }
 
@@ -12,11 +12,50 @@ a:hover, a:focus {
 	color:#c00;
 }
 
-.button:hover {
+#main button:hover,#main .button:hover {
 	background-color:#c00;
 }
 
 /*************************** LAYOUT ******************************/
+
+@import url(https://fonts.googleapis.com/css?family=Anton);
+
+h1, h2, h3, h4 {
+	font-family: 'Anton', sans-serif;
+}
+
+h1,h2 {
+	text-align:center;
+}
+
+h2 {
+	font-weight:bold;
+	font-size:2em;
+}
+
+h3 {
+	font-size:1.2em;
+	font-weight:bold;
+	color:#900;
+}
+
+h4 {
+	line-height:1.2em;
+	font-size:1em;
+	margin:0;
+	margin-bottom:0.5em;
+	padding:0;
+}
+
+#main p.intro {
+	margin-top:3rem;
+	margin-bottom:2rem;
+}
+
+.subheading {
+	text-align:center;
+	margin-bottom:2rem;
+}
 
 .textright {
 	text-align:right;
@@ -41,6 +80,12 @@ body {
 	font-size:0.8rem;
 }
 
+#main-nav ul li.active {
+	display:inline-block;
+	font-size:0.8rem;
+	font-weight:bold;
+}
+
 #main-nav ul li a {
 	color:inherit;
 }
@@ -54,7 +99,9 @@ body {
 }
 
 #main-nav ul li#sitename:after {
-	font-weight:bold;
+	font-weight: bold;
+	content: " //";
+	font-family: 'Anton', sans-serif;
 }
 
 #main-nav ul li.last:after {
@@ -75,26 +122,22 @@ body {
 #main {
 	border:1px solid #ddd;
 	background-color:white;
-	padding-bottom:1rem;
-	padding-top:1.5rem;
+	padding:2rem;
 }
 
-#main h1,h2 {
-	text-align:center;
-}
 
-#main h3 {
-	font-size:1.2em;
-	font-weight:bold;
-	color:#900;
-}
 
 #homepage-linklist {
+	margin-top:0.8em;
+}
+
+#homepage-linklist ul {
 	font-size:0.8rem;
+	
 }
 
 #main.homepage hr.splitter {
-	width:60%;
+	width:40%;
 	margin:3rem auto;
 	color:#900;
 	border-color:#900;
@@ -103,7 +146,17 @@ body {
 #api-header {
 	color: #900;
 	text-align:center;
-	margin-bottom: 2rem;
+}
+
+#main form.bigform {
+	width:70%;
+	margin:0 auto;
+	margin-top:1rem;
+	margin-bottom:2rem;
+}
+
+button, button.small {
+	line-height:0.6rem;
 }
 
 #simple .submit {
@@ -136,13 +189,12 @@ a.more {
 	display:none;
 }
 
-#api-results {
+.api-results {
 	display:none;
 }
 
 #learnmore {
 	text-align: right;
-	margin-top:-1rem;
 }
 /*--------------------------- graph area */
 
@@ -184,6 +236,12 @@ a.more {
 	background-color:#eee;
 }
 
+/*------------------------------ bookmark-viewer */
+
+#ao3-bookmark-view {
+	width:100%;
+	height:60em;
+}
 
 
 
