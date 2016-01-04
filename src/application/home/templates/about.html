@@ -1,46 +1,7 @@
 {% extends "base.html" %}
-{% block class %}homepage{% endblock %}
+{% set page_id = "about" %}
+{% block title %}About{% endblock %}
 {% block content %}
-	<div class="row collapse">
-		<div class="large-6 medium-6 small-12 columns">
-			<h3>AO3 Analytics Tool</h3>
-			<p>Short introduction text. Explanation of the tool. What else goes here? Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ligula magna, ultrices quis cursus accumsan, pulvinar quis nisi.</p>
-		</div>
-		<aside id="homepage-linklist" class="medium-5 columns">
-			<h4>Where to go</h4>
-			<ul >
-				<li><a href="">Try the AO3 Bookmark Viewer</a></li>
-				<li><a href="">Learn more about the Tag Stats API, and what is it for</a></li>
-				<li><a href="">Find more fandom research projects like this one</a></li>
-				<li><a href="">Read about the people behind this</a></li>
-			</ul>
-		</aside>
-	</div>
-	<hr class="splitter" />
-	<h3 id="api-header">Try the thing</h3>
-	<form id="searchform" class="row collapse">
-		<div class="large-10 medium-9 small-12 columns">
-	          <input id="search-string" type="text" placeholder="tag name, e.g. 'Harry Potter' or 'fluff'" autocomplete="off">
-    	</div>
-    	<div class="large-2 medium-3 small-12 columns">
-          <a href="#" id="search-btn" class="button postfix">Go</a>
-    	</div>
-    	<!--
-    	<div class="large-2 medium-3 small-12 columns">
-          <a href="#" id="add-searchword"> + add search tag</a>
-    	</div>
-    	-->
-	</form>
-	<div class="row api-results">
-		<div id="json-export" class="large-12 column">
-			<label>results as JSON:</label>
-			<textarea placeholder="" id="json-field" readonly="readonly">
-			</textarea>
-		</div>	
-	</div>
-	<div class="row collapse api-results">
-		<div id="learnmore" class="medium-3 medium-offset-9 columns">
-			<a href="">Learn more about the API</a>
-		</div>	
-	</div>	
+	<h2>About Fandom Stats</h2>
+	<p>Placeholder text. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ligula magna, ultrices quis cursus accumsan, pulvinar quis nisi. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ligula magna, ultrices quis cursus accumsan, pulvinar quis nisi.</p>
 {% endblock %}

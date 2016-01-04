@@ -148,7 +148,7 @@ body {
 	text-align:center;
 }
 
-#main form.bigform {
+#main form.bigform, #main div.bigform {
 	width:70%;
 	margin:0 auto;
 	margin-top:1rem;
@@ -241,7 +241,9 @@ a.more {
 #ao3-bookmark-view {
 	width:100%;
 	height:60em;
+	border: 1px solid #ddd;
 }
+
 
 
 
