@@ -30,9 +30,10 @@ $("#json-field").click(function(){
 
 $("#searchform").submit(function(e){
 	e.preventDefault();
+	searchform = $(this);
 	var button = $("#search-btn");
 	var buttonContent = button.html();
-	button.html($(".spinner").clone().show());
+	button.html($("#spinner").clone().show());
 	var tagAPI = {};
 	tagAPI.url = "/api/v1.0/stats";
 	var tag = $("#search-string").val();
@@ -42,9 +43,9 @@ $("#searchform").submit(function(e){
 		data:{
 			tag_id:tag,
 		},
-		success: function(result,status, object){
+		success: function(result, status, object){
 			$(".api-results").show('fast');
-			console.log(object);
+			console.log(object.status);
 			$("#json-field").val(object.responseText); 
 		},
 		error: function(object,exception) {
@@ -52,14 +53,25 @@ $("#searchform").submit(function(e){
 				//connection error
 			} else if (object.status == 404) {
 				//not found
+				searchform.append('<p class="form-info">This tag wasn\'t found on AO3.</p>');				
+			} else if (object.status == 501) {
+				//redirection
+				searchform.append('<p class="form-info">Looks like this is a non-canonical tag! Unfortunately, our API can\'t follow redirects yet. Try <a href="http://archiveofourown.org/tags/search?utf8=%E2%9C%93&query[name]='+tag+'&query[type]=">looking up the canonical tag on AO3</a>.</p>');								
 			} else if (object.status == 500){
-				alert("blerp 500");
 				//internal error
+				button.html($("#button-error").clone().show());
+				searchform.append('<p class="form-info">An error occured.<a href="'+window.location.href+'">Refresh page to try again.</a></p>');
 			} else if (exception === 'parsererror') {
+				button.html($("#button-error").clone().show());
+				searchform.append('<p class="form-info">An error occured.<a href="'+window.location.href+'">Refresh page to try again.</a></p>');
 				//request failed
 			} else if (exception === 'timeout') {
+				button.html($("#button-error").clone().show());
+				searchform.append('<p class="form-info">An error occured.<a href="'+window.location.href+'">Refresh page to try again.</a></p>');
 				//timeout error
 			} else if (exception === 'abort') {
+				button.html($("#button-error").clone().show());
+				searchform.append('<p class="form-info">An error occured.<a href="'+window.location.href+'">Refresh page to try again.</a></p>');
 				//aborted
 			} else {
 				//something else
@@ -67,7 +79,6 @@ $("#searchform").submit(function(e){
 			}
 		},
 		complete:function(object,status) {
-			console.log("status: "+status);
 			button.html(buttonContent); //loader back to text
 		}
 	});

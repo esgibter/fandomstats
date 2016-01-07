@@ -164,8 +164,18 @@ button, button.small {
 	line-height:0.6rem;
 }
 
-.spinner {
+.button-message {
 	display:none;
+}
+
+#button-error {
+	font-size: 2em;
+	position: relative;
+	top: -1px;
+}
+
+.form-info {
+	font-size:0.8em;
 }
 
 legend {

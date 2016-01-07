@@ -54,7 +54,8 @@
 	      $("body").toggleClass("no-js");	      
 	    </script>
 	    <script src="{{ url_for('home.static', filename='js/home.js') }}"></script>
-	    <img src="{{ url_for('home.static', filename='img/spinner.gif') }}" class="spinner" />
+	    <img id="spinner" src="{{ url_for('home.static', filename='img/spinner.gif') }}" class="button-message" />
+	    <span id="button-error" class="button-message">&#xd7;</span>
 	</body>
 </html>
 
