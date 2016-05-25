@@ -3,8 +3,8 @@
 {% block content %}
 	<div class="row collapse">
 		<div class="large-6 medium-6 small-12 columns">
-			<h3>AO3 Analytics Tool</h3>
-			<p>Short introduction text. Explanation of the tool. What else goes here? Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ligula magna, ultrices quis cursus accumsan, pulvinar quis nisi.</p>
+			<p>Welcome to [our page]. What we do. Our main project is the AO3 tag stats API. 
+				In the future, we plan to create visual tools that will generate graphs for various AO3 metrics that fans without IT background can use to explore fandom behavior.</p>
 		</div>
 		<aside id="homepage-linklist" class="medium-5 columns">
 			<h4>Where to go</h4>
@@ -17,8 +17,8 @@
 		</aside>
 	</div>
 	<hr class="splitter" />
-	<h3 id="api-header">Try the thing</h3>
-	<form id="searchform" class="row collapse bigform">
+	<h3 id="api-header">Try the tag stats tool</h3>
+	<form id="searchform-homepage" class="row collapse bigform searchform">
 		<div class="large-10 medium-9 small-12 columns">
 	          <input id="search-string" type="text" placeholder="tag name, e.g. 'Harry Potter' or 'fluff'" autocomplete="off">
     	</div>
@@ -33,14 +33,14 @@
 	</form>
 	<div class="row api-results">
 		<div id="json-export" class="large-12 column">
-			<label>results as JSON:</label>
-			<textarea placeholder="" id="json-field" readonly="readonly">
+			<label>results as CSV:</label>
+			<textarea placeholder="" id="result-field" readonly="readonly">
 			</textarea>
 		</div>	
 	</div>
 	<div class="row collapse api-results">
-		<div id="learnmore" class="medium-3 medium-offset-9 columns">
-			<a href="">Learn more about the API</a>
-		</div>	
+		<div id="learnmore" class="small-12 columns">
+			In the future, we will give you some pretty graphs to look at. In the meantime, you can <a href="ao3-tag-stats">learn more about the API</a>
+		</div>
 	</div>	
 {% endblock %}

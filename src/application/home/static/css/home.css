@@ -215,6 +215,13 @@ a.more {
 	padding-top:1rem;
 }
 
+#main.ao3-tag-stats #graph-area {
+	display:block !important;
+	padding-top:0;
+	border:none;
+	margin-bottom:4em;
+}
+
 #graph-intro p:last-child {
 	margin-bottom:0;
 }
@@ -239,7 +246,7 @@ a.more {
 	border:1px solid #ddd;
 }
 
-#json-field {
+#result-field {
 	width:100%;
 	height:10rem;
 	font-size:small;

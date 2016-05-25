@@ -3,8 +3,23 @@
 {% block title %}AO3 Tag Stats API{% endblock %}
 {% block content %}
 	<h2>AO3 Tag Stats Tool</h2>
-	<p class="intro">Short introduction text. Explanation of the tool. What else goes here? Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ligula magna, ultrices quis cursus accumsan, pulvinar quis nisi. <span class="more-text">Mauris fringilla ac orci sodales efficitur. Vivamus consequat sem auctor risus eleifend fermentum ut at orci. Aenean mollis pretium dui, id dictum justo eleifend eget. Morbi commodo diam nec ipsum hendrerit, ut scelerisque lectus tempus. Etiam eu felis tellus. Vivamus ut odio elit.</span> <a href="" class="more">more&raquo;</a></p>	
-	<form id="searchform" class="row collapse bigform">
+	<div class="row collapse">
+		<div class="small-12 columns">
+			<p>The purpose of this tool is to make it easy to fetch and display basic stats about any type of Archive Of Our Own (AO3) tag.
+				For example, let’s say you want to know more about how any of the following types of AO3 tags are used:</p>
+			<ul>
+				<li>A fandom tag: “Teen Wolf (TV)”</li>
+				<li>A character tag: “Rey (Star Wars)”</li>
+				<li>A relationship tag: “Fox Mulder/Dana Scully”</li>
+				<li>A rating tag: “Mature”</li>
+				<li>A relationship category tag: “F/F”</li>
+				<li>A warning tag: “Graphic Depictions Of Violence”</li>
+				<li>A freeform (additional) tag: “Angst”</li>
+			</ul>
+			<p>You can try typing an AO3 tag name here...</p>			
+		</div>		
+	</div>	
+	<form id="searchform" class="row collapse bigform searchform">
 		<div class="large-10 medium-9 small-12 columns">
 	          <input id="search-string" type="text" placeholder="tag name, e.g. 'Harry Potter' or 'fluff'">
     	</div>
@@ -17,26 +32,32 @@
     	</div>
     	-->
 	</form>
+	<div id="graph-area" class="api-results">
+		<div id="json-export">
+			<p>… and we return to you data about how that tag is used on AO3, in JSON format.</p>
+			<label>API results:</label>
+			<textarea id="result-field" readonly="readonly" placeholder="(use the searchbar above)">
+			</textarea>
+		</div>
+	</div>
+			
 	<div class="row collapse">
 		<div class="small-12 columns">
-			<h3>How it works</h3>
-			<p>tramtadada</p>
-			<h3>What is it for</h3>
-			<p>thang</p>
+			<h3>Wait, what is this?!</h3>
+			<p>Right now, we’re simply returning to you the same numbers that you’d see in the AO3 Sort &amp; Filter sidebar if you clicked on the tag on AO3. 
+			This is a bit of a proof of concept and placeholder for what we hope to do in the future. As for why it’s in JSON, see more below.</p>
+			
+			<h3>What will it become?</h3>
+			<p>We have three goals:</p>
+			<ol>
+				<li><strong>Display graphs on this page.</strong> We want to start displaying some graphs of this data here, so that people who never want to write any programs or do any stats of their own can just type in an AO3 tag and get back some nice quick data visualization of how the tag is used.</li>
+				<li><strong>Provide an AO3 fandom stats API.</strong> The reason the tag data is displayed in JSON format is that we’re also trying to write a more general purpose set of Python functions that fandom data geeks can call from within their own programs in order to efficiently fetch data about tags from AO3.  We’d like to also eventually provide more data aside from that shown here (e.g., the ability to fetch median hits and median kudos for the tag.)</li>
+				<li><strong>Provide other fandom data-related information and tools elsewhere on the site.</strong> Right now, you can see our <a href="ao3-bookmark-viewer">AO3 Bookmark Viewer</a> as one such example.</li>
+			</ol>
+			
+			<h3>How can I use the existing API -- or help develop it further?</h3>
+			<p>If you want to use our existing Python scripts, or help develop the API or the site further, please <a href="about#contact">contact us</a>.</p>
 		</div>	
 	</div>
-	<div class="row collapse">
-		<div id="graph-area" class="large-12 columns api-results">
-			<div class="row">
-				<div id="json-export" class="large-12 column">
-					<p></p>
-					<label>copy results as JSON:</label>
-					<textarea placeholder="" id="json-field" readonly="readonly">
-					</textarea>
-				</div>							
-			</div>
-			
-		</div>
-							
-	</div>
+	
 {% endblock %}
