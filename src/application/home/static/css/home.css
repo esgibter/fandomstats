@@ -255,7 +255,12 @@ a.more {
 }
 
 
+/*------------------------------ about */
 
+#contributors {
+	list-style-type: none;
+	margin-bottom:2em;
+}
 
 /*------------------------------ footer */
 
