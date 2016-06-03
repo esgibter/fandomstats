@@ -5,7 +5,7 @@ import os
 from flask_debugtoolbar import DebugToolbarExtension
 from werkzeug.debug import DebuggedApplication
 
-app = Flask('application')
+app = Flask('application',static_folder='static-shared')
 
 if os.getenv('FLASK_CONF') == 'DEV':
   #development settings n

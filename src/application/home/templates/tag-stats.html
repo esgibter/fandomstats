@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% set page_id = "ao3-tag-stats" %}
+{% block title %}AO3 Tag Stats API{% endblock %}
+{% block content %}
+	<h2>AO3 Tag Stats API</h2>
+	<div class="row collapse">
+		<div class="small-12 columns">
+			<p>This is a tool we're building for programmers and fandom analysts to get data from Archive Of Our Own (AO3), and use it in their own project. 
+				The data visualisations on the homepage will be an example of what you can do with the resulting dataset.</p>
+				
+				<h3>So, how does it work?</h3>
+				The purpose of the API is to make it easy to fetch and display basic stats about any type of AO3 tag.
+				For example, let’s say you want to know more about how any of the following types tags are used:</p>
+			<ul>
+				<li>A fandom tag: “Teen Wolf (TV)”</li>
+				<li>A character tag: “Rey (Star Wars)”</li>
+				<li>A relationship tag: “Fox Mulder/Dana Scully”</li>
+				<li>A rating tag: “Mature”</li>
+				<li>A relationship category tag: “F/F”</li>
+				<li>A warning tag: “Graphic Depictions Of Violence”</li>
+				<li>A freeform (additional) tag: “Angst”</li>
+			</ul>
+			<p>You pass the AO3 tag to the API (for example through a HTML field, like here)...</p>			
+		</div>		
+	</div>	
+	<form id="searchform" class="row collapse bigform searchform">
+		<div class="large-10 medium-9 small-12 columns">
+	          <input id="search-string" type="text" placeholder="tag name, e.g. 'Harry Potter' or 'fluff'">
+    	</div>
+    	<div class="large-2 medium-3 small-12 columns">
+          <a href="#" id="search-btn" class="button postfix">Go</a>
+    	</div>
+    	<!--
+    	<div class="large-2 medium-3 small-12 columns">
+          <a href="#" id="add-searchword"> + add search tag</a>
+    	</div>
+    	-->
+	</form>
+	<div id="graph-area" class="api-results">
+		<div id="api-export">
+			<p>… and we return to you data about how that tag is used on AO3, in JSON format.</p>
+			<label>API results:</label>
+			<textarea id="result-field" readonly="readonly" placeholder="(use the searchbar above)">
+			</textarea>
+		</div>
+	</div>
+			
+	<div class="row collapse">
+		<div class="small-12 columns">
+			<h3>Wait, what is this?!</h3>
+			<p>Right now, we’re simply returning to you the same numbers that you’d see in the AO3 Sort &amp; Filter sidebar if you clicked on the tag on AO3
+				 -  but without having to record the numbers by hand every time you want to check a tag, and in a format ready to be processed further.
+			</p>
+				
+			<h3 id="future">What will it become?</h3>
+			<p>In one word... "more".</p>
+			<ul>
+				<li><strong>More visualisations.</strong> Well, more than zero, anyway. :P But beside that, we want to gradually add new graphs and experiment with ways to display the available data.</li>
+				<li><strong>More kinds of data.</strong> There is much more we could be getting out of AO3, things like median hits and median kudos for a tag.</li>
+				<li><strong>More control (both on the homepage and through the API).</strong> We want to offer granular filtering of fics, the same way the AO3 website does. Get fic counts just for a certain category within a tag, exclude a character, etc. etc.</li>
+				<li><strong>Provide other fandom data-related information and tools elsewhere on the site.</strong> Right now, you can see our <a href="ao3-bookmark-viewer">AO3 Bookmark Viewer</a> as one such example.</li>
+			</ul>
+			
+			<h3>How can I use the existing API -- or help develop it further?</h3>
+			<p>This project is very much a WIP right now. If you want to use our existing Python scripts, the API itself, or help develop the API or the site further, please <a href="about#contact">contact us</a>.</p>
+		</div>	
+	</div>
+	
+{% endblock %}

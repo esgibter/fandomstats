@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% set page_id = "homepage" %}
+{% block content %}
+	<div class="row collapse">
+		<div class="large-6 medium-6 small-12 columns">
+			<p>
+				Welcome to Fandom Stats!
+			</p>
+			<p>
+				We are working on a set of tools that will make it easier to get data for fandom analysis,
+				 mostly from the popular and number-friendly fandom haunts like <a href="http://archiveofourown.org">AO3</a> or <a href="http://tumblr.com">tumblr</a>.
+			</p> 
+			<p>
+				 In the future, this page will create visualisations about any AO3 tag, using our <a href="ao3-tag-stats">AO3 Tag Stats API</a> to gather the data. 
+				 Right now, you can try it out below and get the results in human-readable (csv) format, or go to <a href="ao3-tag-stats">the API page</a> and learn more about how it works.
+			</p>
+		</div>
+		<aside id="homepage-linklist" class="medium-5 columns">
+			<h4>Where to go</h4>
+			<ul >
+				<li><a href="/ao3-bookmark-viewer">Try the AO3 Bookmark Viewer</a></li>
+				<li><a href="/ao3-tag-stats">Learn more about the Tag Stats API, and what is it for</a></li>
+				<!--<li><a href="/fandom-research-directory">Find more fandom research projects like this one</a></li>-->
+				<li><a href="/about">Read about the people behind this</a></li>
+			</ul>
+		</aside>
+	</div>
+	<hr class="splitter" />
+	<h3 id="api-header">Get stats for an AO3 tag</h3>
+	<form id="searchform-homepage" class="row collapse bigform searchform">
+		<div class="large-10 medium-9 small-12 columns">
+	          <input id="search-string" type="text" placeholder="tag name, e.g. 'Harry Potter', or 'fluff'" autocomplete="off">
+    	</div>
+    	<div class="large-2 medium-3 small-12 columns">
+          <a href="#" id="search-btn" class="button postfix">Go</a>
+    	</div>
+    	<!--
+    	<div class="large-2 medium-3 small-12 columns">
+          <a href="#" id="add-searchword"> + add search tag</a>
+    	</div>
+    	-->
+	</form>
+	<div class="row api-results">
+		<div id="api-export" class="large-12 column">
+			<label>results as CSV:</label>
+			<textarea placeholder="" id="result-field" readonly="readonly">
+			</textarea>
+		</div>	
+	</div>
+	<div class="row collapse api-results">
+		<div id="learnmore" class="small-12 columns">
+			No pretty graphs yet, but we're working on it! In the meantime, you can learn more about <a href="ao3-tag-stats#future">our aims for the website.</a>
+		</div>
+	</div>	
+{% endblock %}
