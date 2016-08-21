@@ -32,6 +32,7 @@ class AO3url:
             url += urllib.quote_plus("work_search[" + wk + "]") + "=" + urllib.quote_plus(str(wv), '+') + "&"
       else:
         url += k + "=" + urllib.quote_plus(str(v), '+') + "&" 
+    
     return url[:-1]
  
   def setFilters(self, urlArgs):
@@ -63,28 +64,28 @@ class AO3data:
       
   # METHOD: fetchHTML
   def fetchHTML(self, url):
-    
     if self.htmlData == {}:            
       http = urllib3.PoolManager()
       r = {}
       try:
+        print "url: {}".format(url)
         r = http.request('GET', url,redirect=False)
-        status = r.getheader('status')
+        redirect_loc = r.get_redirect_location()
          
-        if status == "200 OK": #everything is okay
+        if redirect_loc == False: #no redirection
             soup = BeautifulSoup(r.data)
             soup.prettify()                
             self.htmlData = soup
-        elif status == "302 Found": #this isn't a canonical tag, but it's synned to one
-            canonical_url = r.getheader('location')
-            canonical_list = canonical_url.split("/") 
-            canonical_tag = canonical_list[len(canonical_list)-2]
-            canonical_tag = urllib.unquote_plus(canonical_tag)
-            raise Exception(302,canonical_tag) 
-        elif status == "404 Not Found": # = malformed url or the tag doesn't exist
-            #you can't abort from a try..catch block (http://stackoverflow.com/questions/17746897/flask-abort-inside-try-block-behaviour), so I'll throw an exception and handle that later.
-            raise Exception(400,"")
-        else: #??? something else
+        elif isinstance(redirect_loc,basestring): #redirecting somewhere
+            if (redirect_loc.find("/works") == -1): #it's a tag that can't be filtered on
+                raise Exception(404,"")
+            else: #it's a synned tag 
+                canonical_url = redirect_loc
+                canonical_list = canonical_url.split("/") 
+                canonical_tag = canonical_list[len(canonical_list)-2]
+                canonical_tag = urllib.unquote_plus(canonical_tag)
+                raise Exception(302,canonical_tag)
+        else: #???something else
             raise Exception(500,"")
         
         #Returning from the if DOES NOT WORK. It has to be here. I DON'T KNOW WHY. #blackmagiccode
@@ -96,6 +97,8 @@ class AO3data:
               #proper_api_request = re.sub("tag_id=(.*)&",canonical,self.request_url)
               #The above is the proper API url with the canonical tag. In ideal world, we would return a 3xx page that would redirect to it. Sadly, Flask development isn't an ideal world. TODO: Rewrite this whole thing so we can throw our own response/abort pages.
               abort(501, status=501,message="Cannot process non-canonical (redirecting) tag. Canonical tag: '{}'".format(canonical)); #HTTP Status Code: 501 Not Implemented.        
+          elif code == 404:
+              abort(404, status=404, message="This tag cannot be filtered on.") #HTTP Status Code: 404 Not Found
           elif code == 400:
               abort(400, status=400, message="Malformed Ao3 URL. No results found at {}".format(url)) #HTTP Status Code: 400 Bad request. Do not re-run again without modifying.
           else:
@@ -127,6 +130,7 @@ class AO3data:
         top = soup.findAll("dd", {"id" : idstring})[0]
       except:
         abort(400, status=400, message="Malformed Ao3 URL. No results found at {}".format(url))
+        #this catches also when the tag doesn't exist (404)
 
       labels = top.find_all("label")
       for L in labels:
