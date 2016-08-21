@@ -253,6 +253,36 @@ a.more {
 	background-color:#eee;
 }
 
+/*------------------------------------- graphs */
+.axis path,
+	.axis line {
+		fill: none;
+		stroke: #333;
+		shape-rendering: crispEdges;
+	}
+	
+	.y.axis .tick line, .axis .domain {
+		display:none;
+	}
+	
+	.x.axis .tick line {
+		stroke:#ccc;
+		stroke-width:2;
+	}
+	
+	.x.axis text {
+		font-size:0.8em;
+		color:#ddd;
+	}
+	
+	.values {
+	}
+	
+	text {
+		font-family: "Open Sans", sans-serif;
+	}
+
+
 /*------------------------------ bookmark-viewer */
 
 #ao3-bookmark-view {
