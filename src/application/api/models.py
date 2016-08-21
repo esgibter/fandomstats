@@ -111,9 +111,29 @@ class AO3data:
     topInfo = {
       "numworks": -1,
       "stats": {
-        "rating": {},
-        "warning": {},
-        "category": {},
+        "rating": {
+            "General Audiences": 0,
+            "Teen And Up Audiences": 0,
+            "Mature": 0,
+            "Explicit": 0,
+            "Not Rated": 0
+            },
+        "warning": {
+            "Major Character Death": 0,
+            "Graphic Depictions Of Violence": 0,
+            "Underage": 0,
+            "Rape/Non-Con": 0,
+            "Creator Chose Not To Use Archive Warnings": 0,
+            "No Archive Warnings Apply": 0
+            },
+        "category": {
+            "Gen": 0,
+            "F/F": 0,
+            "F/M": 0,
+            "M/M": 0,
+            "Multi": 0,
+            "Other": 0,
+            },
         "fandom": {},
         "character": {},
         "relationship": {},
