@@ -41,16 +41,17 @@
     	-->
 	</form>
 	<div class="row api-results" id="main-graphs">
-		<div id="graph-category"></div>
-		<div id="api-export" class="large-12 column">
-			<label>results as CSV:</label>
-			<textarea placeholder="" id="result-field" readonly="readonly">
-			</textarea>
-		</div>	
-	</div>
-	<div class="row collapse api-results">
-		<div id="learnmore" class="small-12 columns">
-			No pretty graphs yet, but we're working on it! In the meantime, you can learn more about <a href="ao3-tag-stats#future">our aims for the website.</a>
+		<div class="large-12 column" id="num-sum">
+			<!-- number of fics -->
+		</div>
+		<div class="large-12 column" id="graph-ratings">
+			<!-- graph of ratings -->
+		</div>
+		<div class="large-8 column" id="graph-category">
+			<!-- graph of categories -->
+		</div>
+		<div class="large-4 column" id="num-multicat">
+			<!-- number of fics with 2 and more categories -->
 		</div>
 	</div>	
 {% endblock %}

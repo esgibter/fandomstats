@@ -208,6 +208,10 @@ a.more {
 }
 /*--------------------------- graph area */
 
+#main-graphs {
+	display:block;
+	visibility:hidden;
+}
 
 #graph-area {
 	display:none;
