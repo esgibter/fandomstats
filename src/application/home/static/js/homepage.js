@@ -33,47 +33,11 @@ FSTATS.redrawGraphs = function() {
 $(window).resize(debounce(FSTATS.redrawGraphs,250));
 
 $(document).ready(function(){
+	/*
 	$.getJSON("/home/static/js/dummy.json", function(result) {
 		console.log(result);
-		var graphs = $("#main-graphs");
-		graphs.css("visibility","visible");
-		
-		//TODO figure out where to attach the graphs... the DOM objects? the namespace? create a "registry" on the namespace???
-	
-		var categoryGraph = new FSTATS.PercentBarGraph({
-			container: $('#graph-category'),
-			data:{
-				values:result.stats.category,
-				sum:result.numworks,
-			},
-			ratio:3/9,
-		});
-		
-		categoryGraph.plot();
-		categoryGraph.redraw();
-		
-		var warningGraph = new FSTATS.PercentBarGraph({
-			container:$("#graph-warning"),
-			data: {
-				values:result.stats.warning,
-				sum:result.numworks,
-			},
-			ratio:4/9,
-		});
-		
-		warningGraph.plot();
-		warningGraph.redraw();
-		//var graphs = $("#main-graphs");
-		//graphs.css("visibility","visible");
-		
-		//var graphs = $("#main-graphs");
-		//graphs.css("visibility","visible");
-		//plotCategories(result.stats.category,result.numworks);
-    	
-});
-	
-		
-	
+	});
+	*/
 	//$("#search-string").val("fluff");
 	//$(".searchform").submit();	
 });
@@ -96,30 +60,65 @@ $(".searchform").submit(function(e){
 			tag_id:tag,
 		},
 		success: function(result, status, object){
-			$(".api-results").show('fast');
-			console.log(result);
+			var graphs = $("#main-graphs");
+			graphs.css("visibility","visible");
 			//number of works (big number)
 			//ratings (piechart)
 			//warnings (percent bar)
 			//the rest (bar charts)
-			var graphs = $("#main-graphs");
-			graphs.css("visibility","visible");
 			
-			//TODO figure out where to attach the graphs... the DOM objects? the namespace? create a "registry" on the namespace???
-		
-			var categoryGraph = new FSTATS.CategoryGraph({
-				container: $('#graph-category'),
-				data:{
-					category:result.stats.category,
-					sum:result.numworks,
-				},
-				ratio:4/9,
-			});
+			if (searchform.attr("id") == 'searchform-beta') {
+				var graphs = $("#main-graphs");
+				graphs.css("visibility","visible"); //TODO do something with this, it's leaving a huge gap where the 'hidden' divs are, this should be using display:none (but that messes up the graph plotting).
+				
+				var sumOfWorks = new FSTATS.Number({
+					number:result.numworks,
+					commentBefore:'There is',
+					commentAfter:'works using the tag <em>' + tag + '</em> on AO3.',
+					container:$("#num-sum"),
+				});
+				sumOfWorks.plot();
+				
+				//TODO figure out where to attach the graphs... the DOM objects? the namespace? create a "registry" on the namespace???
 			
-			categoryGraph.plot();
+				var categoryGraph = new FSTATS.PercentBarGraph({
+					container: $('#graph-category'),
+					data:{
+						values:result.stats.category,
+						sum:result.numworks,
+					},
+					ratio:3/9,
+				});
+				
+				categoryGraph.plot();
+				categoryGraph.redraw();
+				
+				var warningGraph = new FSTATS.PercentBarGraph({
+					container:$("#graph-warning"),
+					data: {
+						values:result.stats.warning,
+						sum:result.numworks,
+					},
+					ratio:4/9,
+				});
+				
+				warningGraph.plot();
+				warningGraph.redraw();
+				//var graphs = $("#main-graphs");
+				//graphs.css("visibility","visible");
+				
+				//var graphs = $("#main-graphs");
+				//graphs.css("visibility","visible");
+				//plotCategories(result.stats.category,result.numworks);
+				$('<div id="api-export" class="large-12 column"><label>results as CSV:</label><textarea placeholder="" id="result-field" readonly="readonly"></textarea></div>').appendTo(graphs);
+				FSTATS.renderCsv(result);
+			} else {
+				$('<div id="api-export" class="large-12 column"><label>results as CSV:</label><textarea placeholder="" id="result-field" readonly="readonly"></textarea></div>').appendTo(graphs);
+				$('<div id="learnmore" class="small-12 columns">No pretty graphs yet, but we\'re working on it! In the meantime, you can learn more about <a href="ao3-tag-stats#future">our aims for the website.</a></div>').appendTo(graphs);
+				FSTATS.renderCsv(result);	
+			}
 			
-			$('<div id="api-export" class="large-12 column"><label>results as CSV:</label><textarea placeholder="" id="result-field" readonly="readonly"></textarea></div>').appendTo(graphs);
-			FSTATS.renderCsv(result);
+			
 										 
 		},
 		error: function(object,exception) {
@@ -165,6 +164,24 @@ FSTATS.renderCsv = function(result) {
 	});			
 	
 	$("#result-field").val(csv);	
+};
+
+FSTATS.Number = function(settings) {
+	console.log("creating a number.");
+	console.log(settings);
+	var self = this;
+	this.number = settings.number;
+	this.commentBefore = settings.commentBefore;
+	this.commentAfter = settings.commentAfter;
+	this.container = settings.container;
+	
+	this.plot = function() {
+		var div = $('<div class="number"></div>');
+		div.append('<div class="comment">'+self.commentBefore+'</div>');
+		div.append('<div class="value">'+d3.format(",")(self.number)+'</div>');
+		div.append('<div class="comment">'+self.commentAfter+'</div>');
+		div.appendTo(self.container);
+	};
 };
 
 //TODO checks for required settings!

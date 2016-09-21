@@ -208,6 +208,25 @@ a.more {
 #learnmore {
 	text-align: right;
 }
+
+#beta-notice {
+	width:100%;
+	background-color:turquoise;
+	color:white;
+	font-variant:small-caps;
+	text-align:center;
+	margin-bottom:1em;
+}
+
+#beta-notice a {
+	color:inherit;
+	text-decoration:underline;
+}
+
+#beta-notice a:hover {
+	color:inherit;
+}
+
 /*--------------------------- graph area */
 
 #main-graphs {
@@ -260,6 +279,23 @@ a.more {
 }
 
 /*------------------------------------- graphs */
+
+.number {
+    line-height: 1;
+    margin: 0.2em auto;
+    text-align: center;
+    font-size: 6em;
+    width: 4.5em;
+}
+
+.number .value {
+	color:#CC0000;
+}
+
+.number .comment {
+    font-size: 0.17em;
+}
+
 .axis path,
 	.axis line {
 		fill: none;
