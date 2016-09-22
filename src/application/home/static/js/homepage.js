@@ -73,7 +73,7 @@ $(".searchform").submit(function(e){
 				
 				var sumOfWorks = new FSTATS.Number({
 					number:result.numworks,
-					commentBefore:'There is',
+					commentBefore:'There are',
 					commentAfter:'works using the tag <em>' + tag + '</em> on AO3.',
 					container:$("#num-sum"),
 				});
