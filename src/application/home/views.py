@@ -4,7 +4,12 @@ from application.home import home
 # Homepage
 @home.route("/")
 def index():
-  return render_template('homepage.html')
+  return render_template('homepage.html',beta=False)
+  
+@home.route("/beta")
+def beta():
+  return render_template('homepage.html',beta=True)
+  
   
 # AO3 Bookmark Viewer
 @home.route("/ao3-bookmark-viewer")

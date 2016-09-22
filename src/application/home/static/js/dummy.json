@@ -1,0 +1,76 @@
+{
+    "stats": {
+        "category": {
+            "Gen": 1188,
+            "Multi": 349,
+            "M/M": 2034,
+            "F/F": 329,
+            "F/M": 983,
+            "Other": 172
+        },
+        "freeform": {
+            "Angst": 271,
+            "Romance": 265,
+            "Alternate Universe - Fantasy": 555,
+            "Alternate Universe - Dragons": 788,
+            "Alternate Universe": 501,
+            "Hurt/Comfort": 93,
+            "Dragons": 2872,
+            "Fantasy": 223,
+            "Magic": 437,
+            "Fluff": 358
+        },
+        "fandom": {
+            "Sherlock (TV)": 229,
+            "How to Train Your Dragon (Movies)": 151,
+            "Merlin (TV)": 153,
+            "The Hobbit - All Media Types": 177,
+            "The Hobbit (Jackson Movies)": 127,
+            "Teen Wolf (TV)": 124,
+            "The Avengers (Marvel Movies)": 143,
+            "Supernatural": 214,
+            "Harry Potter - J. K. Rowling": 231,
+            "Original Work": 223
+        },
+        "character": {
+            "John Watson": 184,
+            "Steve Rogers": 91,
+            "Bilbo Baggins": 184,
+            "Tony Stark": 124,
+            "Original Characters": 271,
+            "Original Female Character(s)": 181,
+            "Dean Winchester": 182,
+            "Smaug (Tolkien)": 145,
+            "Sam Winchester": 97,
+            "Sherlock Holmes": 212
+        },
+        "relationship": {
+            "Jensen Ackles/Jared Padalecki": 92,
+            "Jack Harkness/Ianto Jones": 67,
+            "Bilbo Baggins/Smaug": 73,
+            "Derek Hale/Stiles Stilinski": 89,
+            "Sherlock Holmes/John Watson": 109,
+            "Merlin/Arthur Pendragon (Merlin)": 66,
+            "Sherlock Holmes & John Watson": 19,
+            "Bilbo Baggins & Smaug": 21,
+            "Castiel/Dean Winchester": 122,
+            "Bilbo Baggins/Thorin Oakenshield": 62
+        },
+        "rating": {
+            "Explicit": 638,
+            "Teen And Up Audiences": 1277,
+            "Not Rated": 311,
+            "General Audiences": 1103,
+            "Mature": 669
+        },
+        "warning": {
+            "Creator Chose Not To Use Archive Warnings": 1299,
+            "Underage": 102,
+            "Graphic Depictions Of Violence": 597,
+            "Major Character Death": 231,
+            "Rape/Non-Con": 126,
+            "No Archive Warnings Apply": 2156
+        }
+    },
+    "numworks": 3997
+}

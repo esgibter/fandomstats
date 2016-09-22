@@ -1,5 +1,7 @@
 /*************************** COLORS *****************************/
 
+/*TODO rewrite rem sizes to em sizes*/
+
 a, h1 {
 	color:#900;
 }
@@ -206,8 +208,31 @@ a.more {
 #learnmore {
 	text-align: right;
 }
+
+#beta-notice {
+	width:100%;
+	background-color:turquoise;
+	color:white;
+	font-variant:small-caps;
+	text-align:center;
+	margin-bottom:1em;
+}
+
+#beta-notice a {
+	color:inherit;
+	text-decoration:underline;
+}
+
+#beta-notice a:hover {
+	color:inherit;
+}
+
 /*--------------------------- graph area */
 
+#main-graphs {
+	display:block;
+	visibility:hidden;
+}
 
 #graph-area {
 	display:none;
@@ -252,6 +277,53 @@ a.more {
 	font-size:small;
 	background-color:#eee;
 }
+
+/*------------------------------------- graphs */
+
+.number {
+    line-height: 1;
+    margin: 0.2em auto;
+    text-align: center;
+    font-size: 6em;
+    width: 4.5em;
+}
+
+.number .value {
+	color:#CC0000;
+}
+
+.number .comment {
+    font-size: 0.17em;
+}
+
+.axis path,
+	.axis line {
+		fill: none;
+		stroke: #333;
+		shape-rendering: crispEdges;
+	}
+	
+	.y.axis .tick line, .axis .domain {
+		display:none;
+	}
+	
+	.x.axis .tick line {
+		stroke:#ccc;
+		stroke-width:2;
+	}
+	
+	.x.axis text {
+		font-size:0.8em;
+		color:#ddd;
+	}
+	
+	.values {
+	}
+	
+	text {
+		font-family: "Open Sans", sans-serif;
+	}
+
 
 /*------------------------------ bookmark-viewer */
 

@@ -2,6 +2,9 @@
 {% set page_id = "homepage" %}
 {% block content %}
 	<div class="row collapse">
+		{% if beta %}
+			<div class="large-12 columns" id="beta-notice">This is a beta version of the homepage. <a href="/">Go back.</a></div>	
+		{% endif %}
 		<div class="large-6 medium-6 small-12 columns">
 			<p>
 				Welcome to Fandom Stats!
@@ -25,9 +28,16 @@
 			</ul>
 		</aside>
 	</div>
+	
 	<hr class="splitter" />
+	
 	<h3 id="api-header">Get stats for an AO3 tag</h3>
-	<form id="searchform-homepage" class="row collapse bigform searchform">
+	
+	{% if beta %}
+	<form id="searchform-beta" class="row collapse bigform searchform">
+	{% else %}
+	<form id="searchform-homepage" class="row collapse bigform searchform">	
+	{% endif %}
 		<div class="large-10 medium-9 small-12 columns">
 	          <input id="search-string" type="text" placeholder="tag name, e.g. 'Harry Potter', or 'fluff'" autocomplete="off">
     	</div>
@@ -40,16 +50,29 @@
     	</div>
     	-->
 	</form>
-	<div class="row api-results">
-		<div id="api-export" class="large-12 column">
-			<label>results as CSV:</label>
-			<textarea placeholder="" id="result-field" readonly="readonly">
-			</textarea>
-		</div>	
-	</div>
-	<div class="row collapse api-results">
-		<div id="learnmore" class="small-12 columns">
-			No pretty graphs yet, but we're working on it! In the meantime, you can learn more about <a href="ao3-tag-stats#future">our aims for the website.</a>
+	<div class="row api-results" id="main-graphs">
+		{% if beta %}
+		<div class="large-12 column" id="num-sum">
+			<!-- number of fics -->
 		</div>
+		<div class="large-12 column" id="graph-ratings">
+			<!-- graph of ratings -->
+		</div>
+		<div class="large-12 column section-intro"><h3>Categories</h3></div>
+		<div class="large-12 column" id="graph-category">
+			<!-- graph of categories -->
+		</div>
+		<div class="large-4 column" id="num-multicat">
+			
+			<!-- number of fics with 2 and more categories -->
+		</div>
+		<div class="large-12 column section-intro"><h3>Warnings</h3></div>
+		<div class="large-12 column" id="graph-warning">
+			<!-- graph of warnings -->
+		</div>
+		<div class="large-4 column" id="num-multiwarn">
+			<!-- number of fics with 2 and more warnings -->
+		</div>
+		{% endif %}		
 	</div>	
 {% endblock %}
