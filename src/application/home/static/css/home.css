@@ -260,6 +260,23 @@ a.more {
 }
 
 /*------------------------------------- graphs */
+
+.number {
+    line-height: 1;
+    margin: 0.2em auto;
+    text-align: center;
+    font-size: 6em;
+    width: 4.5em;
+}
+
+.number .value {
+	color:#CC0000;
+}
+
+.number .comment {
+    font-size: 0.17em;
+}
+
 .axis path,
 	.axis line {
 		fill: none;

@@ -4,12 +4,19 @@ FSTATS.palette = {
 	accent:"#CC0000",
 	light1: "#F0F0F0",
 };
-
+FSTATS.defaultBarHeight = 10;
+FSTATS.graphInstances = {};
+	
 FSTATS.redrawGraphs = function() {
 	console.log("resizing");
-	
-	$.each(FSTATS.Graph.instances,function() {this.redraw();});
-	
+	if (FSTATS.graphInstances !== null) {
+		$.each(FSTATS.graphInstances,function() {
+			console.log(this);
+			if (this.redraw !== undefined) {
+				this.redraw();
+			}
+		});	
+	}	
 	//https://www.safaribooksonline.com/blog/2014/02/17/building-responsible-visualizations-d3-js/
 };
 
@@ -29,53 +36,21 @@ FSTATS.redrawGraphs = function() {
 
 //######### HOOKS #########//
 
+
+
 //maybe this should be triggered when the DIVS are resized, not the whole window? That way it'd fix the problem with still-being-constructed divs.
 $(window).resize(debounce(FSTATS.redrawGraphs,250));
 
+
+
 $(document).ready(function(){
+	/*
 	$.getJSON("/home/static/js/dummy.json", function(result) {
 		console.log(result);
-		var graphs = $("#main-graphs");
-		graphs.css("visibility","visible");
-		
-		//TODO figure out where to attach the graphs... the DOM objects? the namespace? create a "registry" on the namespace???
-	
-		var categoryGraph = new FSTATS.PercentBarGraph({
-			container: $('#graph-category'),
-			data:{
-				values:result.stats.category,
-				sum:result.numworks,
-			},
-			ratio:3/9,
-		});
-		
-		categoryGraph.plot();
-		categoryGraph.redraw();
-		
-		var warningGraph = new FSTATS.PercentBarGraph({
-			container:$("#graph-warning"),
-			data: {
-				values:result.stats.warning,
-				sum:result.numworks,
-			},
-			ratio:4/9,
-		});
-		
-		warningGraph.plot();
-		warningGraph.redraw();
-		//var graphs = $("#main-graphs");
-		//graphs.css("visibility","visible");
-		
-		//var graphs = $("#main-graphs");
-		//graphs.css("visibility","visible");
-		//plotCategories(result.stats.category,result.numworks);
-    	
-});
-	
-		
-	
-	//$("#search-string").val("fluff");
-	//$(".searchform").submit();	
+	});
+	*/
+	$("#search-string").val("fluff");
+	$(".searchform").submit();	
 });
 
 
@@ -96,33 +71,94 @@ $(".searchform").submit(function(e){
 			tag_id:tag,
 		},
 		success: function(result, status, object){
+			//TODO CHANGE COLORS TO SOMETHING SANE, FOR SHIT'S SAKE!!!
 			$(".api-results").show('fast');
 			console.log(result);
 			//number of works (big number)
 			//ratings (piechart)
 			//warnings (percent bar)
 			//the rest (bar charts)
+			
 			var graphs = $("#main-graphs");
-			graphs.css("visibility","visible");
+			graphs.css("visibility","visible"); //TODO do something with this, it's leaving a huge gap where the 'hidden' divs are, this should be using display:none (but that messes up the graph plotting).
 			
-			//TODO figure out where to attach the graphs... the DOM objects? the namespace? create a "registry" on the namespace???
-		
-			var categoryGraph = new FSTATS.CategoryGraph({
-				container: $('#graph-category'),
-				data:{
-					category:result.stats.category,
+			console.log(FSTATS.graphInstances);
+			
+			if (FSTATS.graphInstances['sumOfWorks'] !== undefined) {
+				FSTATS.graphInstances['sumOfWorks'].setNumber(result.numworks);
+			} else {
+				FSTATS.graphInstances['sumOfWorks'] = new FSTATS.Number({
+					number:result.numworks,
+					color: '#3ec9ef',
+					commentBefore:'There are',
+					commentAfter:'works using the tag <em>' + tag + '</em> on AO3.',
+					container:$("#num-sum"),
+				});
+				FSTATS.graphInstances['sumOfWorks'].plot();
+			};
+			
+			
+			if (FSTATS.graphInstances['categoryGraph'] !== undefined) {
+				FSTATS.graphInstances['categoryGraph'].setData({
+						values:result.stats.category,
+						sum:result.numworks,
+						color: '#3ec9ef',
+						textColor:"#3eb7d8",
+					});	
+			} else {
+				FSTATS.graphInstances['categoryGraph'] = new FSTATS.PercentBarGraph({
+					container: $('#graph-category'),
+					data:{
+						values:result.stats.category,
+						sum:result.numworks,
+						color: '#3ec9ef',
+						textColor:"#3eb7d8",
+					},
+					ratio:3/9,
+				});
+				
+				FSTATS.graphInstances['categoryGraph'].plot();
+			}
+			FSTATS.graphInstances['categoryGraph'].redraw();
+			
+			//TODO this draws wrong - the first two columns are too high. BUT after resizing, it's okay. Maybe a problem with the height calculation?
+			//Or resizing? Maybe: set a "drawing" param, and don't let the graph resize while it's drawing.
+			if (FSTATS.graphInstances['warningGraph'] !== undefined) {
+				FSTATS.graphInstances['warningGraph'].setData({
+					values:result.stats.warning,
 					sum:result.numworks,
-				},
-				ratio:4/9,
-			});
+					color: '#3ec9ef',
+					textColor:"#3eb7d8",
+				});	
+			} else {
+				FSTATS.graphInstances['warningGraph'] = new FSTATS.PercentBarGraph({
+					container:$("#graph-warning"),
+					data: {
+						values:result.stats.warning,
+						sum:result.numworks,
+						color: '#3ec9ef',
+						textColor:"#3eb7d8",
+					},
+					ratio:4/9,
+				});
+				FSTATS.graphInstances['warningGraph'].plot();
+			}
+			FSTATS.graphInstances['warningGraph'].redraw();
 			
-			categoryGraph.plot();
+			
+			//var graphs = $("#main-graphs");
+			//graphs.css("visibility","visible");
+			//plotCategories(result.stats.category,result.numworks);
+			$('<div id="api-export" class="large-12 column"><label>results as CSV:</label><textarea placeholder="" id="result-field" readonly="readonly"></textarea></div>').appendTo(graphs);
+			FSTATS.renderCsv(result);
 			
 			$('<div id="api-export" class="large-12 column"><label>results as CSV:</label><textarea placeholder="" id="result-field" readonly="readonly"></textarea></div>').appendTo(graphs);
+			$('<div id="learnmore" class="small-12 columns">No pretty graphs yet, but we\'re working on it! In the meantime, you can learn more about <a href="ao3-tag-stats#future">our aims for the website.</a></div>').appendTo(graphs);
 			FSTATS.renderCsv(result);
 										 
 		},
 		error: function(object,exception) {
+			console.log(object);
 			$("#result-field").val("");
 			if (object.status === 0) {
 				//connection error				
@@ -167,12 +203,34 @@ FSTATS.renderCsv = function(result) {
 	$("#result-field").val(csv);	
 };
 
+FSTATS.Number = function(settings) {
+	console.log("creating a number.");
+	console.log(settings);
+	var self = this;
+	this.number = settings.number;
+	this.commentBefore = settings.commentBefore;
+	this.commentAfter = settings.commentAfter;
+	this.container = settings.container;
+	this.color = settings.color;
+	
+	this.plot = function() {
+		var div = $('<div class="number" style="color:'+self.color+'"></div>');
+		div.append('<div class="comment">'+self.commentBefore+'</div>');
+		div.append('<div class="value">'+d3.format(",")(self.number)+'</div>');
+		div.append('<div class="comment">'+self.commentAfter+'</div>');
+		div.appendTo(self.container);
+	};
+	
+	this.setNumber = function(newNumber) {
+		self.container.find('.value').html(d3.format(",")(newNumber));
+	};
+};
+
 //TODO checks for required settings!
 FSTATS.Graph = function(settings) {
-	FSTATS.Graph.instances = [];
-	FSTATS.Graph.instances.push(this);
 	this.data = settings.data;
 	
+	this.setData = settings.setData;
 	/**
 	 * Margins. Shared between all graphs for consistency sake.
 	 */
@@ -204,7 +262,11 @@ FSTATS.Graph = function(settings) {
 	this.ratio = settings.ratio;
 	
 	this.width = this.container.width() - this.margin.left - this.margin.right;
+	//console.log(this.data.values.keys().length);
+	//this.height = (FSTATS.defaultBarHeight + 4)*this.data.values.length + this.margin.top + this.margin.bottom;
+	
 	this.height = this.width*this.ratio - this.margin.top - this.margin.bottom;
+	console.log("height: "+this.height);
 };
 
 
@@ -215,33 +277,37 @@ FSTATS.PercentBarGraph = function(settings) {
 	this.parent = FSTATS.Graph;
 	this.parent.call(this,settings); //calls parent constructor
 	
-	this.values = this.data.values;
-	this.sum = this.data.sum;
 	
-	var longest = 0;
-	this.dataset = [];
-	
-	for (key in this.values) {
-		var number = this.values[key];
-	    var percent = number/this.sum;
-	    
-	    if (key.length > longest) {
-	    	longest = key.length;
-	    }    
-	    
-		item = {
-				y:key,
-				x:number,
-				percent:percent
-			};
+	this.setData = function(newData) {
+		self.values = newData.values;
+		self.sum = newData.sum;
+		self.dataset = [];
+		self.longest = 0;
 		
-		this.dataset.push(item);
+		for (key in self.values) {
+			var number = self.values[key];
+		    var percent = number/self.sum;
+		    
+		    if (key.length > self.longest) {
+		    	self.longest = key.length;
+		    }    
+		    
+			item = {
+					y:key,
+					x:number,
+					percent:percent
+				};
+			
+			self.dataset.push(item);
+		};
 	};
 	
-	var em = parseFloat(getComputedStyle(document.body).fontSize);
-	this.margin.left = longest * em * 0.9;
+	this.setData(this.data);
 	
-	if (longest > 5) {
+	var em = parseFloat(getComputedStyle(document.body).fontSize);
+	this.margin.left = self.longest * em * 0.9;
+	
+	if (self.longest > 5) {
 		this.margin.left = this.margin.left * 0.5; 
 	} else {
 		this.margin.left = this.margin.left * 0.7;
@@ -258,7 +324,9 @@ FSTATS.PercentBarGraph = function(settings) {
 		//console.log("redrawing graph!");
 		//get new size of container
 		self.width = self.container.width() - self.margin.left - self.margin.right;
+		
 		self.height = self.width*self.ratio - self.margin.top - self.margin.bottom;
+		
 		
 		self.svg.attr("width",self.width + self.margin.left + self.margin.right)
 				.attr("height",self.height + self.margin.top + self.margin.bottom);
@@ -334,7 +402,7 @@ FSTATS.PercentBarGraph = function(settings) {
 						.attr("fill", function(d) {
 							var left = self.xScale(d.x);
 							if (left < (self.width - 20)) {
-								return "#cc0000";
+								return self.data.textColor;
 							} else {
 								return "#fff";
 							}
@@ -424,11 +492,12 @@ FSTATS.PercentBarGraph = function(settings) {
 		
 		self.bars = self.graph.append("g")
 					.attr("class","bars")
-					.style("fill",FSTATS.palette.accent)
+					.style("fill",self.data.color)
 					.attr("width",self.width)
 					.attr("height",self.height)
 					.attr("transform","translate(0,0)");
 		
+		//TODO: the first rect in WarningGraph is drawn too high and partially covers the next rect. this gets fixed when redrawing.
 		var rect = self.bars.selectAll("rect")
 					.data(self.dataset)
 					.enter()
@@ -443,7 +512,7 @@ FSTATS.PercentBarGraph = function(settings) {
 						.attr("width", function(d) {
 							return 0;						
 						})
-						.attr("fill","#cc0000")
+						.attr("fill",self.data.color)
 					.transition()
 						.delay(function(d, i) { return i * 100; })
 						.duration(1000)
@@ -503,7 +572,7 @@ FSTATS.PercentBarGraph = function(settings) {
 					.attr("fill", function(d) {
 						var left = self.xScale(d.x);
 						if (left < (self.width - 20)) {
-							return "#cc0000";
+							return self.data.textColor;
 						} else {
 							return "#fff";
 						}
