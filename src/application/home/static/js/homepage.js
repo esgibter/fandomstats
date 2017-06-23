@@ -1,12 +1,28 @@
 var FSTATS = FSTATS || {}; //namespace
 FSTATS.version = '1.0.0';
+FSTATS.em = parseFloat(getComputedStyle(document.body).fontSize); //this should return font size in pixels...
 FSTATS.palette = {
 	accent:"#CC0000",
 	light1: "#F0F0F0",
 };
-FSTATS.defaultBarHeight = 10;
+FSTATS.sortFunctions = {
+	'key':function(a,b) {
+		if (a.y > b.y) {
+			return 1;
+		} else {
+			return -1;
+		}			
+	},
+	'value':function(a,b){
+		return b.x-a.x;
+	}
+}
+//FSTATS.defaultBarHeight = 10;
+FSTATS.minBarHeight = 35;
+FSTATS.maxBarHeight = 50;
 FSTATS.graphInstances = {};
-	
+
+/*
 FSTATS.redrawGraphs = function() {
 	console.log("resizing");
 	if (FSTATS.graphInstances !== null) {
@@ -19,6 +35,18 @@ FSTATS.redrawGraphs = function() {
 	}	
 	//https://www.safaribooksonline.com/blog/2014/02/17/building-responsible-visualizations-d3-js/
 };
+*/
+FSTATS.redrawGraphs = debounce(function(){
+	console.log("resizing");
+	if (FSTATS.graphInstances !== null) {
+		$.each(FSTATS.graphInstances,function() {
+			if (this.redraw !== undefined) {
+				this.redraw();
+			}
+		});	
+	}
+},250);
+
 
 
 /*~~~~ notes ~~~~
@@ -39,16 +67,11 @@ FSTATS.redrawGraphs = function() {
 
 
 //maybe this should be triggered when the DIVS are resized, not the whole window? That way it'd fix the problem with still-being-constructed divs.
-$(window).resize(debounce(FSTATS.redrawGraphs,250));
+window.addEventListener('resize', FSTATS.redrawGraphs);
 
 
 
 $(document).ready(function(){
-	/*
-	$.getJSON("/home/static/js/dummy.json", function(result) {
-		console.log(result);
-	});
-	*/
 	$("#search-string").val("fluff");
 	$(".searchform").submit();	
 });
@@ -65,15 +88,23 @@ $(".searchform").submit(function(e){
 	tagAPI.url = "/api/v1.0/stats";
 	var tag = $("#search-string").val();
 	var params = {};
+	///*TEST
+	$.ajax({
+		url:"/home/static/js/dummy.json",
+		success: function(result, status, object){
+	//*/TEST	
+	
+	/*LIVE
 	$.ajax({
 		url:tagAPI.url,
 		data:{
 			tag_id:tag,
 		},
 		success: function(result, status, object){
+			LIVE*/
 			//TODO CHANGE COLORS TO SOMETHING SANE, FOR SHIT'S SAKE!!!
 			$(".api-results").show('fast');
-			console.log(result);
+			//console.log(result);
 			//number of works (big number)
 			//ratings (piechart)
 			//warnings (percent bar)
@@ -82,8 +113,8 @@ $(".searchform").submit(function(e){
 			var graphs = $("#main-graphs");
 			graphs.css("visibility","visible"); //TODO do something with this, it's leaving a huge gap where the 'hidden' divs are, this should be using display:none (but that messes up the graph plotting).
 			
-			console.log(FSTATS.graphInstances);
-			
+			numSum = $('<div class="large-12 column graph" id="num-sum"></div>');
+			graphs.append(numSum);
 			if (FSTATS.graphInstances['sumOfWorks'] !== undefined) {
 				FSTATS.graphInstances['sumOfWorks'].setNumber(result.numworks);
 			} else {
@@ -92,11 +123,17 @@ $(".searchform").submit(function(e){
 					color: '#3ec9ef',
 					commentBefore:'There are',
 					commentAfter:'works using the tag <em>' + tag + '</em> on AO3.',
-					container:$("#num-sum"),
+					container:numSum,
 				});
 				FSTATS.graphInstances['sumOfWorks'].plot();
 			};
 			
+			//ratings = $('<div class="large-12 column" id="graph-ratings"></div>');
+			//RATING
+			
+			categories = $('<div class="large-12 column graph" id="graph-category"></div>');
+			categories.append('<h3>Categories</h3><p>Types of ships based on the genders of the participants (F = female, M = male).</p>');
+			graphs.append(categories);
 			
 			if (FSTATS.graphInstances['categoryGraph'] !== undefined) {
 				FSTATS.graphInstances['categoryGraph'].setData({
@@ -106,8 +143,9 @@ $(".searchform").submit(function(e){
 						textColor:"#3eb7d8",
 					});	
 			} else {
-				FSTATS.graphInstances['categoryGraph'] = new FSTATS.PercentBarGraph({
-					container: $('#graph-category'),
+				FSTATS.graphInstances['categoryGraph'] = new FSTATS.BarGraph({
+					type:'percentage',
+					container: categories,
 					data:{
 						values:result.stats.category,
 						sum:result.numworks,
@@ -119,10 +157,11 @@ $(".searchform").submit(function(e){
 				
 				FSTATS.graphInstances['categoryGraph'].plot();
 			}
-			FSTATS.graphInstances['categoryGraph'].redraw();
 			
-			//TODO this draws wrong - the first two columns are too high. BUT after resizing, it's okay. Maybe a problem with the height calculation?
-			//Or resizing? Maybe: set a "drawing" param, and don't let the graph resize while it's drawing.
+			warnings = $('<div class="large-12 column graph" id="graph-warning"></div>');
+			warnings.append('<h3>Warnings</h3><p>Additional content warnings set by the author.</p>');
+			graphs.append(warnings);
+			
 			if (FSTATS.graphInstances['warningGraph'] !== undefined) {
 				FSTATS.graphInstances['warningGraph'].setData({
 					values:result.stats.warning,
@@ -131,8 +170,9 @@ $(".searchform").submit(function(e){
 					textColor:"#3eb7d8",
 				});	
 			} else {
-				FSTATS.graphInstances['warningGraph'] = new FSTATS.PercentBarGraph({
-					container:$("#graph-warning"),
+				FSTATS.graphInstances['warningGraph'] = new FSTATS.BarGraph({
+					type:'percentage',
+					container:warnings,
 					data: {
 						values:result.stats.warning,
 						sum:result.numworks,
@@ -143,22 +183,119 @@ $(".searchform").submit(function(e){
 				});
 				FSTATS.graphInstances['warningGraph'].plot();
 			}
-			FSTATS.graphInstances['warningGraph'].redraw();
+			//FSTATS.graphInstances['warningGraph'].redraw();
+			
+			fandoms = $('<div class="large-12 column graph" id="graph-fandom"></div>');
+			fandoms.append('<h3>Fandoms</h3><p>First 10 most frequently appearing fandoms for this tag.</p>');
+			graphs.append(fandoms);
 			
 			
-			//var graphs = $("#main-graphs");
-			//graphs.css("visibility","visible");
-			//plotCategories(result.stats.category,result.numworks);
+			if (FSTATS.graphInstances['fandomGraph'] !== undefined) {
+				FSTATS.graphInstances['fandomGraph'].setData({
+					values:result.stats.fandom,
+					sum:result.numworks,
+					color: '#3ec9ef',
+					textColor:"#3eb7d8",
+				});	
+			} else {
+				FSTATS.graphInstances['fandomGraph'] = new FSTATS.BarGraph({
+					container:fandoms,
+					data: {
+						values:result.stats.fandom,
+						sum:result.numworks,
+						color: '#3ec9ef',
+						textColor:"#3eb7d8",
+					},
+					ratio:5/9,
+					sort:'value'
+				});
+				FSTATS.graphInstances['fandomGraph'].plot();
+			}
+			
+			relationships = $('<div class="large-12 column graph" id="graph-relationship"></div>');
+			relationships.append('<h3>Relationships</h3><p>First 10 most frequently appearing ships for this tag, both romantic (designated with a "/") and platonic (using "&").</p>');
+			graphs.append(relationships);
+			
+			if (FSTATS.graphInstances['relationshipGraph'] !== undefined) {
+				FSTATS.graphInstances['relationshipGraph'].setData({
+					values:result.stats.relationship,
+					sum:result.numworks,
+					color: '#3ec9ef',
+					textColor:"#3eb7d8",
+				});	
+			} else {
+				FSTATS.graphInstances['relationshipGraph'] = new FSTATS.BarGraph({
+					container:relationships,
+					data: {
+						values:result.stats.relationship,
+						sum:result.numworks,
+						color: '#3ec9ef',
+						textColor:"#3eb7d8",
+					},
+					ratio:5/9,
+					sort:'value'
+				});
+				FSTATS.graphInstances['relationshipGraph'].plot();
+			}
+			
+			characters = $('<div class="large-12 column graph" id="graph-character"></div>');
+			characters.append('<h3>Characters</h3><p>First 10 most frequently appearing characters for this tag.</p>');
+			graphs.append(characters);
+			
+			if (FSTATS.graphInstances['characterGraph'] !== undefined) {
+				FSTATS.graphInstances['characterGraph'].setData({
+					values:result.stats.character,
+					sum:result.numworks,
+					color: '#3ec9ef',
+					textColor:"#3eb7d8",
+				});	
+			} else {
+				FSTATS.graphInstances['characterGraph'] = new FSTATS.BarGraph({
+					container:characters,
+					data: {
+						values:result.stats.character,
+						sum:result.numworks,
+						color: '#3ec9ef',
+						textColor:"#3eb7d8",
+					},
+					ratio:5/9,
+					sort:'value'
+				});
+				FSTATS.graphInstances['characterGraph'].plot();
+			}
+			
+			freeforms = $('<div class="large-12 column graph" id="graph-freeform"></div>');
+			freeforms.append('<h3>Freeform tags</h3><p>First 10 most frequently appearing "freeform" tags (i.e. other than fandom, relationship, or character tags).</p>');
+			graphs.append(freeforms);
+			
+			if (FSTATS.graphInstances['freeformGraph'] !== undefined) {
+				FSTATS.graphInstances['freeformGraph'].setData({
+					values:result.stats.freeform,
+					sum:result.numworks,
+					color: '#3ec9ef',
+					textColor:"#3eb7d8",
+				});	
+			} else {
+				FSTATS.graphInstances['freeformGraph'] = new FSTATS.BarGraph({
+					container:freeforms,
+					data: {
+						values:result.stats.freeform,
+						sum:result.numworks,
+						color: '#3ec9ef',
+						textColor:"#3eb7d8",
+					},
+					ratio:5/9,
+					sort:'value'
+				});
+				FSTATS.graphInstances['freeformGraph'].plot();
+			}
+			
 			$('<div id="api-export" class="large-12 column"><label>results as CSV:</label><textarea placeholder="" id="result-field" readonly="readonly"></textarea></div>').appendTo(graphs);
-			FSTATS.renderCsv(result);
-			
-			$('<div id="api-export" class="large-12 column"><label>results as CSV:</label><textarea placeholder="" id="result-field" readonly="readonly"></textarea></div>').appendTo(graphs);
-			$('<div id="learnmore" class="small-12 columns">No pretty graphs yet, but we\'re working on it! In the meantime, you can learn more about <a href="ao3-tag-stats#future">our aims for the website.</a></div>').appendTo(graphs);
 			FSTATS.renderCsv(result);
 										 
 		},
 		error: function(object,exception) {
-			console.log(object);
+			//console.log(object);
 			$("#result-field").val("");
 			if (object.status === 0) {
 				//connection error				
@@ -203,9 +340,8 @@ FSTATS.renderCsv = function(result) {
 	$("#result-field").val(csv);	
 };
 
+//TODO: get all works on AO3 from the logged-out screen -- relevant github issue https://github.com/esgibter/fandomstats/issues/40
 FSTATS.Number = function(settings) {
-	console.log("creating a number.");
-	console.log(settings);
 	var self = this;
 	this.number = settings.number;
 	this.commentBefore = settings.commentBefore;
@@ -229,16 +365,57 @@ FSTATS.Number = function(settings) {
 //TODO checks for required settings!
 FSTATS.Graph = function(settings) {
 	this.data = settings.data;
+	var self = this;
 	
-	this.setData = settings.setData;
+	if (undefined == settings.sort) {
+		this.sortFunction = FSTATS.sortFunctions['key'];
+	} else {
+		this.sortFunction = FSTATS.sortFunctions[settings.sort];
+	}
+	
+	
+	this.setData = function(newData) {
+		self.values = newData.values;
+		self.sum = newData.sum;
+		self.dataset = [];
+		self.longest = 0;
+		self.max = 0;
+		
+		for (key in self.values) {
+			var number = self.values[key];
+		    var percent = number/self.sum;
+		    
+		    //find longest label (needed to size the left margin)
+		    if (key.length > self.longest) {
+		    	self.longest = key.length;
+		    }  
+		    
+		    //find the largest value (needed for absolute graphs)
+		    if (number > self.max) {
+		    	self.max = number;
+		    }  
+		    
+			item = {
+					y:key,
+					x:number,
+					percent:percent
+				};
+			
+			self.dataset.push(item);
+		};
+		
+		//alphabetize the results. TODO maybe have an option to force a specific order?
+		self.dataset.sort(self.sortFunction);
+	};
+	
 	/**
 	 * Margins. Shared between all graphs for consistency sake.
 	 */
 	this.margin = {
-		top:50,
+		top:10,
 		left:50,
 		right:50,
-		bottom:50,
+		bottom:10,
 	};
 	
 	/**
@@ -261,183 +438,75 @@ FSTATS.Graph = function(settings) {
 	 */
 	this.ratio = settings.ratio;
 	
+	
+	
 	this.width = this.container.width() - this.margin.left - this.margin.right;
-	//console.log(this.data.values.keys().length);
 	//this.height = (FSTATS.defaultBarHeight + 4)*this.data.values.length + this.margin.top + this.margin.bottom;
 	
-	this.height = this.width*this.ratio - this.margin.top - this.margin.bottom;
-	console.log("height: "+this.height);
+	var height = this.width*this.ratio - this.margin.top - this.margin.bottom;
+	var numberOfBars = Object.keys(this.data).length;
+	
+	if (height > numberOfBars * FSTATS.maxBarHeight) { //too thick
+		this.height = numberOfBars*FSTATS.maxBarHeight;
+	} else if (height > numberOfBars * FSTATS.minBarHeight) { //too thin
+		this.height = numberOfBars*FSTATS.minBarHeight;
+	} else { //just right
+		this.height =  height;
+	}
+		
 };
 
-
-
-//TODO make this a general "grey percentage bars" class
-FSTATS.PercentBarGraph = function(settings) {
+FSTATS.BarGraph = function(settings) {
 	var self = this;
 	this.parent = FSTATS.Graph;
 	this.parent.call(this,settings); //calls parent constructor
-	
-	
-	this.setData = function(newData) {
-		self.values = newData.values;
-		self.sum = newData.sum;
-		self.dataset = [];
-		self.longest = 0;
-		
-		for (key in self.values) {
-			var number = self.values[key];
-		    var percent = number/self.sum;
-		    
-		    if (key.length > self.longest) {
-		    	self.longest = key.length;
-		    }    
-		    
-			item = {
-					y:key,
-					x:number,
-					percent:percent
-				};
-			
-			self.dataset.push(item);
-		};
-	};
+	if (settings.type == undefined) {
+		this.type = 'absolute';	
+	} else {
+		this.type = settings.type;
+	}
 	
 	this.setData(this.data);
 	
-	var em = parseFloat(getComputedStyle(document.body).fontSize);
-	this.margin.left = self.longest * em * 0.9;
-	
-	if (self.longest > 5) {
-		this.margin.left = this.margin.left * 0.5; 
-	} else {
-		this.margin.left = this.margin.left * 0.7;
-	}
-	 //Most characters are actually narrower than em, so this somehow fixes that.
-	
 	//set left margin according to the number of characters in the label
-	
+	var origMargin = this.margin.left;
+	if (self.longest > 5) {
+		this.margin.left = self.longest * FSTATS.em * 0.5; 
+	} else {
+		this.margin.left = self.longest * FSTATS.em * 0.7;
+	}
+	//Most characters are actually narrower than em, so this somehow fixes that.
+	this.width = this.width - (this.margin.left - origMargin); //fix to keep the svg width correct!
 	
 	this.labelFontSize = 0.9;
 	this.percentsFontSize = 0.8;
 	
-	this.redraw = function() {
-		//console.log("redrawing graph!");
-		//get new size of container
-		self.width = self.container.width() - self.margin.left - self.margin.right;
-		
-		self.height = self.width*self.ratio - self.margin.top - self.margin.bottom;
-		
-		
-		self.svg.attr("width",self.width + self.margin.left + self.margin.right)
-				.attr("height",self.height + self.margin.top + self.margin.bottom);
-		
-		self.xScale.range([0,self.width]);
-		self.yScale.rangeRound([0,self.height]);
-		
-		
-		
-		self.graph.select(".y.axis")
-					.transition()
-						.duration(300)
-						.attr("transform","translate(0,0)")
-						.call(self.yAxis);
-		
-		self.slots.selectAll("rect")
-					.transition()
-					.duration(300)
-						.attr("y", function(d) {
-							return self.yScale(d.y);
-						})
-						.attr("height", self.yScale.bandwidth())
-						.attr("width", function(d) {
-							return self.xScale(self.data.sum);
-						});
-						
-		self.bars.selectAll("rect")
-					.transition() //resize heights (simultaneously with the slots)
-						.duration(300) 
-						.attr("y", function(d) {
-							return self.yScale(d.y);
-						})
-						.attr("height", self.yScale.bandwidth())
-					.transition() //resize widths (slower)
-						.duration(1000)
-						.delay(function(d, i) { return i * 100; })
-						.attr("width", function(d){
-							//console.log("=========");
-							//console.log(d);
-							return self.xScale(d.x);
-						});
-					
-		self.percents.selectAll("text")
-					.transition()
-						.duration(300)
-						.attr("x",function (d) {
-							return self.width + 5;
-						})
-						.attr("y",function(d) {
-							return self.yScale(d.y) + self.yScale.bandwidth()/2;
-						})
-						.attr("height",self.yScale.bandwidth());
-						
-				
-		//.attr("font-size", "0.8em");
-		//change font size?
-		
-		self.ficCounts.selectAll("text")
-					.transition()
-						.duration(1000)
-						.attr("x",function (d) {
-							var left = self.xScale(d.x);
-							if (left < (self.width - 20)) {
-								return self.xScale(d.x) + 5;
-							} else {
-								return self.xScale(d.x) - 5;
-							}					
-						})
-						.attr("y",function(d) {
-							return self.yScale(d.y) + self.yScale.bandwidth()/2;
-						})
-						.attr("height",self.yScale.bandwidth())
-						.attr("fill", function(d) {
-							var left = self.xScale(d.x);
-							if (left < (self.width - 20)) {
-								return self.data.textColor;
-							} else {
-								return "#fff";
-							}
-						})
-						.attr("text-anchor",function(d) {
-							var left = self.xScale(d.x);
-							if (left < (self.width - 20)) {
-								return "start";
-							} else {
-								return "end";
-							}
-						});
-							 			
-		
-		
-		//should I edit things for cases where the width is too small?
-		
-		//redraw data (animate)
-	};
-	
 	this.plot = function() {
+		
+		var svgWidth = self.width + self.margin.left + self.margin.right;
 		
 		self.svg = d3.select(self.container[0]) //self.container is a JQuery object, this is how we get the DOM element out of it. TODO Maybe do it the other way round and pass a DOM element?
 				.append("svg")
 				.attr("class","has-graph")
-				.attr("width",self.width + self.margin.left + self.margin.right)
+				.attr("width",svgWidth)
 				.attr("height",self.height + self.margin.top + self.margin.bottom);
 		self.graph = self.svg.append("g")
 					.attr("transform","translate(" + self.margin.left + ", "+ self.margin.top +")");	
 		
 		// =================== defining scales and axes
 		
-		self.xScale = d3.scaleLinear()
+		self.ficCountLabelPadding = this.labelFontSize*FSTATS.em * 4;
+		
+		if ('percentage' == self.type) {
+			self.xScale = d3.scaleLinear()
 				.domain([0,self.data.sum])
-				.range([0,self.width]);
+				.range([0,self.width]);	
+		} else {
+			self.xScale = d3.scaleLinear()
+				.domain([0,self.max])
+				.range([0,self.width - self.ficCountLabelPadding]);	
+		}
+		
 				
 		self.xAxis = d3.axisBottom(self.xScale);
 					
@@ -466,29 +535,31 @@ FSTATS.PercentBarGraph = function(settings) {
 					
 		//================= plotting the values
 	
-		//TODO decide what needs to be a param and what can stay a variable???
-		self.slots = self.graph.append("g")
-					.attr("class","slots")
-					.style("fill",FSTATS.palette.light1);
-					
-		slotRects = self.slots.selectAll("rect")
-					.data(self.dataset)
-					.enter()
-					.append("rect")
-					.attr("x", function(d) {
-						return self.xScale(0);
-					})
-					.attr("y", function(d) {
-						//console.log("=========");
-						//console.log(d);
-						//console.log(self.yScale(d.y));
-						return self.yScale(d.y);
-					})
-					.attr("height", self.yScale.bandwidth())
-					.attr("width", function(d) {
-						return self.xScale(self.data.sum);
-					})
-					.attr("fill","#f0f0f0"); //TODO ??????
+		if ('percentage'== self.type) {
+			self.slots = self.graph.append("g")
+						.attr("class","slots")
+						.style("fill",FSTATS.palette.light1);
+						
+			slotRects = self.slots.selectAll("rect")
+						.data(self.dataset)
+						.enter()
+						.append("rect")
+						.attr("x", function(d) {
+							return self.xScale(0);
+						})
+						.attr("y", function(d) {
+							//console.log("=========");
+							//console.log(d);
+							//console.log(self.yScale(d.y));
+							return self.yScale(d.y);
+						})
+						.attr("height", self.yScale.bandwidth())
+						.attr("width", function(d) {
+							return self.xScale(self.data.sum);
+						})
+						.attr("fill","#f0f0f0"); //TODO ??????	
+		}
+		
 		
 		self.bars = self.graph.append("g")
 					.attr("class","bars")
@@ -510,7 +581,7 @@ FSTATS.PercentBarGraph = function(settings) {
 						})
 						.attr("height", self.yScale.bandwidth())
 						.attr("width", function(d) {
-							return 0;						
+							return 0; //animate from 0 to width						
 						})
 						.attr("fill",self.data.color)
 					.transition()
@@ -523,27 +594,29 @@ FSTATS.PercentBarGraph = function(settings) {
 						})
 					;
 					
-				
-		self.percents = self.graph.append("g")
-					.attr("class","percents");
+		if ('percentage' == self.type) {
+			self.percents = self.graph.append("g")
+						.attr("class","percents");
+			
+			var percentLabels = self.percents.selectAll("text")
+						.data(self.dataset)
+						.enter()
+						.append("text")
+						.attr("x",function (d) {
+							return self.width + 5;
+						})
+						.attr("y",function(d) {
+							return self.yScale(d.y) + self.yScale.bandwidth()/2;
+						})
+						.attr("dy","0.35em")
+						.attr("height",self.yScale.bandwidth())
+						.text(function(d) {
+							return d3.format(">.0%")(d.percent);					
+						})
+						.attr("font-size", self.percentsFontSize + 'em')
+						.attr("fill","#999");	
+		} 		
 		
-		var percentLabels = self.percents.selectAll("text")
-					.data(self.dataset)
-					.enter()
-					.append("text")
-					.attr("x",function (d) {
-						return self.width + 5;
-					})
-					.attr("y",function(d) {
-						return self.yScale(d.y) + self.yScale.bandwidth()/2;
-					})
-					.attr("dy","0.35em")
-					.attr("height",self.yScale.bandwidth())
-					.text(function(d) {
-						return d3.format(">.0%")(d.percent);					
-					})
-					.attr("font-size", self.percentsFontSize + 'em')
-					.attr("fill","#999");
 		
 		self.ficCounts = self.graph.append("g")
 					.attr("class","fic-counts");
@@ -553,12 +626,7 @@ FSTATS.PercentBarGraph = function(settings) {
 					.enter()
 					.append("text")
 					.attr("x",function (d) {
-						var left = self.xScale(d.x);
-						if (left < (self.width - 20)) {
-							return self.xScale(d.x) + 5;
-						} else {
-							return self.xScale(d.x) - 5;
-						}					
+						return self.xScale(d.x) + 5;											
 					})
 					.attr("y",function(d) {
 						return self.yScale(d.y) + self.yScale.bandwidth()/2;
@@ -569,38 +637,171 @@ FSTATS.PercentBarGraph = function(settings) {
 					.text(function(d) {
 						return d3.format(",")(d.x);
 					})
-					.attr("fill", function(d) {
+					.attr("fill",self.data.textColor)
+					.attr("text-anchor","start");	
+					
+				
+			if ('percentage' == self.type) {
+				countLabels.attr("x",function (d) {
 						var left = self.xScale(d.x);
-						if (left < (self.width - 20)) {
-							return self.data.textColor;
+						if (left < (self.width - self.ficCountLabelPadding)) {
+							return left + 5;
 						} else {
-							return "#fff";
+							return left - 5;
 						}
-					})
-					.attr("text-anchor",function(d) {
-						var left = self.xScale(d.x);
-						if (left < (self.width - 20)) {
-							return "start";
-						} else {
-							return "end";
-						}
-					});	
+											
+						})
+						.attr("fill", function(d) {
+							var left = self.xScale(d.x);
+							if (left < (self.width - self.ficCountLabelPadding)) {
+								return self.data.textColor;
+							} else {
+								return "#fff";
+							}
+						})
+						.attr("text-anchor",function(d) {
+							var left = self.xScale(d.x);
+							if (left < (self.width - self.ficCountLabelPadding)) {
+								return "start";
+							} else {
+								return "end";
+							}
+						});
+			}
+			
 	};
-	//additional constructor shit	
+	//additional constructor shit
+	
+	this.redraw = function() {
+		//console.log("redrawing graph!");
+		//get new size of container
+		self.width = self.container.width() - self.margin.left - self.margin.right;
+		
+		var newHeight = self.width*self.ratio - self.margin.top - self.margin.bottom;
+		if (newHeight >= self.dataset.length*FSTATS.minBarHeight) {
+			self.height = newHeight;
+		} //no noodles!
+		
+		self.svg.attr("width",self.width + self.margin.left + self.margin.right)
+				.attr("height",self.height + self.margin.top + self.margin.bottom);
+		
+		
+		if ('percentage' == self.type) {
+			self.xScale.range([0,self.width]);	
+		} else {
+			self.xScale.range([0,self.width - self.ficCountLabelPadding]);	
+		}
+		
+		
+		
+		self.yScale.rangeRound([0,self.height]);
+		
+		
+		
+		self.graph.select(".y.axis")
+					.transition()
+						.duration(300)
+						.attr("transform","translate(0,0)")
+						.call(self.yAxis);
+		
+		self.bars.selectAll("rect")
+					.transition() //resize heights (simultaneously with the slots)
+						.duration(300) 
+						.attr("y", function(d) {
+							return self.yScale(d.y);
+						})
+						.attr("height", self.yScale.bandwidth())
+					.transition() //resize widths (slower)
+						.duration(1000)
+						.delay(function(d, i) { return i * 100; })
+						.attr("width", function(d){
+							//console.log("=========");
+							//console.log(d);
+							return self.xScale(d.x);
+						});
+					
+		
+						
+				
+		//.attr("font-size", "0.8em");
+		//change font size?
+		
+		self.ficCounts.selectAll("text")
+					.transition()
+						.duration(1000)
+						.attr("x",function (d) {
+							return self.xScale(d.x) + 5;				
+						})
+						.attr("y",function(d) {
+							return self.yScale(d.y) + self.yScale.bandwidth()/2;
+						})
+						.attr("height",self.yScale.bandwidth());					
+		
+		
+		if ('percentage' == self.type) {
+			self.slots.selectAll("rect")
+						.transition()
+						.duration(300)
+							.attr("y", function(d) {
+								return self.yScale(d.y);
+							})
+							.attr("height", self.yScale.bandwidth())
+							.attr("width", function(d) {
+								return self.xScale(self.data.sum);
+							});
+							
+			self.percents.selectAll("text")
+					.transition()
+						.duration(300)
+						.attr("x",function (d) {
+							return self.width + 5;
+						})
+						.attr("y",function(d) {
+							return self.yScale(d.y) + self.yScale.bandwidth()/2;
+						})
+						.attr("height",self.yScale.bandwidth());
+			
+			self.ficCounts.selectAll("text")
+					.transition()
+						.duration(1000)
+						.attr("x",function (d) {
+							var left = self.xScale(d.x);
+							if (left < (self.width - self.ficCountLabelPadding)) {
+								return self.xScale(d.x) + 5;
+							} else {
+								return self.xScale(d.x) - 5;
+							}					
+						})
+						.attr("y",function(d) {
+							return self.yScale(d.y) + self.yScale.bandwidth()/2;
+						})
+						.attr("height",self.yScale.bandwidth())
+						.attr("fill", function(d) {
+							var left = self.xScale(d.x);
+							if (left < (self.width - self.ficCountLabelPadding)) {
+								return self.data.textColor;
+							} else {
+								return "#fff";
+							}
+						})
+						.attr("text-anchor",function(d) {
+							var left = self.xScale(d.x);
+							if (left < (self.width - 20)) {
+								return "start";
+							} else {
+								return "end";
+							}
+						});
+			}					 			
+			
+		//should I edit things for cases where the width is too small?
+		
+		//redraw data (animate)
+	};	
 };
 
-FSTATS.PercentBarGraph.prototype = Object.create(FSTATS.Graph.prototype); //inheritance
-FSTATS.PercentBarGraph.prototype.constructor = FSTATS.PercentGraph; //sets the constructor to the right function
-
-
-
-function numWorks() {
-	//TODO: big number of works (potentially: get all works on AO3 from the logged-out screen -- relevant github issue https://github.com/esgibter/fandomstats/issues/40)
-}
-
-
-
-
+FSTATS.BarGraph.prototype = Object.create(FSTATS.Graph.prototype); //inheritance
+FSTATS.BarGraph.prototype.constructor = FSTATS.BarGraph; //sets the constructor to the right function
 
 //--------------- UTILITIES --------------------//
 
@@ -632,4 +833,10 @@ function debounce(func, wait, immediate) {
 };
 //thx to David Walsh (https://davidwalsh.name/javascript-debounce-function), for not making me write my own debounce fn!
 
-
+if(!Object.keys) Object.keys = function(o){
+ if (o !== Object(o))
+      throw new TypeError('Object.keys called on non-object');
+ var ret=[],p;
+ for(p in o) if(Object.prototype.hasOwnProperty.call(o,p)) ret.push(p);
+ return ret;
+}//https://stackoverflow.com/a/6723633/1494766
