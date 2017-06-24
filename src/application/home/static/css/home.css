@@ -263,7 +263,7 @@ a.more {
 svg {
 	padding:0;
 	margin:0;
-	border:1px solid #eee;
+	/*border:1px solid #eee;*/
 }
 
 .number {

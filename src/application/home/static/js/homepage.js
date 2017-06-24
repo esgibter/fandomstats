@@ -4,7 +4,14 @@ FSTATS.em = parseFloat(getComputedStyle(document.body).fontSize); //this should 
 FSTATS.palette = {
 	accent:"#CC0000",
 	light1: "#F0F0F0",
+	bland:"#B38D87",
 };
+FSTATS.fontSizes = {
+	'medium label': 0.9,
+	'small label': 0.8,
+	'large label': 1.5,
+}
+
 FSTATS.sortFunctions = {
 	'key':function(a,b) {
 		if (a.y > b.y) {
@@ -120,7 +127,7 @@ $(".searchform").submit(function(e){
 			} else {
 				FSTATS.graphInstances['sumOfWorks'] = new FSTATS.Number({
 					number:result.numworks,
-					color: '#3ec9ef',
+					color: FSTATS.palette.accent,
 					commentBefore:'There are',
 					commentAfter:'works using the tag <em>' + tag + '</em> on AO3.',
 					container:numSum,
@@ -128,8 +135,50 @@ $(".searchform").submit(function(e){
 				FSTATS.graphInstances['sumOfWorks'].plot();
 			};
 			
-			//ratings = $('<div class="large-12 column" id="graph-ratings"></div>');
-			//RATING
+			ratings = $('<div class="large-12 column graph" id="graph-ratings"></div>');
+			ratings.append('<h3>Ratings</h3>');
+			graphs.append(ratings);
+			
+			FSTATS.graphInstances['ratingsGraph'] = new FSTATS.PieChart({
+				container:ratings,
+				data: {
+					values:[
+						{
+							"x":result.stats.rating["General Audiences"],
+							"y":'G',
+							"description":'General Audiences',
+							"color":'#99D012',						
+						},
+						{
+							"x":result.stats.rating["Teen And Up Audiences"],
+							"y":'T',
+							"description":'Teen And Up Audiences',
+							"color":'#F1E024',						
+						},
+						{
+							"x":result.stats.rating["Mature"],
+							"y":'M',
+							"description":'Mature',
+							"color":'#F39325',						
+						},
+						{
+							"x":result.stats.rating["Explicit"],
+							"y":'E',
+							"description":'Explicit',
+							"color":'#AB0606',						
+						},
+						{
+							"x":result.stats.rating["Not Rated"],
+							"y":'N',
+							"description":'Not Rated',
+							"color":'#CECECC',						
+						},
+					],
+					sum:result.numworks,					
+				},
+				ratio:1/2,
+			})
+			FSTATS.graphInstances['ratingsGraph'].plot();
 			
 			categories = $('<div class="large-12 column graph" id="graph-category"></div>');
 			categories.append('<h3>Categories</h3><p>Types of ships based on the genders of the participants (F = female, M = male).</p>');
@@ -139,8 +188,6 @@ $(".searchform").submit(function(e){
 				FSTATS.graphInstances['categoryGraph'].setData({
 						values:result.stats.category,
 						sum:result.numworks,
-						color: '#3ec9ef',
-						textColor:"#3eb7d8",
 					});	
 			} else {
 				FSTATS.graphInstances['categoryGraph'] = new FSTATS.BarGraph({
@@ -149,8 +196,8 @@ $(".searchform").submit(function(e){
 					data:{
 						values:result.stats.category,
 						sum:result.numworks,
-						color: '#3ec9ef',
-						textColor:"#3eb7d8",
+						color: FSTATS.palette.bland,
+						textColor:FSTATS.palette.bland,
 					},
 					ratio:3/9,
 				});
@@ -166,8 +213,6 @@ $(".searchform").submit(function(e){
 				FSTATS.graphInstances['warningGraph'].setData({
 					values:result.stats.warning,
 					sum:result.numworks,
-					color: '#3ec9ef',
-					textColor:"#3eb7d8",
 				});	
 			} else {
 				FSTATS.graphInstances['warningGraph'] = new FSTATS.BarGraph({
@@ -176,8 +221,8 @@ $(".searchform").submit(function(e){
 					data: {
 						values:result.stats.warning,
 						sum:result.numworks,
-						color: '#3ec9ef',
-						textColor:"#3eb7d8",
+						color: FSTATS.palette.bland,
+						textColor:FSTATS.palette.bland,
 					},
 					ratio:4/9,
 				});
@@ -194,8 +239,6 @@ $(".searchform").submit(function(e){
 				FSTATS.graphInstances['fandomGraph'].setData({
 					values:result.stats.fandom,
 					sum:result.numworks,
-					color: '#3ec9ef',
-					textColor:"#3eb7d8",
 				});	
 			} else {
 				FSTATS.graphInstances['fandomGraph'] = new FSTATS.BarGraph({
@@ -203,8 +246,8 @@ $(".searchform").submit(function(e){
 					data: {
 						values:result.stats.fandom,
 						sum:result.numworks,
-						color: '#3ec9ef',
-						textColor:"#3eb7d8",
+						color: FSTATS.palette.bland,
+						textColor:FSTATS.palette.bland,
 					},
 					ratio:5/9,
 					sort:'value'
@@ -220,8 +263,6 @@ $(".searchform").submit(function(e){
 				FSTATS.graphInstances['relationshipGraph'].setData({
 					values:result.stats.relationship,
 					sum:result.numworks,
-					color: '#3ec9ef',
-					textColor:"#3eb7d8",
 				});	
 			} else {
 				FSTATS.graphInstances['relationshipGraph'] = new FSTATS.BarGraph({
@@ -229,8 +270,8 @@ $(".searchform").submit(function(e){
 					data: {
 						values:result.stats.relationship,
 						sum:result.numworks,
-						color: '#3ec9ef',
-						textColor:"#3eb7d8",
+						color: FSTATS.palette.bland,
+						textColor:FSTATS.palette.bland,
 					},
 					ratio:5/9,
 					sort:'value'
@@ -246,8 +287,6 @@ $(".searchform").submit(function(e){
 				FSTATS.graphInstances['characterGraph'].setData({
 					values:result.stats.character,
 					sum:result.numworks,
-					color: '#3ec9ef',
-					textColor:"#3eb7d8",
 				});	
 			} else {
 				FSTATS.graphInstances['characterGraph'] = new FSTATS.BarGraph({
@@ -255,8 +294,8 @@ $(".searchform").submit(function(e){
 					data: {
 						values:result.stats.character,
 						sum:result.numworks,
-						color: '#3ec9ef',
-						textColor:"#3eb7d8",
+						color: FSTATS.palette.bland,
+						textColor:FSTATS.palette.bland,
 					},
 					ratio:5/9,
 					sort:'value'
@@ -272,8 +311,6 @@ $(".searchform").submit(function(e){
 				FSTATS.graphInstances['freeformGraph'].setData({
 					values:result.stats.freeform,
 					sum:result.numworks,
-					color: '#3ec9ef',
-					textColor:"#3eb7d8",
 				});	
 			} else {
 				FSTATS.graphInstances['freeformGraph'] = new FSTATS.BarGraph({
@@ -281,8 +318,8 @@ $(".searchform").submit(function(e){
 					data: {
 						values:result.stats.freeform,
 						sum:result.numworks,
-						color: '#3ec9ef',
-						textColor:"#3eb7d8",
+						color: FSTATS.palette.bland,
+						textColor:FSTATS.palette.bland,
 					},
 					ratio:5/9,
 					sort:'value'
@@ -436,24 +473,7 @@ FSTATS.Graph = function(settings) {
 	/**
 	 * A decimal number. (I personally write them as fractions when setting them, it's easier to read IMO.)
 	 */
-	this.ratio = settings.ratio;
-	
-	
-	
-	this.width = this.container.width() - this.margin.left - this.margin.right;
-	//this.height = (FSTATS.defaultBarHeight + 4)*this.data.values.length + this.margin.top + this.margin.bottom;
-	
-	var height = this.width*this.ratio - this.margin.top - this.margin.bottom;
-	var numberOfBars = Object.keys(this.data).length;
-	
-	if (height > numberOfBars * FSTATS.maxBarHeight) { //too thick
-		this.height = numberOfBars*FSTATS.maxBarHeight;
-	} else if (height > numberOfBars * FSTATS.minBarHeight) { //too thin
-		this.height = numberOfBars*FSTATS.minBarHeight;
-	} else { //just right
-		this.height =  height;
-	}
-		
+	this.ratio = settings.ratio;		
 };
 
 FSTATS.BarGraph = function(settings) {
@@ -468,18 +488,25 @@ FSTATS.BarGraph = function(settings) {
 	
 	this.setData(this.data);
 	
-	//set left margin according to the number of characters in the label
-	var origMargin = this.margin.left;
+	//set width & height
 	if (self.longest > 5) {
 		this.margin.left = self.longest * FSTATS.em * 0.5; 
 	} else {
 		this.margin.left = self.longest * FSTATS.em * 0.7;
 	}
-	//Most characters are actually narrower than em, so this somehow fixes that.
-	this.width = this.width - (this.margin.left - origMargin); //fix to keep the svg width correct!
+	this.width = this.container.width() - this.margin.left - this.margin.right;
+	//this.height = (FSTATS.defaultBarHeight + 4)*this.data.values.length + this.margin.top + this.margin.bottom;
 	
-	this.labelFontSize = 0.9;
-	this.percentsFontSize = 0.8;
+	var height = this.width*this.ratio - this.margin.top - this.margin.bottom;
+	var numberOfBars = Object.keys(this.data).length;
+	
+	if (height > numberOfBars * FSTATS.maxBarHeight) { //too thick
+		this.height = numberOfBars*FSTATS.maxBarHeight;
+	} else if (height > numberOfBars * FSTATS.minBarHeight) { //too thin
+		this.height = numberOfBars*FSTATS.minBarHeight;
+	} else { //just right
+		this.height =  height;
+	}
 	
 	this.plot = function() {
 		
@@ -495,7 +522,7 @@ FSTATS.BarGraph = function(settings) {
 		
 		// =================== defining scales and axes
 		
-		self.ficCountLabelPadding = this.labelFontSize*FSTATS.em * 4;
+		self.ficCountLabelPadding = FSTATS.fontSizes["medium label"]*FSTATS.em * 4;
 		
 		if ('percentage' == self.type) {
 			self.xScale = d3.scaleLinear()
@@ -526,7 +553,7 @@ FSTATS.BarGraph = function(settings) {
 					.attr("class","y axis")
 					.attr("transform","translate(0,0)")
 					.call(self.yAxis)
-					.attr("font-size",self.labelFontSize + 'em')
+					.attr("font-size",FSTATS.fontSizes["medium label"] + 'em')
 					.attr("fill","#333");
 					
 		
@@ -568,7 +595,6 @@ FSTATS.BarGraph = function(settings) {
 					.attr("height",self.height)
 					.attr("transform","translate(0,0)");
 		
-		//TODO: the first rect in WarningGraph is drawn too high and partially covers the next rect. this gets fixed when redrawing.
 		var rect = self.bars.selectAll("rect")
 					.data(self.dataset)
 					.enter()
@@ -613,7 +639,7 @@ FSTATS.BarGraph = function(settings) {
 						.text(function(d) {
 							return d3.format(">.0%")(d.percent);					
 						})
-						.attr("font-size", self.percentsFontSize + 'em')
+						.attr("font-size", FSTATS.fontSizes["small label"] + 'em')
 						.attr("fill","#999");	
 		} 		
 		
@@ -632,7 +658,7 @@ FSTATS.BarGraph = function(settings) {
 						return self.yScale(d.y) + self.yScale.bandwidth()/2;
 					})
 					.attr("dy","0.35em")
-					.attr("font-size",self.labelFontSize + 'em')
+					.attr("font-size",FSTATS.fontSizes["medium label"] + 'em')
 					.attr("height",self.yScale.bandwidth())
 					.text(function(d) {
 						return d3.format(",")(d.x);
@@ -802,6 +828,176 @@ FSTATS.BarGraph = function(settings) {
 
 FSTATS.BarGraph.prototype = Object.create(FSTATS.Graph.prototype); //inheritance
 FSTATS.BarGraph.prototype.constructor = FSTATS.BarGraph; //sets the constructor to the right function
+
+
+FSTATS.PieChart = function(settings) {
+	var self = this;
+	this.parent = FSTATS.Graph;
+	this.parent.call(this,settings); //calls parent constructor
+	
+	
+	var parentSetData = this.setData;
+	this.setData = function(newData) {
+		if (Array.isArray(newData.values)) {
+			self.sum = newData.sum;
+			self.dataset = newData.values;
+		} else {
+			self.parentSetData(newData);
+		}
+	}
+	this.setData(settings.data);
+	
+	
+	this.width = this.container.width() - this.margin.left - this.margin.right;
+	this.height = this.width*this.ratio - this.margin.top - this.margin.bottom;
+	
+	this.plot = function() {
+		var svgWidth = self.width + self.margin.left + self.margin.right;
+		var svgHeight = self.height + self.margin.top + self.margin.bottom;
+		
+		var labelPadding = FSTATS.em * 2;
+		
+		self.radius = Math.min((self.width-2*labelPadding)/2, (self.height-2*labelPadding)) / 2;
+		
+		self.svg = d3.select(self.container[0]) //self.container is a JQuery object, this is how we get the DOM element out of it. TODO Maybe do it the other way round and pass a DOM element?
+				.append("svg")
+				.attr("class","has-graph")
+				.attr("width",svgWidth)
+				.attr("height",svgHeight);
+		self.graph = self.svg.append("g")
+					.attr("transform","translate(" + self.margin.left + ", "+ self.margin.top +")");	
+					
+		self.pieGraph = self.graph.append("g")
+					.attr('transform', 'translate(' + (self.radius + labelPadding) +  ',' + (self.height / 2) + ')');
+					
+		//default colors (if not defined in settings)
+		var color = d3.scaleOrdinal(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+		
+		/*
+		self.yScale = d3.scaleBand()
+					.domain(self.dataset.map(function(d) {return d.y;}))
+					.rangeRound([0,self.height]) //I'm not "flipping" the axis here, because I want the bars to start at top
+					.padding(0.05);
+		*/
+		self.pie = d3.pie()
+					.sort(null)
+					.value(function(d) {return d.x; });
+		
+		self.arc = d3.arc()
+					.innerRadius(0)
+					.outerRadius(self.radius);
+		
+		self.ficCountsArc = d3.arc()
+					.innerRadius(self.radius + FSTATS.em)
+					.outerRadius(self.radius + FSTATS.em);
+					
+		self.labelsArc = d3.arc()
+					.innerRadius(self.radius/2)
+					.outerRadius(self.radius/2);
+					
+					
+					
+		self.pieChart = self.pieGraph.selectAll('path')
+					.data(self.pie(self.dataset))
+					.enter()
+					.append('path')
+					.attr('d',self.arc)
+					.attr('fill',function(d){
+						if (undefined == d.data.color) {
+							return color(d.data.y);
+						} else {
+							return d.data.color;
+						}
+										
+					})
+					
+		self.ficCounts = self.pieGraph.append("g")
+						.attr("class","ficCounts");
+		
+		self.ficCountTexts = self.ficCounts.selectAll('text')
+					.data(self.pie(self.dataset))
+					.enter()
+					.append('text')
+					.attr('transform', function(d) {
+						return "translate(" + self.ficCountsArc.centroid(d) + ")";
+					})
+					.attr("dy","0.35em")
+					.text(function(d) {
+						return d.data.x;
+					})
+					.attr("font-size", FSTATS.fontSizes['small label'] + 'em')
+					.attr("fill","#999")
+					.attr("text-anchor",'middle');
+		
+		/*
+		self.labels = self.pieGraph.append("g")
+						.attr("class","labels");
+						
+		self.labelsTexts = self.labels.selectAll('text')
+					.data(self.pie(self.dataset))
+					.enter()
+					.append('text')
+					.attr('transform', function(d) {
+						return "translate(" + self.labelsArc.centroid(d) + ")";
+					})
+					.attr("dy","0.35em")
+					.text(function(d) {
+						return d.data.y;
+					})
+					.attr("font-size", FSTATS.fontSizes['large label'] + 'em')
+					.attr("fill","#fff")
+					.attr("text-anchor",'middle');
+		*/
+					
+		self.legend = self.graph.append("g")
+						.attr("class","legend")
+						.attr("transform","translate(" + (labelPadding*2 + self.radius*2 + labelPadding) + ", "+ (labelPadding*2) +")");
+						
+					
+		self.legendSamples = self.legend.selectAll('rect')
+					.data(self.dataset)
+					.enter()
+					.append('rect')
+					.attr('x',0)
+					.attr('y',function(d,i) {
+						return i*(FSTATS.em + FSTATS.em*0.5);
+					})
+					.attr('width',FSTATS.em)
+					.attr('height',FSTATS.em)
+					.attr('fill',function(d){
+						if (undefined == d.color) {
+							return color(d.y);
+						} else {
+							return d.color;
+						}
+					});				
+					
+			
+		self.legendLabels = self.legend.selectAll("text")
+						.data(self.dataset)
+						.enter()
+						.append("text")
+						.attr("x",FSTATS.em+FSTATS.em*0.5)
+						.attr("y",function(d,i) {
+							return i*(FSTATS.em + FSTATS.em*0.5) + FSTATS.em*0.5; //i-th box from the top (half em padding) and center 
+						})
+						.attr("dy","0.35em")
+						.attr("height",FSTATS.em)
+						.text(function(d) {
+							return d.description;					
+						})
+						.attr("font-size", FSTATS.fontSizes["small label"] + 'em')
+						.attr("fill","#999");	
+	}
+	
+	this.redraw = function() {
+		
+	}
+ }
+
+FSTATS.PieChart.prototype = Object.create(FSTATS.Graph.prototype); //inheritance
+FSTATS.PieChart.prototype.constructor = FSTATS.PieChart; //sets the constructor to the right function
+
 
 //--------------- UTILITIES --------------------//
 
