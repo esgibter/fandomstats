@@ -1,16 +1,21 @@
 var FSTATS = FSTATS || {}; //namespace
 FSTATS.version = '1.0.0';
 FSTATS.em = parseFloat(getComputedStyle(document.body).fontSize); //this should return font size in pixels...
+
 FSTATS.palette = {
 	accent:"#CC0000",
 	light1: "#F0F0F0",
 	bland:"#B38D87",
 };
+
+FSTATS.maxRadius = 150;
+
+
 FSTATS.fontSizes = {
 	'medium label': 0.9,
 	'small label': 0.8,
-	'large label': 1.5,
-}
+	'large label': 1.5
+};
 
 FSTATS.sortFunctions = {
 	'key':function(a,b) {
@@ -18,12 +23,20 @@ FSTATS.sortFunctions = {
 			return 1;
 		} else {
 			return -1;
-		}			
+		}		
 	},
 	'value':function(a,b){
 		return b.x-a.x;
 	}
-}
+};
+
+FSTATS.defaultMargin = {
+		top:10,
+		left:10,
+		right:50,
+		bottom:10,
+	};
+
 //FSTATS.defaultBarHeight = 10;
 FSTATS.minBarHeight = 35;
 FSTATS.maxBarHeight = 50;
@@ -99,7 +112,7 @@ $(".searchform").submit(function(e){
 	$.ajax({
 		url:"/home/static/js/dummy.json",
 		success: function(result, status, object){
-	//*/TEST	
+	//TEST*/	
 	
 	/*LIVE
 	$.ajax({
@@ -134,10 +147,10 @@ $(".searchform").submit(function(e){
 				});
 				FSTATS.graphInstances['sumOfWorks'].plot();
 			};
-			
 			ratings = $('<div class="large-12 column graph" id="graph-ratings"></div>');
 			ratings.append('<h3>Ratings</h3>');
 			graphs.append(ratings);
+			
 			
 			FSTATS.graphInstances['ratingsGraph'] = new FSTATS.PieChart({
 				container:ratings,
@@ -176,8 +189,7 @@ $(".searchform").submit(function(e){
 					],
 					sum:result.numworks,					
 				},
-				ratio:1/2,
-			})
+			});
 			FSTATS.graphInstances['ratingsGraph'].plot();
 			
 			categories = $('<div class="large-12 column graph" id="graph-category"></div>');
@@ -189,6 +201,7 @@ $(".searchform").submit(function(e){
 						values:result.stats.category,
 						sum:result.numworks,
 					});	
+				FSTATS.graphInstances['categoryGraph'].redraw();
 			} else {
 				FSTATS.graphInstances['categoryGraph'] = new FSTATS.BarGraph({
 					type:'percentage',
@@ -213,7 +226,8 @@ $(".searchform").submit(function(e){
 				FSTATS.graphInstances['warningGraph'].setData({
 					values:result.stats.warning,
 					sum:result.numworks,
-				});	
+				});
+				FSTATS.graphInstances['warningGraph'].redraw();	
 			} else {
 				FSTATS.graphInstances['warningGraph'] = new FSTATS.BarGraph({
 					type:'percentage',
@@ -228,7 +242,7 @@ $(".searchform").submit(function(e){
 				});
 				FSTATS.graphInstances['warningGraph'].plot();
 			}
-			//FSTATS.graphInstances['warningGraph'].redraw();
+			
 			
 			fandoms = $('<div class="large-12 column graph" id="graph-fandom"></div>');
 			fandoms.append('<h3>Fandoms</h3><p>First 10 most frequently appearing fandoms for this tag.</p>');
@@ -240,6 +254,7 @@ $(".searchform").submit(function(e){
 					values:result.stats.fandom,
 					sum:result.numworks,
 				});	
+				FSTATS.graphInstances['fandomGraph'].redraw();
 			} else {
 				FSTATS.graphInstances['fandomGraph'] = new FSTATS.BarGraph({
 					container:fandoms,
@@ -263,7 +278,8 @@ $(".searchform").submit(function(e){
 				FSTATS.graphInstances['relationshipGraph'].setData({
 					values:result.stats.relationship,
 					sum:result.numworks,
-				});	
+				});
+				FSTATS.graphInstances['relationshipGraph'].redraw();	
 			} else {
 				FSTATS.graphInstances['relationshipGraph'] = new FSTATS.BarGraph({
 					container:relationships,
@@ -288,6 +304,7 @@ $(".searchform").submit(function(e){
 					values:result.stats.character,
 					sum:result.numworks,
 				});	
+				FSTATS.graphInstances['characterGraph'].redraw();
 			} else {
 				FSTATS.graphInstances['characterGraph'] = new FSTATS.BarGraph({
 					container:characters,
@@ -311,7 +328,8 @@ $(".searchform").submit(function(e){
 				FSTATS.graphInstances['freeformGraph'].setData({
 					values:result.stats.freeform,
 					sum:result.numworks,
-				});	
+				});
+				FSTATS.graphInstances['freeformGraph'].redraw();	
 			} else {
 				FSTATS.graphInstances['freeformGraph'] = new FSTATS.BarGraph({
 					container:freeforms,
@@ -424,7 +442,7 @@ FSTATS.Graph = function(settings) {
 		    
 		    //find longest label (needed to size the left margin)
 		    if (key.length > self.longest) {
-		    	self.longest = key.length;
+		    	self.longest = key;
 		    }  
 		    
 		    //find the largest value (needed for absolute graphs)
@@ -448,12 +466,8 @@ FSTATS.Graph = function(settings) {
 	/**
 	 * Margins. Shared between all graphs for consistency sake.
 	 */
-	this.margin = {
-		top:10,
-		left:50,
-		right:50,
-		bottom:10,
-	};
+	this.margin =  JSON.parse(JSON.stringify(FSTATS.defaultMargin)); //hack to clone, not add reference to the original object
+	
 	
 	/**
 	 * Method that redraws the graph.
@@ -464,6 +478,29 @@ FSTATS.Graph = function(settings) {
 	 * Method that plots the graph.
 	 */
 	this.plot = settings.plot;	
+	
+	/**
+	 * Get the width of the widest text in a dataset - used to calculate margins on bar graphs.
+	 */
+	this.getTextWidth = function(svg, dataset) {
+		var maxTextWidth = 0;
+		
+		svg.append('g')
+		    .selectAll('.dummyText')
+		    .data(dataset)
+		    .enter()
+		    .append("text")
+		    .attr("font-size",FSTATS.fontSizes["medium label"] + 'em')
+			.text(function(d) { return d.y})
+		    .each(function(d,i) {
+		        var thisWidth = this.getComputedTextLength();
+		        if (thisWidth > maxTextWidth) {
+		        	maxTextWidth = thisWidth;
+		        }
+		        this.remove() // remove them just after displaying them
+		    });
+		return maxTextWidth;
+	}
 	
 	/**
 	 * Div that contains the graph. (JQuery object) 
@@ -487,38 +524,37 @@ FSTATS.BarGraph = function(settings) {
 	}
 	
 	this.setData(this.data);
-	
-	//set width & height
-	if (self.longest > 5) {
-		this.margin.left = self.longest * FSTATS.em * 0.5; 
-	} else {
-		this.margin.left = self.longest * FSTATS.em * 0.7;
-	}
-	this.width = this.container.width() - this.margin.left - this.margin.right;
-	//this.height = (FSTATS.defaultBarHeight + 4)*this.data.values.length + this.margin.top + this.margin.bottom;
-	
-	var height = this.width*this.ratio - this.margin.top - this.margin.bottom;
-	var numberOfBars = Object.keys(this.data).length;
-	
-	if (height > numberOfBars * FSTATS.maxBarHeight) { //too thick
-		this.height = numberOfBars*FSTATS.maxBarHeight;
-	} else if (height > numberOfBars * FSTATS.minBarHeight) { //too thin
-		this.height = numberOfBars*FSTATS.minBarHeight;
-	} else { //just right
-		this.height =  height;
-	}
-	
+
 	this.plot = function() {
+		console.log("---------------------");
+		var svgWidth = this.container.width();
+		this.width = this.container.width() - this.margin.left - this.margin.right;
 		
-		var svgWidth = self.width + self.margin.left + self.margin.right;
+		var height = this.width*this.ratio - this.margin.top - this.margin.bottom;
+		var numberOfBars = Object.keys(this.data).length;
+		
+		if (height > numberOfBars * FSTATS.maxBarHeight) { //too thick
+			this.height = numberOfBars*FSTATS.maxBarHeight;
+		} else if (height > numberOfBars * FSTATS.minBarHeight) { //too thin
+			this.height = numberOfBars*FSTATS.minBarHeight;
+		} else { //just right
+			this.height =  height;
+		}
+		
+		var svgHeight = self.height + self.margin.top + self.margin.bottom;
 		
 		self.svg = d3.select(self.container[0]) //self.container is a JQuery object, this is how we get the DOM element out of it. TODO Maybe do it the other way round and pass a DOM element?
 				.append("svg")
 				.attr("class","has-graph")
 				.attr("width",svgWidth)
-				.attr("height",self.height + self.margin.top + self.margin.bottom);
+				.attr("height",svgHeight);
+				
+		var maxTextWidth = self.getTextWidth(self.svg,self.dataset);
+		self.margin.left = self.margin.left + maxTextWidth;
+		self.width = self.width - maxTextWidth;
+		
 		self.graph = self.svg.append("g")
-					.attr("transform","translate(" + self.margin.left + ", "+ self.margin.top +")");	
+					.attr("transform","translate(" + (self.margin.left) + ", "+ self.margin.top +")");	
 		
 		// =================== defining scales and axes
 		
@@ -719,7 +755,7 @@ FSTATS.BarGraph = function(settings) {
 		}
 		
 		
-		
+		//TODO if redrawing with new data I need to update the yScale!!!
 		self.yScale.rangeRound([0,self.height]);
 		
 		
@@ -844,20 +880,28 @@ FSTATS.PieChart = function(settings) {
 		} else {
 			self.parentSetData(newData);
 		}
-	}
+	};
 	this.setData(settings.data);
 	
-	
-	this.width = this.container.width() - this.margin.left - this.margin.right;
-	this.height = this.width*this.ratio - this.margin.top - this.margin.bottom;
-	
 	this.plot = function() {
+		self.width = self.container.width() - self.margin.left - self.margin.right;
+		self.height = self.width*2/3;
+	
+		self.labelPadding = FSTATS.em * 2;
+		self.radius = (self.height-2*self.labelPadding)/2;
+		//limit the radius (the leftover goes into padding)
+		if (self.radius > FSTATS.maxRadius) {
+			var leftover = self.radius - FSTATS.maxRadius;
+			self.margin.left = self.margin.left + leftover;
+			self.width = self.width - leftover;
+			self.radius = FSTATS.maxRadius;
+			self.height = (self.radius + self.labelPadding)*2; //so there isn't empty space at the bottom
+		}
+		
 		var svgWidth = self.width + self.margin.left + self.margin.right;
 		var svgHeight = self.height + self.margin.top + self.margin.bottom;
 		
-		var labelPadding = FSTATS.em * 2;
-		
-		self.radius = Math.min((self.width-2*labelPadding)/2, (self.height-2*labelPadding)) / 2;
+		console.log("svgWidth: " + svgWidth + ", svgHeight: "+ svgHeight);
 		
 		self.svg = d3.select(self.container[0]) //self.container is a JQuery object, this is how we get the DOM element out of it. TODO Maybe do it the other way round and pass a DOM element?
 				.append("svg")
@@ -868,7 +912,7 @@ FSTATS.PieChart = function(settings) {
 					.attr("transform","translate(" + self.margin.left + ", "+ self.margin.top +")");	
 					
 		self.pieGraph = self.graph.append("g")
-					.attr('transform', 'translate(' + (self.radius + labelPadding) +  ',' + (self.height / 2) + ')');
+					.attr('transform', 'translate(' + (self.radius + self.labelPadding) +  ',' + (self.radius + self.labelPadding) + ')');
 					
 		//default colors (if not defined in settings)
 		var color = d3.scaleOrdinal(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
@@ -891,12 +935,6 @@ FSTATS.PieChart = function(settings) {
 					.innerRadius(self.radius + FSTATS.em)
 					.outerRadius(self.radius + FSTATS.em);
 					
-		self.labelsArc = d3.arc()
-					.innerRadius(self.radius/2)
-					.outerRadius(self.radius/2);
-					
-					
-					
 		self.pieChart = self.pieGraph.selectAll('path')
 					.data(self.pie(self.dataset))
 					.enter()
@@ -909,7 +947,7 @@ FSTATS.PieChart = function(settings) {
 							return d.data.color;
 						}
 										
-					})
+					});
 					
 		self.ficCounts = self.pieGraph.append("g")
 						.attr("class","ficCounts");
@@ -929,29 +967,9 @@ FSTATS.PieChart = function(settings) {
 					.attr("fill","#999")
 					.attr("text-anchor",'middle');
 		
-		/*
-		self.labels = self.pieGraph.append("g")
-						.attr("class","labels");
-						
-		self.labelsTexts = self.labels.selectAll('text')
-					.data(self.pie(self.dataset))
-					.enter()
-					.append('text')
-					.attr('transform', function(d) {
-						return "translate(" + self.labelsArc.centroid(d) + ")";
-					})
-					.attr("dy","0.35em")
-					.text(function(d) {
-						return d.data.y;
-					})
-					.attr("font-size", FSTATS.fontSizes['large label'] + 'em')
-					.attr("fill","#fff")
-					.attr("text-anchor",'middle');
-		*/
-					
 		self.legend = self.graph.append("g")
 						.attr("class","legend")
-						.attr("transform","translate(" + (labelPadding*2 + self.radius*2 + labelPadding) + ", "+ (labelPadding*2) +")");
+						.attr("transform","translate(" + (self.labelPadding*2 + self.radius*2 + self.labelPadding) + ", "+ (self.labelPadding*2) +")");
 						
 					
 		self.legendSamples = self.legend.selectAll('rect')
@@ -988,12 +1006,68 @@ FSTATS.PieChart = function(settings) {
 						})
 						.attr("font-size", FSTATS.fontSizes["small label"] + 'em')
 						.attr("fill","#999");	
-	}
+	};
 	
 	this.redraw = function() {
 		
-	}
- }
+		//reset left margin
+		self.margin.left = FSTATS.defaultMargin.left;
+		
+		//update width from DOM
+		self.width = self.container.width() - self.margin.left - self.margin.right;
+		self.height = self.width*2/3;
+		
+		//recalculate radius
+		self.radius = (self.height-2*self.labelPadding)/2;
+		if (self.radius > FSTATS.maxRadius) {
+			var leftover = self.radius - FSTATS.maxRadius;
+			self.margin.left = self.margin.left + leftover;
+			self.width = self.width - leftover;
+			self.radius = FSTATS.maxRadius;
+		};
+		
+		var svgWidth = self.width + self.margin.left + self.margin.right;
+		var svgHeight = self.height + self.margin.top + self.margin.bottom;
+		
+		self.svg.attr("width",svgWidth)
+				.attr("height",svgHeight);
+				
+		//left margin might have been updated
+		self.graph.attr("transform","translate(" + self.margin.left + ", "+ self.margin.top +")");	
+		
+		//radius definitely updated
+		self.pieGraph.attr('transform', 'translate(' + (self.radius + self.labelPadding) +  ',' + (self.radius + self.labelPadding) + ')');
+		
+		self.arc = d3.arc()
+					.innerRadius(0)
+					.outerRadius(self.radius);
+		
+		self.ficCountsArc = d3.arc()
+					.innerRadius(self.radius + FSTATS.em)
+					.outerRadius(self.radius + FSTATS.em);
+					
+		
+		
+		self.pieGraph.selectAll('path')
+					.transition()
+						.duration(300)
+						.attr('d',self.arc);
+						
+		self.ficCounts.selectAll("text")
+					.transition()
+						.duration(1000)
+						.attr('transform', function(d) {
+							return "translate(" + self.ficCountsArc.centroid(d) + ")";
+						})
+						.text(function(d) {
+							return d.data.x;
+						});
+		
+		self.legend.attr("transform","translate(" + (self.labelPadding*2 + self.radius*2 + self.labelPadding) + ", "+ (self.labelPadding*2) +")");					
+	};
+	
+ };
+ 
 
 FSTATS.PieChart.prototype = Object.create(FSTATS.Graph.prototype); //inheritance
 FSTATS.PieChart.prototype.constructor = FSTATS.PieChart; //sets the constructor to the right function
@@ -1035,4 +1109,4 @@ if(!Object.keys) Object.keys = function(o){
  var ret=[],p;
  for(p in o) if(Object.prototype.hasOwnProperty.call(o,p)) ret.push(p);
  return ret;
-}//https://stackoverflow.com/a/6723633/1494766
+};//https://stackoverflow.com/a/6723633/1494766
