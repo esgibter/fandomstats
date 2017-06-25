@@ -144,9 +144,13 @@ $(".searchform").submit(function(e){
 			var graphs = $("#main-graphs");
 			graphs.css("visibility","visible"); //TODO do something with this, it's leaving a huge gap where the 'hidden' divs are, this should be using display:none (but that messes up the graph plotting).
 			
-			/* NUMBER OF FICS
-			numSum = $('<div class="large-12 column graph" id="num-sum"></div>');
-			graphs.append(numSum);
+			//* NUMBER OF FICS
+			var numSum = $("#num-sum");
+			if (0 == numSum.length) {
+				numSum = $('<div class="large-12 column graph" id="num-sum"></div>');
+				graphs.append(numSum);	
+			}
+			
 			if (FSTATS.graphInstances['sumOfWorks'] !== undefined) {
 				FSTATS.graphInstances['sumOfWorks'].update({
 					number:result.numworks,
@@ -171,13 +175,16 @@ $(".searchform").submit(function(e){
 				});
 				FSTATS.graphInstances['sumOfWorks'].plot();
 			};
-			NUMBER OF FICS*/
+			//NUMBER OF FICS*/
 			
 			
-			/*RATINGS
-			ratings = $('<div class="large-12 column graph" id="graph-ratings"></div>');
-			ratings.append('<h3>Ratings</h3>');
-			graphs.append(ratings);
+			//*RATINGS
+			var ratings = $("#graph-ratings");
+			if (0 == ratings.length) {
+				ratings = $('<div class="large-12 column graph" id="graph-ratings"></div>');
+				ratings.append('<h3>Ratings</h3>');
+				graphs.append(ratings);	
+			}
 			
 			if (FSTATS.graphInstances['ratingsGraph'] !== undefined) {
 				FSTATS.graphInstances['ratingsGraph'].setData({
@@ -257,13 +264,16 @@ $(".searchform").submit(function(e){
 				});
 				FSTATS.graphInstances['ratingsGraph'].plot();
 			}
-			RATINGS*/
+			//RATINGS*/
 			
 			
 			///*CATEGORIES
-			categories = $('<div class="large-12 column graph" id="graph-category"></div>');
-			categories.append('<h3>Categories</h3><p>Types of ships based on the genders of the participants (F = female, M = male).</p>');
-			graphs.append(categories);
+			var categories = $("#graph-category");
+			if (0 == categories.length) {
+				categories = $('<div class="large-12 column graph" id="graph-category"></div>');
+				categories.append('<h3>Categories</h3><p>Types of ships based on the genders of the participants (F = female, M = male).</p>');
+				graphs.append(categories);
+			}
 			
 			if (FSTATS.graphInstances['categoryGraph'] !== undefined) {
 				FSTATS.graphInstances['categoryGraph'].setData({
@@ -288,11 +298,13 @@ $(".searchform").submit(function(e){
 			}
 			//CATEGORIES*/
 			
-			/*WARNINGS
-			warnings = $('<div class="large-12 column graph" id="graph-warning"></div>');
-			warnings.append('<h3>Warnings</h3><p>Additional content warnings set by the author.</p>');
-			graphs.append(warnings);
-			
+			///*WARNINGS
+			var warnings = $("#graph-warning");
+			if (0 == warnings.length) {
+				warnings = $('<div class="large-12 column graph" id="graph-warning"></div>');
+				warnings.append('<h3>Warnings</h3><p>Additional content warnings set by the author.</p>');
+				graphs.append(warnings);
+			}
 			if (FSTATS.graphInstances['warningGraph'] !== undefined) {
 				FSTATS.graphInstances['warningGraph'].setData({
 					values:result.stats.warning,
@@ -313,13 +325,15 @@ $(".searchform").submit(function(e){
 				});
 				FSTATS.graphInstances['warningGraph'].plot();
 			}
-			WARNINGS*/
+			//WARNINGS*/
 			
-			/*FANDOMS
-			fandoms = $('<div class="large-12 column graph" id="graph-fandom"></div>');
-			fandoms.append('<h3>Fandoms</h3><p>First 10 most frequently appearing fandoms for this tag.</p>');
-			graphs.append(fandoms);
-			
+			///*FANDOMS
+			var fandoms = $("#graph-fandom");
+			if (0 == fandoms.length) {
+				fandoms = $('<div class="large-12 column graph" id="graph-fandom"></div>');
+				fandoms.append('<h3>Fandoms</h3><p>First 10 most frequently appearing fandoms for this tag.</p>');
+				graphs.append(fandoms);
+			}
 			
 			if (FSTATS.graphInstances['fandomGraph'] !== undefined) {
 				FSTATS.graphInstances['fandomGraph'].setData({
@@ -341,12 +355,15 @@ $(".searchform").submit(function(e){
 				});
 				FSTATS.graphInstances['fandomGraph'].plot();
 			}
-			FANDOMS*/
+			//FANDOMS*/
 			
-			/*RELATIONSHIPS
-			relationships = $('<div class="large-12 column graph" id="graph-relationship"></div>');
-			relationships.append('<h3>Relationships</h3><p>First 10 most frequently appearing ships for this tag, both romantic (designated with a "/") and platonic (using "&").</p>');
-			graphs.append(relationships);
+			///*RELATIONSHIPS
+			var relationships = $("#graph-relationship"); 
+			if (0 == relationships.length) {
+				relationships = $('<div class="large-12 column graph" id="graph-relationship"></div>');
+				relationships.append('<h3>Relationships</h3><p>First 10 most frequently appearing ships for this tag, both romantic (designated with a "/") and platonic (using "&").</p>');
+				graphs.append(relationships);
+			}
 			
 			if (FSTATS.graphInstances['relationshipGraph'] !== undefined) {
 				FSTATS.graphInstances['relationshipGraph'].setData({
@@ -368,12 +385,15 @@ $(".searchform").submit(function(e){
 				});
 				FSTATS.graphInstances['relationshipGraph'].plot();
 			}
-			RELATIONSHIPS*/
+			//RELATIONSHIPS*/
 			
-			/*CHARACTERS
-			characters = $('<div class="large-12 column graph" id="graph-character"></div>');
-			characters.append('<h3>Characters</h3><p>First 10 most frequently appearing characters for this tag.</p>');
-			graphs.append(characters);
+			///*CHARACTERS
+			var characters = $("#graph-character")
+			if (0 == characters.length) {
+				characters = $('<div class="large-12 column graph" id="graph-character"></div>');
+				characters.append('<h3>Characters</h3><p>First 10 most frequently appearing characters for this tag.</p>');
+				graphs.append(characters);
+			}
 			
 			if (FSTATS.graphInstances['characterGraph'] !== undefined) {
 				FSTATS.graphInstances['characterGraph'].setData({
@@ -395,12 +415,15 @@ $(".searchform").submit(function(e){
 				});
 				FSTATS.graphInstances['characterGraph'].plot();
 			}
-			CHARACTERS*/
+			//CHARACTERS*/
 			
-			/*FREEFORM TAGS
-			freeforms = $('<div class="large-12 column graph" id="graph-freeform"></div>');
-			freeforms.append('<h3>Freeform tags</h3><p>First 10 most frequently appearing "freeform" tags (i.e. other than fandom, relationship, or character tags).</p>');
-			graphs.append(freeforms);
+			///*FREEFORM TAGS
+			var freeforms = $("#graph-freeform");
+			if (0 == freeforms.length) {
+				freeforms = $('<div class="large-12 column graph" id="graph-freeform"></div>');
+				freeforms.append('<h3>Freeform tags</h3><p>First 10 most frequently appearing "freeform" tags (i.e. other than fandom, relationship, or character tags).</p>');
+				graphs.append(freeforms);
+			}
 			
 			if (FSTATS.graphInstances['freeformGraph'] !== undefined) {
 				FSTATS.graphInstances['freeformGraph'].setData({
@@ -422,10 +445,15 @@ $(".searchform").submit(function(e){
 				});
 				FSTATS.graphInstances['freeformGraph'].plot();
 			}
-			FREEFORM TAGS*/
+			//FREEFORM TAGS*/
 			
-			$('<div id="api-export" class="large-12 column"><label>results as CSV:</label><textarea placeholder="" id="result-field" readonly="readonly"></textarea></div>').appendTo(graphs);
-			FSTATS.renderCsv(result);
+			var csvField = $("#api-export");
+			if (0 == csvField.length) {
+				csvField = $('<div id="api-export" class="large-12 column"><label>results as CSV:</label><textarea placeholder="" id="result-field" readonly="readonly"></textarea></div>');
+				csvField.appendTo(graphs);
+			}
+			
+			FSTATS.renderCsv(result,csvField);
 										 
 		},
 		error: function(object,exception) {
@@ -462,7 +490,7 @@ $(".searchform").submit(function(e){
 
 
 
-FSTATS.renderCsv = function(result) {
+FSTATS.renderCsv = function(result,container) {
 	var csv = '';
 	csv += "total number of works in tag, "+result.numworks+"\n";
 	$.each(result.stats, function(index,data) {
@@ -471,7 +499,7 @@ FSTATS.renderCsv = function(result) {
 		csv += commaConcat(result.stats[index]);
 	});			
 	
-	$("#result-field").val(csv);	
+	container.find("#result-field").val(csv);	
 };
 
 //TODO: get all works on AO3 from the logged-out screen -- relevant github issue https://github.com/esgibter/fandomstats/issues/40
@@ -562,7 +590,7 @@ FSTATS.Graph = function(settings) {
 		    }  
 		    
 			item = {
-					y:key,
+					y:decodeHtml(key),
 					x:number,
 					percent:percent
 				};
@@ -1192,6 +1220,7 @@ FSTATS.PieChart = function(settings) {
 			self.margin.left = self.margin.left + leftover;
 			self.width = self.width - leftover;
 			self.radius = FSTATS.maxRadius;
+			self.height = (self.radius + self.labelPadding)*2; //so there isn't empty space at the bottom
 		};
 		
 		var svgWidth = self.width + self.margin.left + self.margin.right;
@@ -1261,6 +1290,12 @@ FSTATS.PieChart.prototype.constructor = FSTATS.PieChart; //sets the constructor 
 
 
 //--------------- UTILITIES --------------------//
+function decodeHtml(html) {
+    var txt = document.createElement("textarea");
+    txt.innerHTML = html;
+    return txt.value;
+}
+//https://stackoverflow.com/a/7394787/1494766
 
 function commaConcat(obj) {
 	var string = "";
