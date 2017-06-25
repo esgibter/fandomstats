@@ -65,7 +65,7 @@ FSTATS.redrawGraphs = function() {
 };
 */
 FSTATS.redrawGraphs = debounce(function(){
-	console.log("resizing");
+	//console.log("resizing");
 	if (FSTATS.graphInstances !== null) {
 		$.each(FSTATS.graphInstances,function() {
 			if (this.redraw !== undefined) {
@@ -138,9 +138,13 @@ $(".searchform").submit(function(e){
 			//warnings (percent bar)
 			//the rest (bar charts)
 			
+			console.log("#####");
+			console.log("DRAWING GRAPHS");
+			
 			var graphs = $("#main-graphs");
 			graphs.css("visibility","visible"); //TODO do something with this, it's leaving a huge gap where the 'hidden' divs are, this should be using display:none (but that messes up the graph plotting).
 			
+			/* NUMBER OF FICS
 			numSum = $('<div class="large-12 column graph" id="num-sum"></div>');
 			graphs.append(numSum);
 			if (FSTATS.graphInstances['sumOfWorks'] !== undefined) {
@@ -167,51 +171,96 @@ $(".searchform").submit(function(e){
 				});
 				FSTATS.graphInstances['sumOfWorks'].plot();
 			};
+			NUMBER OF FICS*/
+			
+			
+			/*RATINGS
 			ratings = $('<div class="large-12 column graph" id="graph-ratings"></div>');
 			ratings.append('<h3>Ratings</h3>');
 			graphs.append(ratings);
 			
+			if (FSTATS.graphInstances['ratingsGraph'] !== undefined) {
+				FSTATS.graphInstances['ratingsGraph'].setData({
+						values:[
+							{
+								"x":result.stats.rating["General Audiences"],
+								"y":'G',
+								"description":'General Audiences',
+								"color":'#99D012',						
+							},
+							{
+								"x":result.stats.rating["Teen And Up Audiences"],
+								"y":'T',
+								"description":'Teen And Up Audiences',
+								"color":'#F1E024',						
+							},
+							{
+								"x":result.stats.rating["Mature"],
+								"y":'M',
+								"description":'Mature',
+								"color":'#F39325',						
+							},
+							{
+								"x":result.stats.rating["Explicit"],
+								"y":'E',
+								"description":'Explicit',
+								"color":'#AB0606',						
+							},
+							{
+								"x":result.stats.rating["Not Rated"],
+								"y":'N',
+								"description":'Not Rated',
+								"color":'#CECECC',						
+							},
+						],
+						sum:result.numworks,
+					});	
+				FSTATS.graphInstances['ratingsGraph'].redraw();
+			} else {
+				FSTATS.graphInstances['ratingsGraph'] = new FSTATS.PieChart({
+					container:ratings,
+					data: {
+						values:[
+							{
+								"x":result.stats.rating["General Audiences"],
+								"y":'G',
+								"description":'General Audiences',
+								"color":'#99D012',						
+							},
+							{
+								"x":result.stats.rating["Teen And Up Audiences"],
+								"y":'T',
+								"description":'Teen And Up Audiences',
+								"color":'#F1E024',						
+							},
+							{
+								"x":result.stats.rating["Mature"],
+								"y":'M',
+								"description":'Mature',
+								"color":'#F39325',						
+							},
+							{
+								"x":result.stats.rating["Explicit"],
+								"y":'E',
+								"description":'Explicit',
+								"color":'#AB0606',						
+							},
+							{
+								"x":result.stats.rating["Not Rated"],
+								"y":'N',
+								"description":'Not Rated',
+								"color":'#CECECC',						
+							},
+						],
+						sum:result.numworks,					
+					},
+				});
+				FSTATS.graphInstances['ratingsGraph'].plot();
+			}
+			RATINGS*/
 			
-			FSTATS.graphInstances['ratingsGraph'] = new FSTATS.PieChart({
-				container:ratings,
-				data: {
-					values:[
-						{
-							"x":result.stats.rating["General Audiences"],
-							"y":'G',
-							"description":'General Audiences',
-							"color":'#99D012',						
-						},
-						{
-							"x":result.stats.rating["Teen And Up Audiences"],
-							"y":'T',
-							"description":'Teen And Up Audiences',
-							"color":'#F1E024',						
-						},
-						{
-							"x":result.stats.rating["Mature"],
-							"y":'M',
-							"description":'Mature',
-							"color":'#F39325',						
-						},
-						{
-							"x":result.stats.rating["Explicit"],
-							"y":'E',
-							"description":'Explicit',
-							"color":'#AB0606',						
-						},
-						{
-							"x":result.stats.rating["Not Rated"],
-							"y":'N',
-							"description":'Not Rated',
-							"color":'#CECECC',						
-						},
-					],
-					sum:result.numworks,					
-				},
-			});
-			FSTATS.graphInstances['ratingsGraph'].plot();
 			
+			///*CATEGORIES
 			categories = $('<div class="large-12 column graph" id="graph-category"></div>');
 			categories.append('<h3>Categories</h3><p>Types of ships based on the genders of the participants (F = female, M = male).</p>');
 			graphs.append(categories);
@@ -237,7 +286,9 @@ $(".searchform").submit(function(e){
 				
 				FSTATS.graphInstances['categoryGraph'].plot();
 			}
+			//CATEGORIES*/
 			
+			/*WARNINGS
 			warnings = $('<div class="large-12 column graph" id="graph-warning"></div>');
 			warnings.append('<h3>Warnings</h3><p>Additional content warnings set by the author.</p>');
 			graphs.append(warnings);
@@ -262,8 +313,9 @@ $(".searchform").submit(function(e){
 				});
 				FSTATS.graphInstances['warningGraph'].plot();
 			}
+			WARNINGS*/
 			
-			
+			/*FANDOMS
 			fandoms = $('<div class="large-12 column graph" id="graph-fandom"></div>');
 			fandoms.append('<h3>Fandoms</h3><p>First 10 most frequently appearing fandoms for this tag.</p>');
 			graphs.append(fandoms);
@@ -289,7 +341,9 @@ $(".searchform").submit(function(e){
 				});
 				FSTATS.graphInstances['fandomGraph'].plot();
 			}
+			FANDOMS*/
 			
+			/*RELATIONSHIPS
 			relationships = $('<div class="large-12 column graph" id="graph-relationship"></div>');
 			relationships.append('<h3>Relationships</h3><p>First 10 most frequently appearing ships for this tag, both romantic (designated with a "/") and platonic (using "&").</p>');
 			graphs.append(relationships);
@@ -314,7 +368,9 @@ $(".searchform").submit(function(e){
 				});
 				FSTATS.graphInstances['relationshipGraph'].plot();
 			}
+			RELATIONSHIPS*/
 			
+			/*CHARACTERS
 			characters = $('<div class="large-12 column graph" id="graph-character"></div>');
 			characters.append('<h3>Characters</h3><p>First 10 most frequently appearing characters for this tag.</p>');
 			graphs.append(characters);
@@ -339,7 +395,9 @@ $(".searchform").submit(function(e){
 				});
 				FSTATS.graphInstances['characterGraph'].plot();
 			}
+			CHARACTERS*/
 			
+			/*FREEFORM TAGS
 			freeforms = $('<div class="large-12 column graph" id="graph-freeform"></div>');
 			freeforms.append('<h3>Freeform tags</h3><p>First 10 most frequently appearing "freeform" tags (i.e. other than fandom, relationship, or character tags).</p>');
 			graphs.append(freeforms);
@@ -364,6 +422,7 @@ $(".searchform").submit(function(e){
 				});
 				FSTATS.graphInstances['freeformGraph'].plot();
 			}
+			FREEFORM TAGS*/
 			
 			$('<div id="api-export" class="large-12 column"><label>results as CSV:</label><textarea placeholder="" id="result-field" readonly="readonly"></textarea></div>').appendTo(graphs);
 			FSTATS.renderCsv(result);
@@ -578,7 +637,7 @@ FSTATS.BarGraph = function(settings) {
 	this.setData(this.data);
 
 	this.plot = function() {
-		console.log("---------------------");
+		//console.log("---------------------");
 		var svgWidth = this.container.width();
 		this.width = this.container.width() - this.margin.left - this.margin.right;
 		
@@ -614,7 +673,7 @@ FSTATS.BarGraph = function(settings) {
 		
 		if ('percentage' == self.type) {
 			self.xScale = d3.scaleLinear()
-				.domain([0,self.data.sum])
+				.domain([0,self.sum])
 				.range([0,self.width]);	
 		} else {
 			self.xScale = d3.scaleLinear()
@@ -670,7 +729,7 @@ FSTATS.BarGraph = function(settings) {
 						})
 						.attr("height", self.yScale.bandwidth())
 						.attr("width", function(d) {
-							return self.xScale(self.data.sum);
+							return self.xScale(self.sum);
 						})
 						.attr("fill","#f0f0f0"); //TODO ??????	
 		}
@@ -789,29 +848,55 @@ FSTATS.BarGraph = function(settings) {
 	this.redraw = function() {
 		//console.log("redrawing graph!");
 		//get new size of container
-		self.width = self.container.width() - self.margin.left - self.margin.right;
+		var svgWidth = this.container.width();
 		
-		var newHeight = self.width*self.ratio - self.margin.top - self.margin.bottom;
-		if (newHeight >= self.dataset.length*FSTATS.minBarHeight) {
-			self.height = newHeight;
-		} //no noodles!
+		//reset margins
+		self.margin.left = FSTATS.defaultMargin.left;
+		self.margin.right = FSTATS.defaultMargin.right;
 		
-		self.svg.attr("width",self.width + self.margin.left + self.margin.right)
-				.attr("height",self.height + self.margin.top + self.margin.bottom);
+		//recalculate original width (without labels)
+		self.width = svgWidth - self.margin.left - self.margin.right;
+		
+		//recalculate height (with bar height constraints)
+		var height = this.width*this.ratio - this.margin.top - this.margin.bottom;
+		var numberOfBars = Object.keys(this.data).length;
+		
+		if (height > numberOfBars * FSTATS.maxBarHeight) { //too thick
+			this.height = numberOfBars*FSTATS.maxBarHeight;
+		} else if (height > numberOfBars * FSTATS.minBarHeight) { //too thin
+			this.height = numberOfBars*FSTATS.minBarHeight;
+		} else { //just right
+			this.height =  height;
+		}
+		
+		var svgHeight = self.height + self.margin.top + self.margin.bottom;
+		
+		self.svg.attr("width",svgWidth)
+				.attr("height",svgHeight);
+		
+		var maxTextWidth = self.getTextWidth(self.svg,self.dataset);
+		self.margin.left = self.margin.left + maxTextWidth;
+		self.width = self.width - maxTextWidth;
+				
+		self.graph.attr("transform","translate(" + (self.margin.left) + ", "+ self.margin.top +")");
 		
 		
 		if ('percentage' == self.type) {
-			self.xScale.range([0,self.width]);	
+			self.xScale.domain([0,self.sum])
+					.range([0,self.width]);	
 		} else {
-			self.xScale.range([0,self.width - self.ficCountLabelPadding]);	
+			self.xScale.domain([0,self.max])
+			.range([0,self.width - self.ficCountLabelPadding]);	
 		}
 		
+		//TODO how to update axes?			
 		
-		//TODO if redrawing with new data I need to update the yScale!!!
-		self.yScale.rangeRound([0,self.height]);
+		//update scale with new data
+		self.yScale.domain(self.dataset.map(function(d) {return d.y;}))
+					.rangeRound([0,self.height]);
+				
 		
-		
-		
+		//TODO HOW TO UPDATE AXIS???
 		self.graph.select(".y.axis")
 					.transition()
 						.duration(300)
@@ -819,6 +904,7 @@ FSTATS.BarGraph = function(settings) {
 						.call(self.yAxis);
 		
 		self.bars.selectAll("rect")
+					.data(self.dataset)
 					.transition() //resize heights (simultaneously with the slots)
 						.duration(300) 
 						.attr("y", function(d) {
@@ -841,6 +927,7 @@ FSTATS.BarGraph = function(settings) {
 		//change font size?
 		
 		self.ficCounts.selectAll("text")
+					.data(self.dataset)
 					.transition()
 						.duration(1000)
 						.attr("x",function (d) {
@@ -849,11 +936,16 @@ FSTATS.BarGraph = function(settings) {
 						.attr("y",function(d) {
 							return self.yScale(d.y) + self.yScale.bandwidth()/2;
 						})
-						.attr("height",self.yScale.bandwidth());					
+						.attr("height",self.yScale.bandwidth())
+						.text(function(d) {
+							return d3.format(",")(d.x);
+						});
+											
 		
 		
 		if ('percentage' == self.type) {
 			self.slots.selectAll("rect")
+						.data(self.dataset)
 						.transition()
 						.duration(300)
 							.attr("y", function(d) {
@@ -861,10 +953,11 @@ FSTATS.BarGraph = function(settings) {
 							})
 							.attr("height", self.yScale.bandwidth())
 							.attr("width", function(d) {
-								return self.xScale(self.data.sum);
+								return self.xScale(self.sum);
 							});
 							
 			self.percents.selectAll("text")
+					.data(self.dataset)
 					.transition()
 						.duration(300)
 						.attr("x",function (d) {
@@ -873,9 +966,13 @@ FSTATS.BarGraph = function(settings) {
 						.attr("y",function(d) {
 							return self.yScale(d.y) + self.yScale.bandwidth()/2;
 						})
-						.attr("height",self.yScale.bandwidth());
+						.attr("height",self.yScale.bandwidth())
+						.text(function(d) {
+							return d3.format(">.0%")(d.percent);					
+						});
 			
 			self.ficCounts.selectAll("text")
+					.data(self.dataset)
 					.transition()
 						.duration(1000)
 						.attr("x",function (d) {
@@ -905,6 +1002,9 @@ FSTATS.BarGraph = function(settings) {
 							} else {
 								return "end";
 							}
+						})
+						.text(function(d) {
+							return d3.format(",")(d.x);
 						});
 			}					 			
 			
@@ -926,6 +1026,10 @@ FSTATS.PieChart = function(settings) {
 	
 	var parentSetData = this.setData;
 	this.setData = function(newData) {
+		if (undefined !== self.dataset) {
+			console.log("we already have data");
+			self.oldDataset = self.dataset;
+		}
 		if (Array.isArray(newData.values)) {
 			self.sum = newData.sum;
 			self.dataset = newData.values;
@@ -953,7 +1057,7 @@ FSTATS.PieChart = function(settings) {
 		var svgWidth = self.width + self.margin.left + self.margin.right;
 		var svgHeight = self.height + self.margin.top + self.margin.bottom;
 		
-		console.log("svgWidth: " + svgWidth + ", svgHeight: "+ svgHeight);
+		//console.log("svgWidth: " + svgWidth + ", svgHeight: "+ svgHeight);
 		
 		self.svg = d3.select(self.container[0]) //self.container is a JQuery object, this is how we get the DOM element out of it. TODO Maybe do it the other way round and pass a DOM element?
 				.append("svg")
@@ -983,9 +1087,11 @@ FSTATS.PieChart = function(settings) {
 					.innerRadius(0)
 					.outerRadius(self.radius);
 		
+		/*
 		self.ficCountsArc = d3.arc()
 					.innerRadius(self.radius + FSTATS.em)
 					.outerRadius(self.radius + FSTATS.em);
+		*/
 					
 		self.pieChart = self.pieGraph.selectAll('path')
 					.data(self.pie(self.dataset))
@@ -999,8 +1105,10 @@ FSTATS.PieChart = function(settings) {
 							return d.data.color;
 						}
 										
-					});
-					
+					})
+					.each(function(d) { this._current = d; });
+		
+		/*			
 		self.ficCounts = self.pieGraph.append("g")
 						.attr("class","ficCounts");
 		
@@ -1013,12 +1121,14 @@ FSTATS.PieChart = function(settings) {
 					})
 					.attr("dy","0.35em")
 					.text(function(d) {
-						return d.data.x;
+						return d3.format(",")(d.data.x);
 					})
 					.attr("font-size", FSTATS.fontSizes['small label'] + 'em')
 					.attr("fill","#999")
-					.attr("text-anchor",'middle');
-		
+					.attr("text-anchor",function(d){
+						self.ficCountsArc.
+					}'middle');
+		*/
 		self.legend = self.graph.append("g")
 						.attr("class","legend")
 						.attr("transform","translate(" + (self.labelPadding*2 + self.radius*2 + self.labelPadding) + ", "+ (self.labelPadding*2) +")");
@@ -1054,13 +1164,19 @@ FSTATS.PieChart = function(settings) {
 						.attr("dy","0.35em")
 						.attr("height",FSTATS.em)
 						.text(function(d) {
-							return d.description;					
+							return d.description + " ("+d3.format(",")(d.x)+")";					
 						})
 						.attr("font-size", FSTATS.fontSizes["small label"] + 'em')
 						.attr("fill","#999");	
 	};
 	
 	this.redraw = function() {
+		console.log("redrawing PieChart");
+		
+		console.log("old dataset:");
+		console.log(self.oldDataset);
+		console.log("new dataset:");
+		console.log(self.dataset);
 		
 		//reset left margin
 		self.margin.left = FSTATS.defaultMargin.left;
@@ -1090,31 +1206,50 @@ FSTATS.PieChart = function(settings) {
 		//radius definitely updated
 		self.pieGraph.attr('transform', 'translate(' + (self.radius + self.labelPadding) +  ',' + (self.radius + self.labelPadding) + ')');
 		
+		self.pie.value(function(d) {return d.x; }); //update function in pie. 
+		
 		self.arc = d3.arc()
 					.innerRadius(0)
 					.outerRadius(self.radius);
 		
+		/*
 		self.ficCountsArc = d3.arc()
 					.innerRadius(self.radius + FSTATS.em)
 					.outerRadius(self.radius + FSTATS.em);
 					
-		
+		*/
+		//TODO this doesn't work. fix later.
+		var arcTween = function(a) {
+			var i = d3.interpolate(this._current, a);
+			this._current = i(0);
+			return function(t) {
+			  return self.arc(i(t));
+			};
+		};
 		
 		self.pieGraph.selectAll('path')
+					.data(self.pie(self.dataset)) //update data
 					.transition()
-						.duration(300)
-						.attr('d',self.arc);
+						.duration(750)
+						.attrTween("d",arcTween)
+						.each(function(d) { this._current = d; }); //keep past angles for the next draw 
 						
+		/*				
 		self.ficCounts.selectAll("text")
-					.transition()
-						.duration(1000)
-						.attr('transform', function(d) {
-							return "translate(" + self.ficCountsArc.centroid(d) + ")";
-						})
-						.text(function(d) {
-							return d.data.x;
-						});
+					.data(self.pie(self.dataset)) //update data
+					.attr('transform', function(d) {
+						return "translate(" + self.ficCountsArc.centroid(d) + ")";
+					})
+					.text(function(d) {
+						return d3.format(",")(d.data.x);
+					});
+		*/
 		
+		self.legendLabels.data(self.dataset)
+					.text(function(d) {
+						return d.description + " ("+d3.format(",")(d.x)+")";					
+					});
+						
 		self.legend.attr("transform","translate(" + (self.labelPadding*2 + self.radius*2 + self.labelPadding) + ", "+ (self.labelPadding*2) +")");					
 	};
 	
