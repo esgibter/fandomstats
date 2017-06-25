@@ -50,20 +50,6 @@ FSTATS.minBarHeight = 35;
 FSTATS.maxBarHeight = 50;
 FSTATS.graphInstances = {};
 
-/*
-FSTATS.redrawGraphs = function() {
-	console.log("resizing");
-	if (FSTATS.graphInstances !== null) {
-		$.each(FSTATS.graphInstances,function() {
-			console.log(this);
-			if (this.redraw !== undefined) {
-				this.redraw();
-			}
-		});	
-	}	
-	//https://www.safaribooksonline.com/blog/2014/02/17/building-responsible-visualizations-d3-js/
-};
-*/
 FSTATS.redrawGraphs = debounce(function(){
 	//console.log("resizing");
 	if (FSTATS.graphInstances !== null) {
@@ -76,34 +62,16 @@ FSTATS.redrawGraphs = debounce(function(){
 },250);
 
 
-
-/*~~~~ notes ~~~~
- * 
- * Would it be worth it to rewrite this as pure D3.js? 
- * 
- */
-
-
-//######## RUN ##########//
-
-
-
-
-
-//######### HOOKS #########//
-
-
-
 //maybe this should be triggered when the DIVS are resized, not the whole window? That way it'd fix the problem with still-being-constructed divs.
 window.addEventListener('resize', FSTATS.redrawGraphs);
 
 
-
+/*TESTING
 $(document).ready(function(){
 	$("#search-string").val("fluff");
 	$(".searchform").submit();	
 });
-
+TESTING*/
 
 $(".searchform").submit(function(e){
 	e.preventDefault();
@@ -130,19 +98,13 @@ $(".searchform").submit(function(e){
 		},
 		success: function(result, status, object){
 			//LIVE*/
-			//TODO CHANGE COLORS TO SOMETHING SANE, FOR SHIT'S SAKE!!!
 			$(".api-results").show('fast');
-			//console.log(result);
-			//number of works (big number)
-			//ratings (piechart)
-			//warnings (percent bar)
-			//the rest (bar charts)
 			
 			console.log("#####");
 			console.log("DRAWING GRAPHS");
 			
 			var graphs = $("#main-graphs");
-			graphs.css("visibility","visible"); //TODO do something with this, it's leaving a huge gap where the 'hidden' divs are, this should be using display:none (but that messes up the graph plotting).
+			graphs.css("visibility","visible");
 			
 			//* NUMBER OF FICS
 			var numSum = $("#num-sum");
@@ -182,7 +144,7 @@ $(".searchform").submit(function(e){
 			var ratings = $("#graph-ratings");
 			if (0 == ratings.length) {
 				ratings = $('<div class="large-12 column graph" id="graph-ratings"></div>');
-				ratings.append('<h3>Ratings</h3>');
+				ratings.append('<h3>Ratings</h3><p>What rating did the author choose for their work (if any).</p>');
 				graphs.append(ratings);	
 			}
 			
@@ -271,7 +233,7 @@ $(".searchform").submit(function(e){
 			var categories = $("#graph-category");
 			if (0 == categories.length) {
 				categories = $('<div class="large-12 column graph" id="graph-category"></div>');
-				categories.append('<h3>Categories</h3><p>Types of ships based on the genders of the participants (F = female, M = male).</p>');
+				categories.append('<h3>Categories</h3><p>Types of ships based on the genders of the participants, where F = female, M = male. (The percents are from the total amount of fic and do not add up to 100%.)</p>');
 				graphs.append(categories);
 			}
 			
@@ -302,7 +264,7 @@ $(".searchform").submit(function(e){
 			var warnings = $("#graph-warning");
 			if (0 == warnings.length) {
 				warnings = $('<div class="large-12 column graph" id="graph-warning"></div>');
-				warnings.append('<h3>Warnings</h3><p>Additional content warnings set by the author.</p>');
+				warnings.append('<h3>Warnings</h3><p>Additional content warnings set by the author. (The percents are from the total amount of fic and do not add up to 100%.)</p>');
 				graphs.append(warnings);
 			}
 			if (FSTATS.graphInstances['warningGraph'] !== undefined) {
@@ -485,9 +447,6 @@ $(".searchform").submit(function(e){
 
 
 //################ OOP hell #################//
-
-
-
 
 
 FSTATS.renderCsv = function(result,container) {
@@ -750,9 +709,6 @@ FSTATS.BarGraph = function(settings) {
 							return self.xScale(0);
 						})
 						.attr("y", function(d) {
-							//console.log("=========");
-							//console.log(d);
-							//console.log(self.yScale(d.y));
 							return self.yScale(d.y);
 						})
 						.attr("height", self.yScale.bandwidth())
@@ -789,8 +745,6 @@ FSTATS.BarGraph = function(settings) {
 						.delay(function(d, i) { return i * 100; })
 						.duration(1000)
 						.attr("width", function(d){
-							//console.log("=========");
-							//console.log(d);
 							return self.xScale(d.x);
 						})
 					;
@@ -875,6 +829,7 @@ FSTATS.BarGraph = function(settings) {
 	
 	this.redraw = function() {
 		//console.log("redrawing graph!");
+	
 		//get new size of container
 		var svgWidth = this.container.width();
 		
@@ -917,14 +872,10 @@ FSTATS.BarGraph = function(settings) {
 			.range([0,self.width - self.ficCountLabelPadding]);	
 		}
 		
-		//TODO how to update axes?			
-		
 		//update scale with new data
 		self.yScale.domain(self.dataset.map(function(d) {return d.y;}))
 					.rangeRound([0,self.height]);
 				
-		
-		//TODO HOW TO UPDATE AXIS???
 		self.graph.select(".y.axis")
 					.transition()
 						.duration(300)
@@ -948,11 +899,6 @@ FSTATS.BarGraph = function(settings) {
 							return self.xScale(d.x);
 						});
 					
-		
-						
-				
-		//.attr("font-size", "0.8em");
-		//change font size?
 		
 		self.ficCounts.selectAll("text")
 					.data(self.dataset)
@@ -1036,9 +982,6 @@ FSTATS.BarGraph = function(settings) {
 						});
 			}					 			
 			
-		//should I edit things for cases where the width is too small?
-		
-		//redraw data (animate)
 	};	
 };
 
@@ -1085,8 +1028,6 @@ FSTATS.PieChart = function(settings) {
 		var svgWidth = self.width + self.margin.left + self.margin.right;
 		var svgHeight = self.height + self.margin.top + self.margin.bottom;
 		
-		//console.log("svgWidth: " + svgWidth + ", svgHeight: "+ svgHeight);
-		
 		self.svg = d3.select(self.container[0]) //self.container is a JQuery object, this is how we get the DOM element out of it. TODO Maybe do it the other way round and pass a DOM element?
 				.append("svg")
 				.attr("class","has-graph")
@@ -1101,12 +1042,6 @@ FSTATS.PieChart = function(settings) {
 		//default colors (if not defined in settings)
 		var color = d3.scaleOrdinal(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
 		
-		/*
-		self.yScale = d3.scaleBand()
-					.domain(self.dataset.map(function(d) {return d.y;}))
-					.rangeRound([0,self.height]) //I'm not "flipping" the axis here, because I want the bars to start at top
-					.padding(0.05);
-		*/
 		self.pie = d3.pie()
 					.sort(null)
 					.value(function(d) {return d.x; });
@@ -1114,12 +1049,6 @@ FSTATS.PieChart = function(settings) {
 		self.arc = d3.arc()
 					.innerRadius(0)
 					.outerRadius(self.radius);
-		
-		/*
-		self.ficCountsArc = d3.arc()
-					.innerRadius(self.radius + FSTATS.em)
-					.outerRadius(self.radius + FSTATS.em);
-		*/
 					
 		self.pieChart = self.pieGraph.selectAll('path')
 					.data(self.pie(self.dataset))
@@ -1135,28 +1064,7 @@ FSTATS.PieChart = function(settings) {
 										
 					})
 					.each(function(d) { this._current = d; });
-		
-		/*			
-		self.ficCounts = self.pieGraph.append("g")
-						.attr("class","ficCounts");
-		
-		self.ficCountTexts = self.ficCounts.selectAll('text')
-					.data(self.pie(self.dataset))
-					.enter()
-					.append('text')
-					.attr('transform', function(d) {
-						return "translate(" + self.ficCountsArc.centroid(d) + ")";
-					})
-					.attr("dy","0.35em")
-					.text(function(d) {
-						return d3.format(",")(d.data.x);
-					})
-					.attr("font-size", FSTATS.fontSizes['small label'] + 'em')
-					.attr("fill","#999")
-					.attr("text-anchor",function(d){
-						self.ficCountsArc.
-					}'middle');
-		*/
+
 		self.legend = self.graph.append("g")
 						.attr("class","legend")
 						.attr("transform","translate(" + (self.labelPadding*2 + self.radius*2 + self.labelPadding) + ", "+ (self.labelPadding*2) +")");
@@ -1241,12 +1149,6 @@ FSTATS.PieChart = function(settings) {
 					.innerRadius(0)
 					.outerRadius(self.radius);
 		
-		/*
-		self.ficCountsArc = d3.arc()
-					.innerRadius(self.radius + FSTATS.em)
-					.outerRadius(self.radius + FSTATS.em);
-					
-		*/
 		//TODO this doesn't work. fix later.
 		var arcTween = function(a) {
 			var i = d3.interpolate(this._current, a);
@@ -1263,16 +1165,6 @@ FSTATS.PieChart = function(settings) {
 						.attrTween("d",arcTween)
 						.each(function(d) { this._current = d; }); //keep past angles for the next draw 
 						
-		/*				
-		self.ficCounts.selectAll("text")
-					.data(self.pie(self.dataset)) //update data
-					.attr('transform', function(d) {
-						return "translate(" + self.ficCountsArc.centroid(d) + ")";
-					})
-					.text(function(d) {
-						return d3.format(",")(d.data.x);
-					});
-		*/
 		
 		self.legendLabels.data(self.dataset)
 					.text(function(d) {
