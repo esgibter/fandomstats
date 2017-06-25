@@ -30,6 +30,14 @@ FSTATS.sortFunctions = {
 	}
 };
 
+FSTATS.parseTags = function(string,taglist) {
+	var newString;
+		for (key in taglist) {
+			newString = string.replace("{{"+key+"}}",taglist[key]);
+		}
+		return newString;
+	};
+
 FSTATS.defaultMargin = {
 		top:10,
 		left:10,
@@ -108,20 +116,20 @@ $(".searchform").submit(function(e){
 	tagAPI.url = "/api/v1.0/stats";
 	var tag = $("#search-string").val();
 	var params = {};
-	///*TEST
+	/*TEST
 	$.ajax({
 		url:"/home/static/js/dummy.json",
 		success: function(result, status, object){
-	//TEST*/	
+	EST*/	
 	
-	/*LIVE
+	///*LIVE
 	$.ajax({
 		url:tagAPI.url,
 		data:{
 			tag_id:tag,
 		},
 		success: function(result, status, object){
-			LIVE*/
+			//LIVE*/
 			//TODO CHANGE COLORS TO SOMETHING SANE, FOR SHIT'S SAKE!!!
 			$(".api-results").show('fast');
 			//console.log(result);
@@ -136,13 +144,25 @@ $(".searchform").submit(function(e){
 			numSum = $('<div class="large-12 column graph" id="num-sum"></div>');
 			graphs.append(numSum);
 			if (FSTATS.graphInstances['sumOfWorks'] !== undefined) {
-				FSTATS.graphInstances['sumOfWorks'].setNumber(result.numworks);
+				FSTATS.graphInstances['sumOfWorks'].update({
+					number:result.numworks,
+					color: FSTATS.palette.accent,
+					commentBefore:'There are',
+					commentAfter:'works using the tag <em>{{tag}}</em> on AO3.',
+					variables:{
+						tag:tag,
+					},
+					container:numSum,
+				});
 			} else {
 				FSTATS.graphInstances['sumOfWorks'] = new FSTATS.Number({
 					number:result.numworks,
 					color: FSTATS.palette.accent,
 					commentBefore:'There are',
 					commentAfter:'works using the tag <em>' + tag + '</em> on AO3.',
+					variables:{
+						tag:tag,
+					},
 					container:numSum,
 				});
 				FSTATS.graphInstances['sumOfWorks'].plot();
@@ -399,21 +419,53 @@ FSTATS.renderCsv = function(result) {
 FSTATS.Number = function(settings) {
 	var self = this;
 	this.number = settings.number;
-	this.commentBefore = settings.commentBefore;
-	this.commentAfter = settings.commentAfter;
+	if (undefined != settings.variables){
+		this.variables = settings.variables;	
+	} else {
+		this.variables = {};
+	}
+	
+	this.commentBefore = FSTATS.parseTags(settings.commentBefore,this.variables);
+	this.commentAfter = FSTATS.parseTags(settings.commentAfter,this.variables);
 	this.container = settings.container;
 	this.color = settings.color;
 	
+	
+	
 	this.plot = function() {
 		var div = $('<div class="number" style="color:'+self.color+'"></div>');
-		div.append('<div class="comment">'+self.commentBefore+'</div>');
+		div.append('<div class="comment" id="comment-before">'+self.commentBefore+'</div>');
 		div.append('<div class="value">'+d3.format(",")(self.number)+'</div>');
-		div.append('<div class="comment">'+self.commentAfter+'</div>');
+		div.append('<div class="comment" id="comment-after">'+self.commentAfter+'</div>');
 		div.appendTo(self.container);
 	};
 	
 	this.setNumber = function(newNumber) {
 		self.container.find('.value').html(d3.format(",")(newNumber));
+	};
+	
+	this.update = function(settings) {
+		//update number
+		self.number = settings.number;
+		self.container.find('.value').html(d3.format(",")(settings.number));
+		
+		//update variables, if changed
+		if (undefined != settings.variables) {
+			self.variables= settings.variables;
+		}
+		
+		//update comments, if changed
+		if (undefined != settings.commentBefore) {
+			self.commentBefore = FSTATS.parseTags(settings.commentBefore,this.variables);
+			self.container.find("#comment-before").html(self.commentBefore);	
+		}
+		if (undefined != settings.commentAfter) {	
+			self.commentAfter = FSTATS.parseTags(settings.commentAfter,this.variables);
+			self.container.find("#comment-after").html(self.commentAfter);
+		}
+		
+		
+		
 	};
 };
 
