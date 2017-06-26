@@ -68,7 +68,7 @@ class AO3data:
       http = urllib3.PoolManager()
       r = {}
       try:
-        print "url: {}".format(url)
+        print "url: {}".format(url) #TODO the API dies with an uncaught 500 error when it times out while accessing AO3
         r = http.request('GET', url,redirect=False)
         redirect_loc = r.get_redirect_location()
          

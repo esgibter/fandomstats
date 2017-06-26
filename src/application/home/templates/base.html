@@ -14,7 +14,7 @@
 	    <link rel="stylesheet" href="{{ url_for('static', filename='css/normalize.css') }}" />
 	    <link rel="stylesheet" href="{{ url_for('static', filename='css/foundation.min.css') }}" />
 	    <link rel="stylesheet" href="{{ url_for('home.static', filename='css/home.css') }}" />
-	    <script src="{{ url_for('home.static', filename='js/vendor/modernizr.js') }}"></script>
+	    <script src="{{ url_for('home.static', filename='js/vendor/modernizr.js') }}"></script>	    
   </head>
 	<body class="no-js">
 		{% set navbar = [
@@ -63,7 +63,13 @@
 	      $(document).foundation();
 	      $("body").toggleClass("no-js");	      
 	    </script>
-	    <script src="{{ url_for('home.static', filename='js/home.js') }}"></script>
+	    <script src="{{ url_for('home.static', filename='js/script.js') }}"></script>
+	    {% if page_id == 'homepage' %}
+	    	<script src="{{ url_for('static', filename='js/vendor/d3.min.js') }}"></script>
+	    	<script src="{{ url_for('home.static', filename='js/homepage.js') }}"></script>
+	    {% elif page_id == 'ao3-tag-stats' %}
+	    	<script src="{{ url_for('home.static', filename='js/tag-stats.js') }}"></script>
+	    {% endif %}
 	    <img id="spinner" src="{{ url_for('home.static', filename='img/spinner.gif') }}" class="button-message" />
 	    <span id="button-error" class="button-message">&#xd7;</span>
 	</body>
