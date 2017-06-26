@@ -1,4 +1,5 @@
 from flask import render_template, jsonify, request
+from application import app
 from application.home import home
 
 # Homepage
@@ -26,3 +27,7 @@ def linkspam():
 def about():
   return render_template('about.html')
 
+# Google Search Console verification file
+@home.route("/google137e022a821ce1e1.html")
+def GSC_file():
+  return app.send_static_file('google137e022a821ce1e1.html')
