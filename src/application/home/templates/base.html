@@ -10,7 +10,6 @@
 				Fandom Stats
 			{% endif %}			
 			</title>
-		<meta name=viewport content="width=device-width, initial-scale=1">
 		<meta property="og:url" content="{{request.url}}" />
 		<meta property="og:site_name" content="Fandom Stats" />
 		
@@ -54,10 +53,11 @@
 		<meta name="msapplication-square150x150logo" content="{{ url_for('static', filename='img/icons/mstile-150x150.png') }}" />
 		<meta name="msapplication-wide310x150logo" content="{{ url_for('static', filename='img/icons/mstile-310x150.png') }}" />
 		<meta name="msapplication-square310x310logo" content="{{ url_for('static', filename='img/icons/mstile-310x310.png') }}" />
-		<meta itemprop="image" content="{{ url_for('static', filename='img/thumbnail-image.png') }}">
-		<meta property="og:image" content="{{ url_for('static', filename='img/thumbnail-image.png') }}" />
+		
+		<meta itemprop="image" content="{{ url_for('static', filename='img/thumbnail-image.png',_external=True) }}">
+		<meta property="og:image" content="{{ url_for('static', filename='img/thumbnail-image.png',_external=True) }}" />
 		<meta name="twitter:card" content="summary_large_image">
-		<meta name="twitter:image:src" content="{{ url_for('static', filename='img/preview-image.png') }}">			
+		<meta name="twitter:image:src" content="{{ url_for('static', filename='img/preview-image.png',_external=True) }}">			
 		
 		
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/normalize.css') }}" />
