@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% set page_id = "reading-the-data" %}
+{% block title %}How to Read the Data{% endblock %}
+{% block content %}
+	<h2>How (Not) to Read the Data</h2>
+	<p>The problem with statistics, as you might have noticed from various less-then-honest news sources, is that not all numbers were created equal. Graphs and other data visualisations can be mis-understood, mis-interpreted, and mis-used - even accidentally! 
+	<p>In general terms, you need to pay attention to these things:</p>
+		<ul>
+			<li><strong>The source</strong> - Where is the data coming from? Is this an accurate sample of the group you're studying?</li>
+			<li><strong>The method</strong> - How is the data being collected? No method is perfect, so what are the possible weak points?</li>
+			<li><strong>Yourself</strong> - Do you understand everything correctly? Are you expecting a certain result (and possibly avoiding contradictions)?</li>
+			<li><strong>The reader</strong> - Will your audience understand what you're trying to say? Could they misinterpret something?</li> 
+		</ul>
+		<p>This, incidentally, applies just as much to us (supplying the graphing tools), as to you (reading and interpreting them). But hey! At least you can let us know if we're getting it wrong. :D</p>
+		
+		<h3>The source - AO3 tag system</h3>
+		<p>Quoting <a href="https://wrangletangle.tumblr.com/">wrangletangle</a>:</p>
+		<blockquote>
+			<p style="">Stats are fun! Please use responsibly.<br></p>
+<p>This is your regular wrangler reminder to everyone to please add disclaimers on your stats meta that use AO3 because:</p>
+<ul>
+	<li>AO3 does not represent all of fandom, or even most of English-speaking fandom.<br></li>
+	<li>AO3 hosts more works than just fic. Please refer to “works” instead of “fics” to be accurate.</li>
+	<li>AO3 numbers are subject to wrangling work speeds and necessary decisions, including metatagging. Numbers can change drastically when guidelines are changed or when technical issues force us to adjust organization. Works can be delayed being added to a filter if they use a non-canonical tag and we are short-staffed or that fandom is not currently staffed.</li>
+	<li>These are just the tags people remember to tag with, so please use language like “tagged with TAGNAME”, not “contain CONCEPT”.</li>
+	<li>Users decide ratings and categories for themselves, and they may have different ideas of what those mean. Not all “mature” works are the same, so again, “tagged with TAGNAME” instead of “are TAGNAME”.</li>
+	<li>AO3 tags are wrangled specifically to help users find things, not to create accurate statistical data. For example, tags that contain two or more separate concepts that don’t modify each other will generally not be wrangled at all. The work still contains the concept; the tag is simply not wrangleable.</li>
+	<li>Tagging is always, always in flux. Every tagging decision is made by a human being, and judgment is often involved, so what one person would connect, another might not. These individual decisions add up quickly for large tags, some on the order of several per day.<br></li>
+	<li>There’s a bug that makes the top 10 filters sometimes inaccurate. Coders are working on it.</li>
+	<li>There’s another bug that makes some works disappear from the filters on canonization, synning, or rename. Also working on it.</li>
+</ul>
+<p>Just because the numbers are easy to pull doesn’t indicate that they’re accurate or they mean what we want them to mean. Even broadly general conclusions may be insupportable; please always disclaim.<br></p>
+		</blockquote>
+		<p>(<a href="https://wrangletangle.tumblr.com/post/162679047625/to-people-using-fandomstatsorg">original post</a>, published with permission)</p>
+	<h3>The method - fandomstats.org tag API</h3>
+	<p>Beneath it all, what we're doing is really just "dumb" website scraping - we're using the same numbers you can see when you open the tag page yourself. As a result, we know only what AO3 knows (or doesn't).</p>
+		<ul>
+			<li>If there isn't a tag, there isn't a filter page and we can't get the data for it.</li>
+			<li>We will show seemingly duplicate tags when they're being used (i.e. character names in some fandoms).</li>
+			<li>For tags where we show percentages, they do not add to 100% because they overlap - and we cannot, at this time, tell you <em>how</em> they overlap.</li>
+			<li>Especially for the warnings and categories, the authors' understanding varies wildly. (i.e. some people will tag "Gen" when there is no sex; some when the relationship ins't the focus; others when there is no romantic relationship at all.)</li>
+		</ul>
+		
+<h3>Additional Reading</h3>
+<ul>
+	<li><a href="http://centrumlumina.tumblr.com/post/63208278796/ao3-census-masterpost">centrumlumina's AO3 2013 census</a> - to learn more about the part of fandom who uses AO3.</li>
+	
+	<li><a href="http://www.statisticshowto.com/probability-and-statistics/">Statistics How To</a> - if you want to get serious about statistics.</li>
+	<li><a href="https://www.khanacademy.org/math/statistics-probability">Probability and Statistics on Khan Academy</a> - if you want to have fun with statistics, spend weeks on it, and feel like a nerd (or stupid, depending how well it's going at the moment).</li>
+</ul>
+{% endblock %}

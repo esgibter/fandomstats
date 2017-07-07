@@ -26,6 +26,11 @@ def linkspam():
 @home.route("/about")
 def about():
   return render_template('about.html')
+  
+# About
+@home.route("/reading-the-data")
+def howto():
+  return render_template('reading-the-data.html')
 
 # Google Search Console verification file
 @home.route("/google137e022a821ce1e1.html")

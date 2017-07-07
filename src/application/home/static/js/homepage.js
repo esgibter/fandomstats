@@ -233,7 +233,7 @@ $(".searchform").submit(function(e){
 			var categories = $("#graph-category");
 			if (0 == categories.length) {
 				categories = $('<div class="large-12 column graph" id="graph-category"></div>');
-				categories.append('<h3>Categories</h3><p>Types of ships based on the genders of the participants, where F = female, M = male. (The percents are from the total amount of fic and do not add up to 100%.)</p>');
+				categories.append('<h3>Categories</h3><p>Types of ships based on the genders of the participants, where F = female, M = male. (The percents are from the total amount of works and do not add up to 100%.)</p>');
 				graphs.append(categories);
 			}
 			
@@ -264,7 +264,7 @@ $(".searchform").submit(function(e){
 			var warnings = $("#graph-warning");
 			if (0 == warnings.length) {
 				warnings = $('<div class="large-12 column graph" id="graph-warning"></div>');
-				warnings.append('<h3>Warnings</h3><p>Additional content warnings set by the author. (The percents are from the total amount of fic and do not add up to 100%.)</p>');
+				warnings.append('<h3>Warnings</h3><p>Additional content warnings set by the author. (The percents are from the total amount of works and do not add up to 100%.)</p>');
 				graphs.append(warnings);
 			}
 			if (FSTATS.graphInstances['warningGraph'] !== undefined) {

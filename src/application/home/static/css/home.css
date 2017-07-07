@@ -127,7 +127,9 @@ body {
 	padding:2rem;
 }
 
-
+#main ul {
+	padding-left:1em;
+}
 
 #homepage-linklist {
 	margin-top:0.8em;
