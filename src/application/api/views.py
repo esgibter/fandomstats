@@ -10,7 +10,7 @@ try:
     # Arguments
     parser = reqparse.RequestParser()
     parser.add_argument("type", type=str)
-    parser.add_argument("tag_id", required=True, help="A tag must be specified!")
+    parser.add_argument("tag_id", required=True, type=unicode, help="A tag must be specified!")
     parser.add_argument("page", type=int)
     parser.add_argument("sort_direction", type=str)
     parser.add_argument("query", type=str)
