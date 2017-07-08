@@ -27,11 +27,15 @@ class AO3url:
           if type(wv) is list:
             # go through each value in the list
             for xv in wv:
-              url += urllib.quote_plus("work_search[" + wk + "][]") + "=" + urllib.quote_plus(str(xv), '+') + "&"
+              url += urllib.quote_plus("work_search[" + wk + "][]") + "=" + urllib.quote_plus(xv.encode('utf-8'), '+') + "&"
           else:
-            url += urllib.quote_plus("work_search[" + wk + "]") + "=" + urllib.quote_plus(str(wv), '+') + "&"
+            url += urllib.quote_plus("work_search[" + wk + "]") + "=" + urllib.quote_plus(wv.encode('utf-8'), '+') + "&"
       else:
-        url += k + "=" + urllib.quote_plus(str(v), '+') + "&" 
+          if type(v) is unicode:
+              url += k + "=" + urllib.quote_plus(v.encode('utf-8'), '+') + "&"
+          else:
+              url += k + "=" + urllib.quote_plus(str(v), '+') + "&"
+     
     
     return url[:-1]
  

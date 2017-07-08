@@ -31,7 +31,7 @@ Environment runs at http://localhost:8080
 
 ### Run tests:
 ```
-python apptests.py path/to/your/googleappengine/installation
+python apptest.py path/to/your/googleappengine/installation
 ```
 
 ### Deploy the app:
