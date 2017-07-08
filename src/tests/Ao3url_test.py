@@ -1,18 +1,19 @@
-import os
-import fandomstats
+import os,sys
+sys.path.insert(1, os.path.join(os.path.abspath('.'), 'lib'))
+import application as fandomstats
 import unittest
 import tempfile
 from werkzeug import datastructures 
-from fandomstats.api.models import AO3url 
+from application.api.models import AO3url
 
-class FandomstatsTestCase(unittest.TestCase):
+class Ao3urlTestCase(unittest.TestCase):
     
     def setUp(self):
       fandomstats.app.config['TESTING'] = True
       self.app = fandomstats.app.test_client()
       self.maxDiff = None
 
-    def test_tag_search(self):
+    def test_getUrl_basic(self):
       t = {
             "type":"works",
             "params": {
@@ -23,7 +24,7 @@ class FandomstatsTestCase(unittest.TestCase):
       url = AO3url().getUrl(t)
       self.assertEqual(url, expected)
         
-    def test_tag_search_moderately_complex(self):
+    def test_getUrl_moderately_complex(self):
       t = {
             "type":"works",
             "params": {
@@ -40,7 +41,7 @@ class FandomstatsTestCase(unittest.TestCase):
       url = AO3url().getUrl(t)
       self.assertEqual(url, expected)
 
-    def test_tag_search_complex(self):
+    def test_getUrl_complex(self):
       t = {
             "type":"works",
             "params": {
@@ -61,7 +62,7 @@ class FandomstatsTestCase(unittest.TestCase):
       url = AO3url().getUrl(t)
       self.assertEqual(url, expected)
 
-    def test_create_filters(self):
+    def test_setFilters(self):
       args = { 
         "page":3,
         "tag_id":"Harry Potter",
@@ -76,26 +77,8 @@ class FandomstatsTestCase(unittest.TestCase):
           "tag_id": "Harry Potter",
           "sort_direction":"desc",
           "work_search": {
-            "query": "",
-            "title": "",
-            "creator": "",
-            "revised_at": "",
             "complete": 1,
-            "single_chapter": 0,
             "rating_ids": [12, 13],
-            "warning_ids": [],
-            "category_ids": [],
-            "fandom_names": [],
-            "fandom_ids": [],
-            "character_names": [],
-            "character_ids": [],
-            "relationship_names": [],
-            "relationship_ids": [],
-            "freeform_names": [],
-            "freeform_ids": [],
-            "other_tag_names": [],
-            "other_tag_ids": [],
-            "sort_column": ""
           }
         } 
       }

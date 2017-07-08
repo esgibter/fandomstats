@@ -68,43 +68,33 @@ class AO3data:
       http = urllib3.PoolManager()
       r = {}
       try:
-        print "url: {}".format(url) #TODO the API dies with an uncaught 500 error when it times out while accessing AO3
-        r = http.request('GET', url,redirect=False)
-        redirect_loc = r.get_redirect_location()
-         
-        if redirect_loc == False: #no redirection
-            soup = BeautifulSoup(r.data)
-            soup.prettify()                
-            self.htmlData = soup
-        elif isinstance(redirect_loc,basestring): #redirecting somewhere
-            if (redirect_loc.find("/works") == -1): #it's a tag that can't be filtered on
-                raise Exception(404,"")
-            else: #it's a synned tag 
-                canonical_url = redirect_loc
-                canonical_list = canonical_url.split("/") 
-                canonical_tag = canonical_list[len(canonical_list)-2]
-                canonical_tag = urllib.unquote_plus(canonical_tag)
-                raise Exception(302,canonical_tag)
-        else: #???something else
-            raise Exception(500,"")
-        
-        #Returning from the if DOES NOT WORK. It has to be here. I DON'T KNOW WHY. #blackmagiccode
-        return self.htmlData
-        
-      except Exception as err:
-          code, canonical = err.args
-          if code ==302:
-              #proper_api_request = re.sub("tag_id=(.*)&",canonical,self.request_url)
-              #The above is the proper API url with the canonical tag. In ideal world, we would return a 3xx page that would redirect to it. Sadly, Flask development isn't an ideal world. TODO: Rewrite this whole thing so we can throw our own response/abort pages.
-              abort(501, status=501,message="Cannot process non-canonical (redirecting) tag. Canonical tag: '{}'".format(canonical)); #HTTP Status Code: 501 Not Implemented.        
-          elif code == 404:
-              abort(404, status=404, message="This tag cannot be filtered on.") #HTTP Status Code: 404 Not Found
-          elif code == 400:
-              abort(400, status=400, message="Malformed Ao3 URL. No results found at {}".format(url)) #HTTP Status Code: 400 Bad request. Do not re-run again without modifying.
-          else:
-              abort(500, status=500, message="HTTP request failed when trying to scrape Ao3!") #HTTP Status Code: 500 Internal Server Error. Something went wrong on our side.
-    else:
+          print "url: {}".format(url) #TODO the API dies with an uncaught 500 error when it times out while accessing AO3
+          r = http.request('GET', url,redirect=False)
+          redirect_loc = r.get_redirect_location()
+            
+          if redirect_loc == False: #no redirection
+              if r.status == 404:
+                  raise ValueError(404,'')
+              soup = BeautifulSoup(r.data)
+              soup.prettify()                
+              self.htmlData = soup
+          elif isinstance(redirect_loc,basestring): #redirecting somewhere
+              if (redirect_loc.find("/works") == -1): #it's a tag that can't be filtered on
+                  raise ValueError(404,"")
+              else: #it's a synned tag 
+                  canonical_url = redirect_loc
+                  canonical_list = canonical_url.split("/") 
+                  canonical_tag = canonical_list[len(canonical_list)-2]
+                  canonical_tag = urllib.unquote_plus(canonical_tag)
+                  raise ValueError(302,canonical_tag)
+          else: #???something else
+              raise ValueError(500,"")
+      except urllib3.exceptions.MaxRetryError:
+          raise ValueError(400,"")
+      
+      #Returning from the if DOES NOT WORK. It has to be here. I DON'T KNOW WHY. #blackmagiccode
       return self.htmlData
+      
 
   # Scrape the top 10 ratings, etc from sidebar
   def getTopInfo(self, url):
@@ -140,8 +130,22 @@ class AO3data:
         "freeform": {}
       }
     }
-
-    soup = self.fetchHTML(url)
+    
+    try:
+        soup = self.fetchHTML(url)
+    
+    except ValueError as err:
+          code, canonical = err.args
+          if code ==302:
+              #proper_api_request = re.sub("tag_id=(.*)&",canonical,self.request_url)
+              #The above is the proper API url with the canonical tag. In ideal world, we would return a 3xx page that would redirect to it. Sadly, Flask development isn't an ideal world. TODO: Rewrite this whole thing so we can throw our own response/abort pages.
+              abort(501, status=501,message="Cannot process non-canonical (redirecting) tag. Canonical tag: '{}'".format(canonical)); #HTTP Status Code: 501 Not Implemented.        
+          elif code == 404:
+              abort(404, status=404, message="This tag cannot be filtered on.") #HTTP Status Code: 404 Not Found
+          elif code == 400:
+              abort(400, status=400, message="Malformed Ao3 URL. No results found at {}".format(url)) #HTTP Status Code: 400 Bad request. Do not re-run again without modifying.
+          else:
+              abort(500, status=500, message="HTTP request failed when trying to scrape Ao3!") #HTTP Status Code: 500 Internal Server Error. Something went wrong on our side.
    
     for k in topInfo["stats"].keys():
       idstring = "tag_category_" + k
