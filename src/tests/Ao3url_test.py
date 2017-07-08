@@ -1,3 +1,5 @@
+# coding=utf-8
+
 import os,sys
 sys.path.insert(1, os.path.join(os.path.abspath('.'), 'lib'))
 import application as fandomstats
@@ -21,6 +23,17 @@ class Ao3urlTestCase(unittest.TestCase):
             }
           }
       expected = "http://archiveofourown.org/works?tag_id=Harry+Potter"
+      url = AO3url().getUrl(t)
+      self.assertEqual(url, expected)
+      
+    def test_getUrl_UTF8(self):
+      t = {
+            "type":"works",
+            "params": {
+              "tag_id":"방탄소년단 | Bangtan Boys | BTS"
+            }
+          }
+      expected = "http://archiveofourown.org/works?tag_id=%EB%B0%A9%ED%83%84%EC%86%8C%EB%85%84%EB%8B%A8+%7C+Bangtan+Boys+%7C+BTS"
       url = AO3url().getUrl(t)
       self.assertEqual(url, expected)
         

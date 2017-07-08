@@ -13,6 +13,14 @@ class AO3url:
   def getFilters(self):
     return self.filters
 
+  def quote(self,input):
+      if type(input) == unicode:
+          stringed = input.encode('utf-8')
+      else:
+          stringed = str(input)
+      
+      return urllib.quote_plus(stringed, '+')
+  
   def getUrl(self, filters=None):
     if filters is None:
       filters = self.filters
@@ -27,11 +35,12 @@ class AO3url:
           if type(wv) is list:
             # go through each value in the list
             for xv in wv:
-              url += urllib.quote_plus("work_search[" + wk + "][]") + "=" + urllib.quote_plus(str(xv), '+') + "&"
+              url += urllib.quote_plus("work_search[" + wk + "][]") + "=" + self.quote(xv) + "&"
           else:
-            url += urllib.quote_plus("work_search[" + wk + "]") + "=" + urllib.quote_plus(str(wv), '+') + "&"
+            url += urllib.quote_plus("work_search[" + wk + "]") + "=" + self.quote(wv) + "&"
       else:
-        url += k + "=" + urllib.quote_plus(str(v), '+') + "&" 
+          url += k + "=" + self.quote(v) + "&"
+     
     
     return url[:-1]
  
@@ -68,7 +77,7 @@ class AO3data:
       http = urllib3.PoolManager()
       r = {}
       try:
-          print "url: {}".format(url) #TODO the API dies with an uncaught 500 error when it times out while accessing AO3
+          #print "url: {}".format(url) #TODO the API dies with an uncaught 500 error when it times out while accessing AO3
           r = http.request('GET', url,redirect=False)
           redirect_loc = r.get_redirect_location()
             
@@ -90,7 +99,7 @@ class AO3data:
           else: #???something else
               raise ValueError(500,"")
       except urllib3.exceptions.MaxRetryError:
-          raise ValueError(400,"")
+          raise ValueError(400,"") #TODO fix this: this is not accurate - it would return 400 even if the API timed out - i.e. couldn't access AO3
       
       #Returning from the if DOES NOT WORK. It has to be here. I DON'T KNOW WHY. #blackmagiccode
       return self.htmlData

@@ -2,5 +2,6 @@
 *.swp
 .project
 .pydevproject
+.settings
 /venv/
 secret_keys.py
