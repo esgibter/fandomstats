@@ -71,6 +71,13 @@ body {
 	margin-top:1rem;
 }
 
+@media screen and (min-width:40em) {
+	#header-box {
+		padding-left:0;	
+	}	
+}
+
+
 #main-nav ul {
 	margin:0;
 	padding:0;

@@ -75,14 +75,16 @@
 		{% set active_page = page_id|default('') -%}
 		
 		<nav id="main-nav" class="row">
-			<ul>
-				<li id="sitename"><h1><a href="/">Fandom Stats</a></h1></li>
-				{% for id, caption, last in navbar %}
-				  <li class="{% if id == active_page %}active{% endif %}
-				  {% if last %}last{% endif %}">
-				  <a href="{{ id|e }}">{{ caption|e }}</a></li>
-				{% endfor %}
-			</ul>
+			<div id="header-box" class="large-12 columns">
+				<ul>
+					<li id="sitename"><h1><a href="/">Fandom Stats</a></h1></li>
+					{% for id, caption, last in navbar %}
+					  <li class="{% if id == active_page %}active{% endif %}
+					  {% if last %}last{% endif %}">
+					  <a href="{{ id|e }}">{{ caption|e }}</a></li>
+					{% endfor %}
+				</ul>	
+			</div>			
 		</nav>
 		<div id="wrapper">
 			<div class="row">
