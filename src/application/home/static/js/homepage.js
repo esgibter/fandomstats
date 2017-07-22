@@ -82,7 +82,45 @@ $(".searchform").submit(function(e){
 	button.html($("#spinner").clone().show());
 	var tagAPI = {};
 	tagAPI.url = "/api/v1.0/stats";
-	var tag = $("#search-string").val();
+	var searchString = $("#search-string").val();
+	console.log("raw search string: "+searchString);
+	var quoteCount = 0;
+	var unquoted = '';
+	for (var i = 0, len = searchString.length; i < len; i++) {
+		c = searchString.charAt(i);
+		if (c == '"') {
+			quoteCount++;
+			console.log("found a quote");
+		} else {
+			unquoted+= c;
+		}
+	}
+	console.log("number of quotes found: " + quoteCount);
+	console.log("unquoted string: " + unquoted);
+	var other_tags = [];
+	
+	if (quoteCount <= 1) {
+		console.log("zero or single quote, using the unquoted string as a single tag");
+		main_tag = unquoted;
+	} else {
+		console.log("more than one quote, parsing with regex");
+		var tags = []
+		var re = /[^\s"']+|"([^"]*)"|'([^']*)'/g;
+		var resultArr = [];
+		while ((resultArr = re.exec(searchString)) !== null) {
+			if (resultArr[1] == undefined) {
+				tags.push(resultArr[0]);
+			} else {
+				tags.push(resultArr[1]);
+			}
+		}
+		console.log("tags found: ");
+		console.log(tags);
+		main_tag = tags[0];
+		other_tags = tags.slice(1,tags.length);
+		console.log("main tag: " + main_tag + ", other tags:"); 
+		console.log(other_tags);
+	}
 	var params = {};
 	/*TEST
 	$.ajax({
@@ -94,9 +132,12 @@ $(".searchform").submit(function(e){
 	$.ajax({
 		url:tagAPI.url,
 		data:{
-			tag_id:tag,
+			tag_id:main_tag,
+			other_tag_names:other_tags
 		},
 		success: function(result, status, object){
+			console.log("tried to call API, this is the result: ");
+			console.log("object");
 			//LIVE*/
 			$(".api-results").show('fast');
 			
@@ -117,9 +158,9 @@ $(".searchform").submit(function(e){
 					number:result.numworks,
 					color: FSTATS.palette.accent,
 					commentBefore:'There are',
-					commentAfter:'works using the tag <em>{{tag}}</em> on AO3.',
+					commentAfter:'works tagged <em>{{tags}}</em> on AO3.',
 					variables:{
-						tag:tag,
+						tags:tags.join(", ")
 					},
 					container:numSum,
 				});
@@ -128,9 +169,9 @@ $(".searchform").submit(function(e){
 					number:result.numworks,
 					color: FSTATS.palette.accent,
 					commentBefore:'There are',
-					commentAfter:'works using the tag <em>' + tag + '</em> on AO3.',
+					commentAfter:'works tagged <em>{{tags}}</em> on AO3.',
 					variables:{
-						tag:tag,
+						tags:tags.join(", ")
 					},
 					container:numSum,
 				});
