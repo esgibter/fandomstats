@@ -1,3 +1,5 @@
+# coding=utf-8
+
 import sys
 import re
 from bs4 import BeautifulSoup
@@ -33,9 +35,11 @@ class AO3url:
       if type(v) is dict:
         for wk, wv in v.iteritems():
           if type(wv) is list:
-            # go through each value in the list
+            quoted_list = []
             for xv in wv:
-              url += urllib.quote_plus("work_search[" + wk + "][]") + "=" + self.quote(xv) + "&"
+                quoted_list.append(self.quote(xv))           
+            url += urllib.quote_plus("work_search[" + wk + "]") + "=" + ",".join(quoted_list) + "&"
+            
           else:
             url += urllib.quote_plus("work_search[" + wk + "]") + "=" + self.quote(wv) + "&"
       else:
@@ -50,6 +54,7 @@ class AO3url:
                "type":"works",
                "params": {
                           "tag_id": "",
+                          "utf8":"✓",
                           "page": 1,
                           "sort_direction": "asc",
                           "work_search": {}
