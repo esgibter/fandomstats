@@ -38,7 +38,7 @@ class AO3url:
             quoted_list = []
             for xv in wv:
                 quoted_list.append(self.quote(xv))           
-            url += urllib.quote_plus("work_search[" + wk + "]") + "=" + ",".join(quoted_list) + "&"
+            url += urllib.quote_plus("work_search[" + wk + "]") + "=" + "%2C".join(quoted_list) + "&"
             
           else:
             url += urllib.quote_plus("work_search[" + wk + "]") + "=" + self.quote(wv) + "&"
