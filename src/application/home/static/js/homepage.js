@@ -141,8 +141,6 @@ $(".searchform").submit(function(e){
 			//LIVE*/
 			$(".api-results").show('fast');
 			
-			searchform.append('<p class="form-info">To better understand what the graphs are saying, check out "<a href="/reading-the-data">Reading the Data</a>".</p>');
-			
 			var graphs = $("#main-graphs");
 			graphs.css("visibility","visible");
 			
