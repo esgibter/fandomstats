@@ -90,6 +90,7 @@ class Stats(Resource):
             continue
         if (args[sArg] == None):
             args[sArg] = args[sArg+'[]']
+            args.pop(sArg + '[]')  
             continue
         else:
             args[sArg] = args[sArg]+args[sArg + '[]']
