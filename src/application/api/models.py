@@ -153,7 +153,7 @@ class AO3data:
           if code ==302:
               #proper_api_request = re.sub("tag_id=(.*)&",canonical,self.request_url)
               #The above is the proper API url with the canonical tag. In ideal world, we would return a 3xx page that would redirect to it. Sadly, Flask development isn't an ideal world. TODO: Rewrite this whole thing so we can throw our own response/abort pages.
-              abort(501, status=501,message="Cannot process non-canonical (redirecting) tag. Canonical tag: '{}'".format(canonical)); #HTTP Status Code: 501 Not Implemented.        
+              abort(501, status=501, message="Cannot process non-canonical (redirecting) tag. Canonical tag: '{}'".format(canonical)); #HTTP Status Code: 501 Not Implemented.        
           elif code == 404:
               abort(404, status=404, message="This tag cannot be filtered on.") #HTTP Status Code: 404 Not Found
           elif code == 400:
