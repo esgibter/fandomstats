@@ -83,28 +83,22 @@ $(".searchform").submit(function(e){
 	var tagAPI = {};
 	tagAPI.url = "/api/v1.0/stats";
 	var searchString = $("#search-string").val();
-	console.log("raw search string: "+searchString);
 	var quoteCount = 0;
 	var unquoted = '';
 	for (var i = 0, len = searchString.length; i < len; i++) {
 		c = searchString.charAt(i);
 		if (c == '"') {
 			quoteCount++;
-			console.log("found a quote");
 		} else {
 			unquoted+= c;
 		}
 	}
-	console.log("number of quotes found: " + quoteCount);
-	console.log("unquoted string: " + unquoted);
 	var other_tags = [];
 	
 	if (quoteCount <= 1) {
-		console.log("zero or single quote, using the unquoted string as a single tag");
 		main_tag = unquoted;
 	} else {
-		console.log("more than one quote, parsing with regex");
-		var tags = []
+		var tags = [];
 		var re = /[^\s"']+|"([^"]*)"|'([^']*)'/g;
 		var resultArr = [];
 		while ((resultArr = re.exec(searchString)) !== null) {
@@ -114,12 +108,8 @@ $(".searchform").submit(function(e){
 				tags.push(resultArr[1]);
 			}
 		}
-		console.log("tags found: ");
-		console.log(tags);
 		main_tag = tags[0];
 		other_tags = tags.slice(1,tags.length);
-		console.log("main tag: " + main_tag + ", other tags:"); 
-		console.log(other_tags);
 	}
 	var params = {};
 	/*TEST
@@ -136,8 +126,6 @@ $(".searchform").submit(function(e){
 			other_tag_names:other_tags
 		},
 		success: function(result, status, object){
-			console.log("tried to call API, this is the result: ");
-			console.log("object");
 			//LIVE*/
 			$(".api-results").show('fast');
 			
