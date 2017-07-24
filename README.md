@@ -32,6 +32,12 @@ Environment runs at http://localhost:8080
 ### Run tests:
 ```
 python apptest.py path/to/your/googleappengine/installation
+
+If you want to run only one test class or only part of the tests (i.e. only the integration tests), you can use the --test-pattern argument, like this:
+
+```
+python apptest.py path/to/your/googleappengine/installation --test-pattern=integration*
+python apptest.py path/to/your/googleappengine/installation --test-pattern=Ao3data_test.py
 ```
 
 ### Deploy the app:
