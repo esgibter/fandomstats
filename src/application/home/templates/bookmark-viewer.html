@@ -39,8 +39,8 @@
      url = url + "&bookmark_search%5Bwith_notes%5D=1";
      }
      text = "URL: " + url;
-     bookmarkDisplay = "<iframe id='ao3-bookmark-view' src=" + 
-							   url + "></iframe>";
+     //bookmarkDisplay = "<iframe id='ao3-bookmark-view' src=" + url + "></iframe>";
+     bookmarkDisplay = '<div><a class="result" href="' + url + '" target="_blank">Click to see bookmarks</a><p class="form-about">Why is this different? AO3 added some new security measures (good!) and it broke this tool (bad). <a href="https://fandomstatsorg.tumblr.com/post/163556436634/notice-bookmark-viewer-in-safe-mode">More info here.</a></p></div>';
      document.getElementById("bookmarks").innerHTML = bookmarkDisplay;
  }
 </script>
