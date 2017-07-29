@@ -324,7 +324,15 @@ svg {
 	border: 1px solid #ddd;
 }
 
+#bookmarks {
+	text-align:center;
+}
 
+#bookmarks .result {
+	display:block;
+	font-size: 2em;
+	margin-bottom:0.5em;
+}
 /*------------------------------ about */
 
 #contributors {
