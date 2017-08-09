@@ -93,10 +93,12 @@ $(".searchform").submit(function(e){
 			unquoted+= c;
 		}
 	}
+	var tags=[];
 	var other_tags = [];
 	
 	if (quoteCount <= 1) {
 		main_tag = unquoted;
+		tags.push(main_tag);
 	} else {
 		var tags = [];
 		var re = /[^\s"']+|"([^"]*)"|'([^']*)'/g;
