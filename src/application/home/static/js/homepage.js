@@ -456,7 +456,7 @@ $(".searchform").submit(function(e){
 				searchform.append('<p class="form-info">This tag wasn\'t found on AO3.</p>');				
 			} else if (object.status == 501) {
 				//redirection
-				searchform.append('<p class="form-info">Looks like this is a non-canonical tag! Unfortunately, our API can\'t follow redirects yet. Try <a href="http://archiveofourown.org/tags/search?utf8=%E2%9C%93&query[name]='+tag+'&query[type]=">looking up the canonical tag on AO3</a>.</p>');								
+				searchform.append('<p class="form-info">Looks like this is a non-canonical tag! Unfortunately, our API can\'t follow redirects yet. Try <a href="http://archiveofourown.org/tags/search" >looking up the canonical tag on AO3</a>.</p>');								
 			} else if (object.status == 500 || exception === 'parsererror' || exception === 'timeout' || exception === 'abort'){
 				//internal error
 				button.html($("#button-error").clone().show());
