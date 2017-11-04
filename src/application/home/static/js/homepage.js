@@ -83,37 +83,12 @@ $(".searchform").submit(function(e){
 	var tagAPI = {};
 	tagAPI.url = "/api/v1.0/stats";
 	var searchString = $("#search-string").val();
-	var quoteCount = 0;
-	var unquoted = '';
-	for (var i = 0, len = searchString.length; i < len; i++) {
-		c = searchString.charAt(i);
-		if (c == '"') {
-			quoteCount++;
-		} else {
-			unquoted+= c;
-		}
-	}
-	var tags=[];
-	var other_tags = [];
 	
-	if (quoteCount <= 1) {
-		main_tag = unquoted;
-		tags.push(main_tag);
-	} else {
-		var tags = [];
-		var re = /[^\s"']+|"([^"]*)"|'([^']*)'/g;
-		var resultArr = [];
-		while ((resultArr = re.exec(searchString)) !== null) {
-			if (resultArr[1] == undefined) {
-				tags.push(resultArr[0]);
-			} else {
-				tags.push(resultArr[1]);
-			}
-		}
-		main_tag = tags[0];
-		other_tags = tags.slice(1,tags.length);
-	}
-	var params = {};
+	var tags = searchString.split(",");
+	
+	main_tag = tags[0];
+	other_tags = tags.slice(1);
+	
 	/*TEST
 	$.ajax({
 		url:"/home/static/js/dummy.json",
