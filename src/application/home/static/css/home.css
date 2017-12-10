@@ -73,15 +73,15 @@ body {
 
 @media screen and (min-width:40em) {
 	#header-box {
-		padding-left:0;	
-	}	
+		padding-left:0;
+	}
 }
 
 
 #main-nav ul {
 	margin:0;
 	padding:0;
-	list-style: none;	
+	list-style: none;
 }
 
 #main-nav ul li {
@@ -144,7 +144,7 @@ body {
 
 #homepage-linklist ul {
 	font-size:0.8rem;
-	
+
 }
 
 #main.homepage hr.splitter {
@@ -245,15 +245,27 @@ a.more {
 	padding:1rem;
 }
 
+#search-bookmark {
+	text-align:right;
+}
 
-@media only screen and (min-width: 90.063em) { 
+#search-bookmark a.bookmark {
+	color:#999;
+	font-size:0.8em;
+}
+
+#search-bookmark a.bookmark:hover {
+	color:#c00;
+}
+
+@media only screen and (min-width: 90.063em) {
 	.graph:nth-child(odd) {
 		padding-right:0.5rem;
 	}
-	
+
 	.graph:nth-child(even) {
 		padding-left:0.5rem;
-	}	
+	}
 } /* min-width 1441px, xlarge screens; shiv to collapse central gutter */
 
 #result-field {
@@ -293,24 +305,24 @@ svg {
 		stroke: #333;
 		shape-rendering: crispEdges;
 	}
-	
+
 	.y.axis .tick line, .axis .domain {
 		display:none;
 	}
-	
+
 	.x.axis .tick line {
 		stroke:#ccc;
 		stroke-width:2;
 	}
-	
+
 	.x.axis text {
 		font-size:0.8em;
 		color:#ddd;
 	}
-	
+
 	.values {
 	}
-	
+
 	text {
 		font-family: "Open Sans", sans-serif;
 	}
