@@ -23,7 +23,7 @@ FSTATS.sortFunctions = {
 			return 1;
 		} else {
 			return -1;
-		}		
+		}
 	},
 	'value':function(a,b){
 		return b.x-a.x;
@@ -37,6 +37,16 @@ FSTATS.parseTags = function(string,taglist) {
 		}
 		return newString;
 	};
+
+FSTATS.fixedEncodeURIComponent = function(str) {
+  return encodeURIComponent(str).replace(/%20/g, '+').replace(/[!'()*]/g, function(c) {
+    return '%' + c.charCodeAt(0).toString(16);
+  });
+};
+
+FSTATS.fixedDecodeURIComponent = function(str) {
+	return decodeURIComponent(str.replace(/\+/g, '%20'));
+}
 
 FSTATS.defaultMargin = {
 		top:10,
@@ -57,7 +67,7 @@ FSTATS.redrawGraphs = debounce(function(){
 			if (this.redraw !== undefined) {
 				this.redraw();
 			}
-		});	
+		});
 	}
 },250);
 
@@ -66,13 +76,26 @@ FSTATS.redrawGraphs = debounce(function(){
 window.addEventListener('resize', FSTATS.redrawGraphs);
 
 
-/*TESTING
+/*//TESTING
 $(document).ready(function(){
-	$("#search-string").val("fluff");
-	$(".searchform").submit();	
+	$("#search-string").val("Harry Potter");
+	$(".searchform").submit();
 });
-TESTING*/
+//TESTING*/
 
+//QUERY GET PARAM PARSER
+$(document).ready(function(){
+	var searchMatch = window.location.search.match(/^\?q=(.+)/i);
+	if (searchMatch != null) {
+			query = FSTATS.fixedDecodeURIComponent(searchMatch[1]);
+			console.log("decoded query: "+query);
+			$("#search-string").val(query);
+			$(".searchform").submit();
+	}
+});
+
+
+//SEARCH LISTENER
 $(".searchform").submit(function(e){
 	e.preventDefault();
 	searchform = $(this);
@@ -83,18 +106,18 @@ $(".searchform").submit(function(e){
 	var tagAPI = {};
 	tagAPI.url = "/api/v1.0/stats";
 	var searchString = $("#search-string").val();
-	
+
 	var tags = searchString.split(",");
-	
+
 	main_tag = tags[0];
 	other_tags = tags.slice(1);
-	
+
 	/*TEST
 	$.ajax({
 		url:"/home/static/js/dummy.json",
 		success: function(result, status, object){
-	EST*/	
-	
+	EST*/
+
 	///*LIVE
 	$.ajax({
 		url:tagAPI.url,
@@ -105,17 +128,38 @@ $(".searchform").submit(function(e){
 		success: function(result, status, object){
 			//LIVE*/
 			$(".api-results").show('fast');
-			
+
 			var graphs = $("#main-graphs");
 			graphs.css("visibility","visible");
-			
+
+			//TODO Remove duplcity - searching container div, checking whether to plot or update
+
+			var searchBookmark = $("#search-bookmark");
+			if (0 == searchBookmark.length) {
+				searchBookmark = $('<div class="large-12 column graph" id="search-bookmark"></div>');
+				graphs.append(searchBookmark);
+			}
+
+			if (FSTATS.graphInstances['searchBookmark'] !== undefined) {
+				FSTATS.graphInstances['searchBookmark'].update({
+					query:searchString,
+					container:searchBookmark,
+				});
+			} else {
+				FSTATS.graphInstances['searchBookmark'] = new FSTATS.Bookmark({
+					query:searchString,
+					container:searchBookmark,
+				});
+				FSTATS.graphInstances['searchBookmark'].plot();
+			};
+
 			//* NUMBER OF FICS
 			var numSum = $("#num-sum");
 			if (0 == numSum.length) {
 				numSum = $('<div class="large-12 column graph" id="num-sum"></div>');
-				graphs.append(numSum);	
+				graphs.append(numSum);
 			}
-			
+
 			if (FSTATS.graphInstances['sumOfWorks'] !== undefined) {
 				FSTATS.graphInstances['sumOfWorks'].update({
 					number:result.numworks,
@@ -141,16 +185,16 @@ $(".searchform").submit(function(e){
 				FSTATS.graphInstances['sumOfWorks'].plot();
 			};
 			//NUMBER OF FICS*/
-			
-			
+
+
 			//*RATINGS
 			var ratings = $("#graph-ratings");
 			if (0 == ratings.length) {
 				ratings = $('<div class="large-12 column graph" id="graph-ratings"></div>');
 				ratings.append('<h3>Ratings</h3><p>What rating did the author choose for their work (if any).</p>');
-				graphs.append(ratings);	
+				graphs.append(ratings);
 			}
-			
+
 			if (FSTATS.graphInstances['ratingsGraph'] !== undefined) {
 				FSTATS.graphInstances['ratingsGraph'].setData({
 						values:[
@@ -158,35 +202,35 @@ $(".searchform").submit(function(e){
 								"x":result.stats.rating["General Audiences"],
 								"y":'G',
 								"description":'General Audiences',
-								"color":'#99D012',						
+								"color":'#99D012',
 							},
 							{
 								"x":result.stats.rating["Teen And Up Audiences"],
 								"y":'T',
 								"description":'Teen And Up Audiences',
-								"color":'#F1E024',						
+								"color":'#F1E024',
 							},
 							{
 								"x":result.stats.rating["Mature"],
 								"y":'M',
 								"description":'Mature',
-								"color":'#F39325',						
+								"color":'#F39325',
 							},
 							{
 								"x":result.stats.rating["Explicit"],
 								"y":'E',
 								"description":'Explicit',
-								"color":'#AB0606',						
+								"color":'#AB0606',
 							},
 							{
 								"x":result.stats.rating["Not Rated"],
 								"y":'N',
 								"description":'Not Rated',
-								"color":'#CECECC',						
+								"color":'#CECECC',
 							},
 						],
 						sum:result.numworks,
-					});	
+					});
 				FSTATS.graphInstances['ratingsGraph'].redraw();
 			} else {
 				FSTATS.graphInstances['ratingsGraph'] = new FSTATS.PieChart({
@@ -197,41 +241,41 @@ $(".searchform").submit(function(e){
 								"x":result.stats.rating["General Audiences"],
 								"y":'G',
 								"description":'General Audiences',
-								"color":'#99D012',						
+								"color":'#99D012',
 							},
 							{
 								"x":result.stats.rating["Teen And Up Audiences"],
 								"y":'T',
 								"description":'Teen And Up Audiences',
-								"color":'#F1E024',						
+								"color":'#F1E024',
 							},
 							{
 								"x":result.stats.rating["Mature"],
 								"y":'M',
 								"description":'Mature',
-								"color":'#F39325',						
+								"color":'#F39325',
 							},
 							{
 								"x":result.stats.rating["Explicit"],
 								"y":'E',
 								"description":'Explicit',
-								"color":'#AB0606',						
+								"color":'#AB0606',
 							},
 							{
 								"x":result.stats.rating["Not Rated"],
 								"y":'N',
 								"description":'Not Rated',
-								"color":'#CECECC',						
+								"color":'#CECECC',
 							},
 						],
-						sum:result.numworks,					
+						sum:result.numworks,
 					},
 				});
 				FSTATS.graphInstances['ratingsGraph'].plot();
 			}
 			//RATINGS*/
-			
-			
+
+
 			///*CATEGORIES
 			var categories = $("#graph-category");
 			if (0 == categories.length) {
@@ -239,12 +283,12 @@ $(".searchform").submit(function(e){
 				categories.append('<h3>Categories</h3><p>Types of ships based on the genders of the participants, where F = female, M = male. (The percents are from the total amount of works and do not add up to 100%.)</p>');
 				graphs.append(categories);
 			}
-			
+
 			if (FSTATS.graphInstances['categoryGraph'] !== undefined) {
 				FSTATS.graphInstances['categoryGraph'].setData({
 						values:result.stats.category,
 						sum:result.numworks,
-					});	
+					});
 				FSTATS.graphInstances['categoryGraph'].redraw();
 			} else {
 				FSTATS.graphInstances['categoryGraph'] = new FSTATS.BarGraph({
@@ -258,11 +302,11 @@ $(".searchform").submit(function(e){
 					},
 					ratio:3/9,
 				});
-				
+
 				FSTATS.graphInstances['categoryGraph'].plot();
 			}
 			//CATEGORIES*/
-			
+
 			///*WARNINGS
 			var warnings = $("#graph-warning");
 			if (0 == warnings.length) {
@@ -275,7 +319,7 @@ $(".searchform").submit(function(e){
 					values:result.stats.warning,
 					sum:result.numworks,
 				});
-				FSTATS.graphInstances['warningGraph'].redraw();	
+				FSTATS.graphInstances['warningGraph'].redraw();
 			} else {
 				FSTATS.graphInstances['warningGraph'] = new FSTATS.BarGraph({
 					type:'percentage',
@@ -291,7 +335,7 @@ $(".searchform").submit(function(e){
 				FSTATS.graphInstances['warningGraph'].plot();
 			}
 			//WARNINGS*/
-			
+
 			///*FANDOMS
 			var fandoms = $("#graph-fandom");
 			if (0 == fandoms.length) {
@@ -299,12 +343,12 @@ $(".searchform").submit(function(e){
 				fandoms.append('<h3>Fandoms</h3><p>First 10 most frequently appearing fandoms for this tag.</p>');
 				graphs.append(fandoms);
 			}
-			
+
 			if (FSTATS.graphInstances['fandomGraph'] !== undefined) {
 				FSTATS.graphInstances['fandomGraph'].setData({
 					values:result.stats.fandom,
 					sum:result.numworks,
-				});	
+				});
 				FSTATS.graphInstances['fandomGraph'].redraw();
 			} else {
 				FSTATS.graphInstances['fandomGraph'] = new FSTATS.BarGraph({
@@ -321,21 +365,21 @@ $(".searchform").submit(function(e){
 				FSTATS.graphInstances['fandomGraph'].plot();
 			}
 			//FANDOMS*/
-			
+
 			///*RELATIONSHIPS
-			var relationships = $("#graph-relationship"); 
+			var relationships = $("#graph-relationship");
 			if (0 == relationships.length) {
 				relationships = $('<div class="large-12 column graph" id="graph-relationship"></div>');
 				relationships.append('<h3>Relationships</h3><p>First 10 most frequently appearing ships for this tag, both romantic (designated with a "/") and platonic (using "&").</p>');
 				graphs.append(relationships);
 			}
-			
+
 			if (FSTATS.graphInstances['relationshipGraph'] !== undefined) {
 				FSTATS.graphInstances['relationshipGraph'].setData({
 					values:result.stats.relationship,
 					sum:result.numworks,
 				});
-				FSTATS.graphInstances['relationshipGraph'].redraw();	
+				FSTATS.graphInstances['relationshipGraph'].redraw();
 			} else {
 				FSTATS.graphInstances['relationshipGraph'] = new FSTATS.BarGraph({
 					container:relationships,
@@ -351,7 +395,7 @@ $(".searchform").submit(function(e){
 				FSTATS.graphInstances['relationshipGraph'].plot();
 			}
 			//RELATIONSHIPS*/
-			
+
 			///*CHARACTERS
 			var characters = $("#graph-character")
 			if (0 == characters.length) {
@@ -359,12 +403,12 @@ $(".searchform").submit(function(e){
 				characters.append('<h3>Characters</h3><p>First 10 most frequently appearing characters for this tag.</p>');
 				graphs.append(characters);
 			}
-			
+
 			if (FSTATS.graphInstances['characterGraph'] !== undefined) {
 				FSTATS.graphInstances['characterGraph'].setData({
 					values:result.stats.character,
 					sum:result.numworks,
-				});	
+				});
 				FSTATS.graphInstances['characterGraph'].redraw();
 			} else {
 				FSTATS.graphInstances['characterGraph'] = new FSTATS.BarGraph({
@@ -381,7 +425,7 @@ $(".searchform").submit(function(e){
 				FSTATS.graphInstances['characterGraph'].plot();
 			}
 			//CHARACTERS*/
-			
+
 			///*FREEFORM TAGS
 			var freeforms = $("#graph-freeform");
 			if (0 == freeforms.length) {
@@ -389,13 +433,13 @@ $(".searchform").submit(function(e){
 				freeforms.append('<h3>Freeform tags</h3><p>First 10 most frequently appearing "freeform" tags (i.e. other than fandom, relationship, or character tags).</p>');
 				graphs.append(freeforms);
 			}
-			
+
 			if (FSTATS.graphInstances['freeformGraph'] !== undefined) {
 				FSTATS.graphInstances['freeformGraph'].setData({
 					values:result.stats.freeform,
 					sum:result.numworks,
 				});
-				FSTATS.graphInstances['freeformGraph'].redraw();	
+				FSTATS.graphInstances['freeformGraph'].redraw();
 			} else {
 				FSTATS.graphInstances['freeformGraph'] = new FSTATS.BarGraph({
 					container:freeforms,
@@ -411,27 +455,27 @@ $(".searchform").submit(function(e){
 				FSTATS.graphInstances['freeformGraph'].plot();
 			}
 			//FREEFORM TAGS*/
-			
+
 			var csvField = $("#api-export");
 			if (0 == csvField.length) {
 				csvField = $('<div id="api-export" class="large-12 column"><label>results as CSV:</label><textarea placeholder="" id="result-field" readonly="readonly"></textarea></div>');
 				csvField.appendTo(graphs);
 			}
-			
+
 			FSTATS.renderCsv(result,csvField);
-										 
+
 		},
 		error: function(object,exception) {
 			//console.log(object);
 			$("#result-field").val("");
 			if (object.status === 0) {
-				//connection error				
+				//connection error
 			} else if (object.status == 404 || object.status == 400) {
 				//not found
-				searchform.append('<p class="form-info">This tag wasn\'t found on AO3.</p>');				
+				searchform.append('<p class="form-info">This tag wasn\'t found on AO3.</p>');
 			} else if (object.status == 501) {
 				//redirection
-				searchform.append('<p class="form-info">Looks like this is a non-canonical tag! Unfortunately, our API can\'t follow redirects yet. Try <a href="http://archiveofourown.org/tags/search" >looking up the canonical tag on AO3</a>.</p>');								
+				searchform.append('<p class="form-info">Looks like this is a non-canonical tag! Unfortunately, our API can\'t follow redirects yet. Try <a href="http://archiveofourown.org/tags/search" >looking up the canonical tag on AO3</a>.</p>');
 			} else if (object.status == 500 || exception === 'parsererror' || exception === 'timeout' || exception === 'abort'){
 				//internal error
 				button.html($("#button-error").clone().show());
@@ -445,7 +489,7 @@ $(".searchform").submit(function(e){
 			button.html(buttonContent); //loader back to text
 		}
 	});
-	
+
 });
 
 
@@ -459,28 +503,51 @@ FSTATS.renderCsv = function(result,container) {
 		csv += "\n";
 		csv += index + ", number of works\n";
 		csv += commaConcat(result.stats[index]);
-	});			
-	
-	container.find("#result-field").val(csv);	
+	});
+
+	container.find("#result-field").val(csv);
 };
+
+FSTATS.Bookmark = function(settings) {
+	var self = this;
+	self.container = settings.container;
+
+	self.setBookmark = function(query) {
+		console.log("query: "+query);
+		self.bookmark = "/?q="+FSTATS.fixedEncodeURIComponent(query);
+		console.log("bookmark: " + self.bookmark);
+	}
+
+	self.setBookmark(settings.query);
+
+	self.plot = function() {
+		var div = $('<div><a class="bookmark" href="'+self.bookmark+'">(permalink)</a></div>');
+		div.appendTo(self.container);
+	}
+
+	self.update = function(settings) {
+		self.setBookmark(settings.query);
+		self.container.find(".bookmark").attr("href",self.bookmark);
+	}
+}
 
 //TODO: get all works on AO3 from the logged-out screen -- relevant github issue https://github.com/esgibter/fandomstats/issues/40
 FSTATS.Number = function(settings) {
 	var self = this;
 	this.number = settings.number;
 	if (undefined != settings.variables){
-		this.variables = settings.variables;	
+		this.variables = settings.variables;
 	} else {
 		this.variables = {};
 	}
-	
+
 	this.commentBefore = FSTATS.parseTags(settings.commentBefore,this.variables);
 	this.commentAfter = FSTATS.parseTags(settings.commentAfter,this.variables);
 	this.container = settings.container;
 	this.color = settings.color;
-	
-	
-	
+
+
+
 	this.plot = function() {
 		var div = $('<div class="number" style="color:'+self.color+'"></div>');
 		div.append('<div class="comment" id="comment-before">'+self.commentBefore+'</div>');
@@ -488,33 +555,33 @@ FSTATS.Number = function(settings) {
 		div.append('<div class="comment" id="comment-after">'+self.commentAfter+'</div>');
 		div.appendTo(self.container);
 	};
-	
+
 	this.setNumber = function(newNumber) {
 		self.container.find('.value').html(d3.format(",")(newNumber));
 	};
-	
+
 	this.update = function(settings) {
 		//update number
 		self.number = settings.number;
 		self.container.find('.value').html(d3.format(",")(settings.number));
-		
+
 		//update variables, if changed
 		if (undefined != settings.variables) {
 			self.variables= settings.variables;
 		}
-		
+
 		//update comments, if changed
 		if (undefined != settings.commentBefore) {
 			self.commentBefore = FSTATS.parseTags(settings.commentBefore,this.variables);
-			self.container.find("#comment-before").html(self.commentBefore);	
+			self.container.find("#comment-before").html(self.commentBefore);
 		}
-		if (undefined != settings.commentAfter) {	
+		if (undefined != settings.commentAfter) {
 			self.commentAfter = FSTATS.parseTags(settings.commentAfter,this.variables);
 			self.container.find("#comment-after").html(self.commentAfter);
 		}
-		
-		
-		
+
+
+
 	};
 };
 
@@ -522,70 +589,70 @@ FSTATS.Number = function(settings) {
 FSTATS.Graph = function(settings) {
 	this.data = settings.data;
 	var self = this;
-	
+
 	if (undefined == settings.sort) {
 		this.sortFunction = FSTATS.sortFunctions['key'];
 	} else {
 		this.sortFunction = FSTATS.sortFunctions[settings.sort];
 	}
-	
-	
+
+
 	this.setData = function(newData) {
 		self.values = newData.values;
 		self.sum = newData.sum;
 		self.dataset = [];
 		self.longest = 0;
 		self.max = 0;
-		
+
 		for (key in self.values) {
 			var number = self.values[key];
 		    var percent = number/self.sum;
-		    
+
 		    //find longest label (needed to size the left margin)
 		    if (key.length > self.longest) {
 		    	self.longest = key;
-		    }  
-		    
+		    }
+
 		    //find the largest value (needed for absolute graphs)
 		    if (number > self.max) {
 		    	self.max = number;
-		    }  
-		    
+		    }
+
 			item = {
 					y:decodeHtml(key),
 					x:number,
 					percent:percent
 				};
-			
+
 			self.dataset.push(item);
 		};
-		
+
 		//alphabetize the results. TODO maybe have an option to force a specific order?
 		self.dataset.sort(self.sortFunction);
 	};
-	
+
 	/**
 	 * Margins. Shared between all graphs for consistency sake.
 	 */
 	this.margin =  JSON.parse(JSON.stringify(FSTATS.defaultMargin)); //hack to clone, not add reference to the original object
-	
-	
+
+
 	/**
 	 * Method that redraws the graph.
 	 */
 	this.redraw = settings.redraw;
-	
+
 	/**
 	 * Method that plots the graph.
 	 */
-	this.plot = settings.plot;	
-	
+	this.plot = settings.plot;
+
 	/**
 	 * Get the width of the widest text in a dataset - used to calculate margins on bar graphs.
 	 */
 	this.getTextWidth = function(svg, dataset) {
 		var maxTextWidth = 0;
-		
+
 		svg.append('g')
 		    .selectAll('.dummyText')
 		    .data(dataset)
@@ -602,16 +669,16 @@ FSTATS.Graph = function(settings) {
 		    });
 		return maxTextWidth;
 	}
-	
+
 	/**
-	 * Div that contains the graph. (JQuery object) 
+	 * Div that contains the graph. (JQuery object)
 	 */
 	this.container = settings.container;
-	
+
 	/**
 	 * A decimal number. (I personally write them as fractions when setting them, it's easier to read IMO.)
 	 */
-	this.ratio = settings.ratio;		
+	this.ratio = settings.ratio;
 };
 
 FSTATS.BarGraph = function(settings) {
@@ -619,21 +686,21 @@ FSTATS.BarGraph = function(settings) {
 	this.parent = FSTATS.Graph;
 	this.parent.call(this,settings); //calls parent constructor
 	if (settings.type == undefined) {
-		this.type = 'absolute';	
+		this.type = 'absolute';
 	} else {
 		this.type = settings.type;
 	}
-	
+
 	this.setData(this.data);
 
 	this.plot = function() {
 		//console.log("---------------------");
 		var svgWidth = this.container.width();
 		this.width = this.container.width() - this.margin.left - this.margin.right;
-		
+
 		var height = this.width*this.ratio - this.margin.top - this.margin.bottom;
 		var numberOfBars = Object.keys(this.data).length;
-		
+
 		if (height > numberOfBars * FSTATS.maxBarHeight) { //too thick
 			this.height = numberOfBars*FSTATS.maxBarHeight;
 		} else if (height > numberOfBars * FSTATS.minBarHeight) { //too thin
@@ -641,69 +708,69 @@ FSTATS.BarGraph = function(settings) {
 		} else { //just right
 			this.height =  height;
 		}
-		
+
 		var svgHeight = self.height + self.margin.top + self.margin.bottom;
-		
+
 		self.svg = d3.select(self.container[0]) //self.container is a JQuery object, this is how we get the DOM element out of it. TODO Maybe do it the other way round and pass a DOM element?
 				.append("svg")
 				.attr("class","has-graph")
 				.attr("width",svgWidth)
 				.attr("height",svgHeight);
-				
+
 		var maxTextWidth = self.getTextWidth(self.svg,self.dataset);
 		self.margin.left = self.margin.left + maxTextWidth;
 		self.width = self.width - maxTextWidth;
-		
+
 		self.graph = self.svg.append("g")
-					.attr("transform","translate(" + (self.margin.left) + ", "+ self.margin.top +")");	
-		
+					.attr("transform","translate(" + (self.margin.left) + ", "+ self.margin.top +")");
+
 		// =================== defining scales and axes
-		
+
 		self.ficCountLabelPadding = FSTATS.fontSizes["medium label"]*FSTATS.em * 4;
-		
+
 		if ('percentage' == self.type) {
 			self.xScale = d3.scaleLinear()
 				.domain([0,self.sum])
-				.range([0,self.width]);	
+				.range([0,self.width]);
 		} else {
 			self.xScale = d3.scaleLinear()
 				.domain([0,self.max])
-				.range([0,self.width - self.ficCountLabelPadding]);	
+				.range([0,self.width - self.ficCountLabelPadding]);
 		}
-		
-				
+
+
 		self.xAxis = d3.axisBottom(self.xScale);
-					
-		
+
+
 		self.yScale = d3.scaleBand()
 					.domain(self.dataset.map(function(d) {return d.y;}))
 					.rangeRound([0,self.height]) //I'm not "flipping" the axis here, because I want the bars to start at top
 					.padding(0.05);
-					
-					
+
+
 		self.yAxis = d3.axisLeft(self.yScale);
-		
+
 		//================= drawing axes
-		
-		
+
+
 		self.graph.append("g")
 					.attr("class","y axis")
 					.attr("transform","translate(0,0)")
 					.call(self.yAxis)
 					.attr("font-size",FSTATS.fontSizes["medium label"] + 'em')
 					.attr("fill","#333");
-					
-		
+
+
 		self.graph.selectAll("g.x .tick text")
 					.attr("transform","translate(0,10)");
-					
+
 		//================= plotting the values
-	
+
 		if ('percentage'== self.type) {
 			self.slots = self.graph.append("g")
 						.attr("class","slots")
 						.style("fill",FSTATS.palette.light1);
-						
+
 			slotRects = self.slots.selectAll("rect")
 						.data(self.dataset)
 						.enter()
@@ -718,17 +785,17 @@ FSTATS.BarGraph = function(settings) {
 						.attr("width", function(d) {
 							return self.xScale(self.sum);
 						})
-						.attr("fill","#f0f0f0"); //TODO ??????	
+						.attr("fill","#f0f0f0"); //TODO ??????
 		}
-		
-		
+
+
 		self.bars = self.graph.append("g")
 					.attr("class","bars")
 					.style("fill",self.data.color)
 					.attr("width",self.width)
 					.attr("height",self.height)
 					.attr("transform","translate(0,0)");
-		
+
 		var rect = self.bars.selectAll("rect")
 					.data(self.dataset)
 					.enter()
@@ -741,7 +808,7 @@ FSTATS.BarGraph = function(settings) {
 						})
 						.attr("height", self.yScale.bandwidth())
 						.attr("width", function(d) {
-							return 0; //animate from 0 to width						
+							return 0; //animate from 0 to width
 						})
 						.attr("fill",self.data.color)
 					.transition()
@@ -751,11 +818,11 @@ FSTATS.BarGraph = function(settings) {
 							return self.xScale(d.x);
 						})
 					;
-					
+
 		if ('percentage' == self.type) {
 			self.percents = self.graph.append("g")
 						.attr("class","percents");
-			
+
 			var percentLabels = self.percents.selectAll("text")
 						.data(self.dataset)
 						.enter()
@@ -769,22 +836,22 @@ FSTATS.BarGraph = function(settings) {
 						.attr("dy","0.35em")
 						.attr("height",self.yScale.bandwidth())
 						.text(function(d) {
-							return d3.format(">.0%")(d.percent);					
+							return d3.format(">.0%")(d.percent);
 						})
 						.attr("font-size", FSTATS.fontSizes["small label"] + 'em')
-						.attr("fill","#999");	
-		} 		
-		
-		
+						.attr("fill","#999");
+		}
+
+
 		self.ficCounts = self.graph.append("g")
 					.attr("class","fic-counts");
-		
+
 		var countLabels = self.ficCounts.selectAll("text")
 					.data(self.dataset)
 					.enter()
 					.append("text")
 					.attr("x",function (d) {
-						return self.xScale(d.x) + 5;											
+						return self.xScale(d.x) + 5;
 					})
 					.attr("y",function(d) {
 						return self.yScale(d.y) + self.yScale.bandwidth()/2;
@@ -796,9 +863,9 @@ FSTATS.BarGraph = function(settings) {
 						return d3.format(",")(d.x);
 					})
 					.attr("fill",self.data.textColor)
-					.attr("text-anchor","start");	
-					
-				
+					.attr("text-anchor","start");
+
+
 			if ('percentage' == self.type) {
 				countLabels.attr("x",function (d) {
 						var left = self.xScale(d.x);
@@ -807,7 +874,7 @@ FSTATS.BarGraph = function(settings) {
 						} else {
 							return left - 5;
 						}
-											
+
 						})
 						.attr("fill", function(d) {
 							var left = self.xScale(d.x);
@@ -826,27 +893,27 @@ FSTATS.BarGraph = function(settings) {
 							}
 						});
 			}
-			
+
 	};
 	//additional constructor shit
-	
+
 	this.redraw = function() {
 		//console.log("redrawing graph!");
-	
+
 		//get new size of container
 		var svgWidth = this.container.width();
-		
+
 		//reset margins
 		self.margin.left = FSTATS.defaultMargin.left;
 		self.margin.right = FSTATS.defaultMargin.right;
-		
+
 		//recalculate original width (without labels)
 		self.width = svgWidth - self.margin.left - self.margin.right;
-		
+
 		//recalculate height (with bar height constraints)
 		var height = this.width*this.ratio - this.margin.top - this.margin.bottom;
 		var numberOfBars = Object.keys(this.data).length;
-		
+
 		if (height > numberOfBars * FSTATS.maxBarHeight) { //too thick
 			this.height = numberOfBars*FSTATS.maxBarHeight;
 		} else if (height > numberOfBars * FSTATS.minBarHeight) { //too thin
@@ -854,41 +921,41 @@ FSTATS.BarGraph = function(settings) {
 		} else { //just right
 			this.height =  height;
 		}
-		
+
 		var svgHeight = self.height + self.margin.top + self.margin.bottom;
-		
+
 		self.svg.attr("width",svgWidth)
 				.attr("height",svgHeight);
-		
+
 		var maxTextWidth = self.getTextWidth(self.svg,self.dataset);
 		self.margin.left = self.margin.left + maxTextWidth;
 		self.width = self.width - maxTextWidth;
-				
+
 		self.graph.attr("transform","translate(" + (self.margin.left) + ", "+ self.margin.top +")");
-		
-		
+
+
 		if ('percentage' == self.type) {
 			self.xScale.domain([0,self.sum])
-					.range([0,self.width]);	
+					.range([0,self.width]);
 		} else {
 			self.xScale.domain([0,self.max])
-			.range([0,self.width - self.ficCountLabelPadding]);	
+			.range([0,self.width - self.ficCountLabelPadding]);
 		}
-		
+
 		//update scale with new data
 		self.yScale.domain(self.dataset.map(function(d) {return d.y;}))
 					.rangeRound([0,self.height]);
-				
+
 		self.graph.select(".y.axis")
 					.transition()
 						.duration(300)
 						.attr("transform","translate(0,0)")
 						.call(self.yAxis);
-		
+
 		self.bars.selectAll("rect")
 					.data(self.dataset)
 					.transition() //resize heights (simultaneously with the slots)
-						.duration(300) 
+						.duration(300)
 						.attr("y", function(d) {
 							return self.yScale(d.y);
 						})
@@ -901,14 +968,14 @@ FSTATS.BarGraph = function(settings) {
 							//console.log(d);
 							return self.xScale(d.x);
 						});
-					
-		
+
+
 		self.ficCounts.selectAll("text")
 					.data(self.dataset)
 					.transition()
 						.duration(1000)
 						.attr("x",function (d) {
-							return self.xScale(d.x) + 5;				
+							return self.xScale(d.x) + 5;
 						})
 						.attr("y",function(d) {
 							return self.yScale(d.y) + self.yScale.bandwidth()/2;
@@ -917,9 +984,9 @@ FSTATS.BarGraph = function(settings) {
 						.text(function(d) {
 							return d3.format(",")(d.x);
 						});
-											
-		
-		
+
+
+
 		if ('percentage' == self.type) {
 			self.slots.selectAll("rect")
 						.data(self.dataset)
@@ -932,7 +999,7 @@ FSTATS.BarGraph = function(settings) {
 							.attr("width", function(d) {
 								return self.xScale(self.sum);
 							});
-							
+
 			self.percents.selectAll("text")
 					.data(self.dataset)
 					.transition()
@@ -945,9 +1012,9 @@ FSTATS.BarGraph = function(settings) {
 						})
 						.attr("height",self.yScale.bandwidth())
 						.text(function(d) {
-							return d3.format(">.0%")(d.percent);					
+							return d3.format(">.0%")(d.percent);
 						});
-			
+
 			self.ficCounts.selectAll("text")
 					.data(self.dataset)
 					.transition()
@@ -958,7 +1025,7 @@ FSTATS.BarGraph = function(settings) {
 								return self.xScale(d.x) + 5;
 							} else {
 								return self.xScale(d.x) - 5;
-							}					
+							}
 						})
 						.attr("y",function(d) {
 							return self.yScale(d.y) + self.yScale.bandwidth()/2;
@@ -983,9 +1050,9 @@ FSTATS.BarGraph = function(settings) {
 						.text(function(d) {
 							return d3.format(",")(d.x);
 						});
-			}					 			
-			
-	};	
+			}
+
+	};
 };
 
 FSTATS.BarGraph.prototype = Object.create(FSTATS.Graph.prototype); //inheritance
@@ -996,8 +1063,8 @@ FSTATS.PieChart = function(settings) {
 	var self = this;
 	this.parent = FSTATS.Graph;
 	this.parent.call(this,settings); //calls parent constructor
-	
-	
+
+
 	var parentSetData = this.setData;
 	this.setData = function(newData) {
 		if (undefined !== self.dataset) {
@@ -1012,11 +1079,11 @@ FSTATS.PieChart = function(settings) {
 		}
 	};
 	this.setData(settings.data);
-	
+
 	this.plot = function() {
 		self.width = self.container.width() - self.margin.left - self.margin.right;
 		self.height = self.width*2/3;
-	
+
 		self.labelPadding = FSTATS.em * 2;
 		self.radius = (self.height-2*self.labelPadding)/2;
 		//limit the radius (the leftover goes into padding)
@@ -1027,32 +1094,32 @@ FSTATS.PieChart = function(settings) {
 			self.radius = FSTATS.maxRadius;
 			self.height = (self.radius + self.labelPadding)*2; //so there isn't empty space at the bottom
 		}
-		
+
 		var svgWidth = self.width + self.margin.left + self.margin.right;
 		var svgHeight = self.height + self.margin.top + self.margin.bottom;
-		
+
 		self.svg = d3.select(self.container[0]) //self.container is a JQuery object, this is how we get the DOM element out of it. TODO Maybe do it the other way round and pass a DOM element?
 				.append("svg")
 				.attr("class","has-graph")
 				.attr("width",svgWidth)
 				.attr("height",svgHeight);
 		self.graph = self.svg.append("g")
-					.attr("transform","translate(" + self.margin.left + ", "+ self.margin.top +")");	
-					
+					.attr("transform","translate(" + self.margin.left + ", "+ self.margin.top +")");
+
 		self.pieGraph = self.graph.append("g")
 					.attr('transform', 'translate(' + (self.radius + self.labelPadding) +  ',' + (self.radius + self.labelPadding) + ')');
-					
+
 		//default colors (if not defined in settings)
 		var color = d3.scaleOrdinal(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
-		
+
 		self.pie = d3.pie()
 					.sort(null)
 					.value(function(d) {return d.x; });
-		
+
 		self.arc = d3.arc()
 					.innerRadius(0)
 					.outerRadius(self.radius);
-					
+
 		self.pieChart = self.pieGraph.selectAll('path')
 					.data(self.pie(self.dataset))
 					.enter()
@@ -1064,15 +1131,15 @@ FSTATS.PieChart = function(settings) {
 						} else {
 							return d.data.color;
 						}
-										
+
 					})
 					.each(function(d) { this._current = d; });
 
 		self.legend = self.graph.append("g")
 						.attr("class","legend")
 						.attr("transform","translate(" + (self.labelPadding*2 + self.radius*2 + self.labelPadding) + ", "+ (self.labelPadding*2) +")");
-						
-					
+
+
 		self.legendSamples = self.legend.selectAll('rect')
 					.data(self.dataset)
 					.enter()
@@ -1089,41 +1156,41 @@ FSTATS.PieChart = function(settings) {
 						} else {
 							return d.color;
 						}
-					});				
-					
-			
+					});
+
+
 		self.legendLabels = self.legend.selectAll("text")
 						.data(self.dataset)
 						.enter()
 						.append("text")
 						.attr("x",FSTATS.em+FSTATS.em*0.5)
 						.attr("y",function(d,i) {
-							return i*(FSTATS.em + FSTATS.em*0.5) + FSTATS.em*0.5; //i-th box from the top (half em padding) and center 
+							return i*(FSTATS.em + FSTATS.em*0.5) + FSTATS.em*0.5; //i-th box from the top (half em padding) and center
 						})
 						.attr("dy","0.35em")
 						.attr("height",FSTATS.em)
 						.text(function(d) {
-							return d.description + " ("+d3.format(",")(d.x)+")";					
+							return d.description + " ("+d3.format(",")(d.x)+")";
 						})
 						.attr("font-size", FSTATS.fontSizes["small label"] + 'em')
-						.attr("fill","#999");	
+						.attr("fill","#999");
 	};
-	
+
 	this.redraw = function() {
 		console.log("redrawing PieChart");
-		
+
 		console.log("old dataset:");
 		console.log(self.oldDataset);
 		console.log("new dataset:");
 		console.log(self.dataset);
-		
+
 		//reset left margin
 		self.margin.left = FSTATS.defaultMargin.left;
-		
+
 		//update width from DOM
 		self.width = self.container.width() - self.margin.left - self.margin.right;
 		self.height = self.width*2/3;
-		
+
 		//recalculate radius
 		self.radius = (self.height-2*self.labelPadding)/2;
 		if (self.radius > FSTATS.maxRadius) {
@@ -1133,25 +1200,25 @@ FSTATS.PieChart = function(settings) {
 			self.radius = FSTATS.maxRadius;
 			self.height = (self.radius + self.labelPadding)*2; //so there isn't empty space at the bottom
 		};
-		
+
 		var svgWidth = self.width + self.margin.left + self.margin.right;
 		var svgHeight = self.height + self.margin.top + self.margin.bottom;
-		
+
 		self.svg.attr("width",svgWidth)
 				.attr("height",svgHeight);
-				
+
 		//left margin might have been updated
-		self.graph.attr("transform","translate(" + self.margin.left + ", "+ self.margin.top +")");	
-		
+		self.graph.attr("transform","translate(" + self.margin.left + ", "+ self.margin.top +")");
+
 		//radius definitely updated
 		self.pieGraph.attr('transform', 'translate(' + (self.radius + self.labelPadding) +  ',' + (self.radius + self.labelPadding) + ')');
-		
-		self.pie.value(function(d) {return d.x; }); //update function in pie. 
-		
+
+		self.pie.value(function(d) {return d.x; }); //update function in pie.
+
 		self.arc = d3.arc()
 					.innerRadius(0)
 					.outerRadius(self.radius);
-		
+
 		//TODO this doesn't work. fix later.
 		var arcTween = function(a) {
 			var i = d3.interpolate(this._current, a);
@@ -1160,25 +1227,25 @@ FSTATS.PieChart = function(settings) {
 			  return self.arc(i(t));
 			};
 		};
-		
+
 		self.pieGraph.selectAll('path')
 					.data(self.pie(self.dataset)) //update data
 					.transition()
 						.duration(750)
 						.attrTween("d",arcTween)
-						.each(function(d) { this._current = d; }); //keep past angles for the next draw 
-						
-		
+						.each(function(d) { this._current = d; }); //keep past angles for the next draw
+
+
 		self.legendLabels.data(self.dataset)
 					.text(function(d) {
-						return d.description + " ("+d3.format(",")(d.x)+")";					
+						return d.description + " ("+d3.format(",")(d.x)+")";
 					});
-						
-		self.legend.attr("transform","translate(" + (self.labelPadding*2 + self.radius*2 + self.labelPadding) + ", "+ (self.labelPadding*2) +")");					
+
+		self.legend.attr("transform","translate(" + (self.labelPadding*2 + self.radius*2 + self.labelPadding) + ", "+ (self.labelPadding*2) +")");
 	};
-	
+
  };
- 
+
 
 FSTATS.PieChart.prototype = Object.create(FSTATS.Graph.prototype); //inheritance
 FSTATS.PieChart.prototype.constructor = FSTATS.PieChart; //sets the constructor to the right function
@@ -1196,7 +1263,7 @@ function commaConcat(obj) {
 	var string = "";
 	$.each(obj, function(index, value){
 		string += index + ", " + value + "\n";
-	});	
+	});
 	return string;
 }
 
