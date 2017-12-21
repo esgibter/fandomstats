@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 {% set page_id = "ao3-tag-stats" %}
-{% block title %}AO3 Tag Stats API{% endblock %}
+{% set title = "AO3 Tag Stats API" %}
 {% block content %}
 	<h2>AO3 Tag Stats API</h2>
 	<div class="row collapse">
 		<div class="small-12 columns">
-			<p>This is a tool we're building for programmers and fandom analysts to get data from Archive Of Our Own (AO3), and use it in their own project. 
+			<p>This is a tool we're building for programmers and fandom analysts to get data from Archive Of Our Own (AO3), and use it in their own project.
 				The data visualisations on the homepage will be an example of what you can do with the resulting dataset.
 			</p>
-				
+
 				<h3>So, how does it work?</h3>
 			<p>
 				The purpose of the API is to make it easy to fetch and display basic stats about any type of AO3 tag.
@@ -23,9 +23,9 @@
 				<li>A warning tag: “Graphic Depictions Of Violence”</li>
 				<li>A freeform (additional) tag: “Angst”</li>
 			</ul>
-			<p>You pass the AO3 tag to the API (for example through a HTML field, like here)...</p>			
-		</div>		
-	</div>	
+			<p>You pass the AO3 tag to the API (for example through a HTML field, like here)...</p>
+		</div>
+	</div>
 	<form id="searchform" class="row collapse bigform searchform">
 		<div class="large-10 medium-9 small-12 columns">
 	          <input id="search-string" type="text" placeholder="tag name, e.g. 'Harry Potter' or 'fluff'">
@@ -47,14 +47,14 @@
 			</textarea>
 		</div>
 	</div>
-			
+
 	<div class="row collapse">
 		<div class="small-12 columns">
 			<h3>Wait, what is this?!</h3>
 			<p>Right now, we’re simply returning to you the same numbers that you’d see in the AO3 Sort &amp; Filter sidebar if you clicked on the tag on AO3
 				 -  but without having to record the numbers by hand every time you want to check a tag, and in a format ready to be processed further.
 			</p>
-				
+
 			<h3 id="future">What will it become?</h3>
 			<p>In one word... "more".</p>
 			<ul>
@@ -63,10 +63,10 @@
 				<li><strong>More control (both on the homepage and through the API).</strong> We want to offer granular filtering of fics, the same way the AO3 website does. Get fic counts just for a certain category within a tag, exclude a character, etc. etc.</li>
 				<li><strong>Provide other fandom data-related information and tools elsewhere on the site.</strong> Right now, you can see our <a href="ao3-bookmark-viewer">AO3 Bookmark Viewer</a> as one such example.</li>
 			</ul>
-			
+
 			<h3>How can I use the existing API -- or help develop it further?</h3>
 			<p>This project is very much a WIP right now. If you want to use our existing Python scripts, the API itself, or help develop the API or the site further, please <a href="about#contact">contact us</a>.</p>
-		</div>	
+		</div>
 	</div>
-	
+
 {% endblock %}

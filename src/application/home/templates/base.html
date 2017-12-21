@@ -8,21 +8,21 @@
 				{{title}} -- Fandom Stats
 			{% else %}
 				Fandom Stats
-			{% endif %}			
+			{% endif %}
 			</title>
 		<meta property="og:url" content="{{request.url}}" />
 		<meta property="og:site_name" content="Fandom Stats" />
-		
+
 		{% if description is defined %}
 			<meta name="description" content='{{description}}'>
-		{% endif %}			
-		
+		{% endif %}
+
 		{% if social_description is defined %}
 			<meta itemprop="description" content="{{social_description}}">
 			<meta name="twitter:description" content="{{social_description}}">
 			<meta property="og:description" content="{{social_description}}" />
-		{% endif %}			
-		
+		{% endif %}
+
 		{% if title is defined %}
 			<meta itemprop="name" content="{{title}}">
 			<meta name="twitter:title" content="{{title}}">
@@ -30,9 +30,9 @@
 		{% else %}
 			<meta itemprop="name" content="Fandom Stats">
 			<meta name="twitter:title" content="Fandom Stats">
-			<meta property="og:title" content="Fandom Stats" />	
+			<meta property="og:title" content="Fandom Stats" />
 		{% endif %}
-		
+
 		<link rel="apple-touch-icon-precomposed" sizes="57x57" href="{{ url_for('static', filename='img/icons/apple-touch-icon-57x57.png') }}" />
 		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="{{ url_for('static', filename='img/icons/apple-touch-icon-114x114.png') }}" />
 		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="{{ url_for('static', filename='img/icons/apple-touch-icon-72x72.png') }}" />
@@ -53,27 +53,28 @@
 		<meta name="msapplication-square150x150logo" content="{{ url_for('static', filename='img/icons/mstile-150x150.png') }}" />
 		<meta name="msapplication-wide310x150logo" content="{{ url_for('static', filename='img/icons/mstile-310x150.png') }}" />
 		<meta name="msapplication-square310x310logo" content="{{ url_for('static', filename='img/icons/mstile-310x310.png') }}" />
-		
+
 		<meta itemprop="image" content="{{ url_for('static', filename='img/thumbnail-image.png',_external=True) }}">
 		<meta property="og:image" content="{{ url_for('static', filename='img/thumbnail-image.png',_external=True) }}" />
 		<meta name="twitter:card" content="summary_large_image">
-		<meta name="twitter:image:src" content="{{ url_for('static', filename='img/preview-image.png',_external=True) }}">			
-		
-		
+		<meta name="twitter:image:src" content="{{ url_for('static', filename='img/preview-image.png',_external=True) }}">
+
+
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/normalize.css') }}" />
 	    <link rel="stylesheet" href="{{ url_for('static', filename='css/foundation.min.css') }}" />
 	    <link rel="stylesheet" href="{{ url_for('home.static', filename='css/home.css') }}" />
-	    <script src="{{ url_for('home.static', filename='js/vendor/modernizr.js') }}"></script>	    
+	    <script src="{{ url_for('home.static', filename='js/vendor/modernizr.js') }}"></script>
   </head>
 	<body class="no-js">
 		{% set navbar = [
 		    ('ao3-tag-stats', 'AO3 Tag Stats API',false),
 		    ('ao3-bookmark-viewer', 'AO3 Bookmark Viewer',false),
 		    ('reading-the-data', 'Reading the Data',false),
-		    ('about', 'About Fandom Stats',true),
+		    ('resources', 'Resources',false),
+				('about', 'About Fandom Stats',true),
 		] -%}
 		{% set active_page = page_id|default('') -%}
-		
+
 		<nav id="main-nav" class="row">
 			<div id="header-box" class="large-12 columns">
 				<ul>
@@ -83,18 +84,18 @@
 					  {% if last %}last{% endif %}">
 					  <a href="{{ id|e }}">{{ caption|e }}</a></li>
 					{% endfor %}
-				</ul>	
-			</div>			
+				</ul>
+			</div>
 		</nav>
 		<div id="wrapper">
 			<div class="row">
 				<div id="main" class="large-12 columns {{ page_id|e }}">
 					{% block content %}{% endblock %}
 				</div>
-					
+
 			</div>
 		</div>
-		<div class="row" id="footer"> 				
+		<div class="row" id="footer">
 			<div class="large-12 columns">
 				&nbsp;
 			</div>
@@ -106,14 +107,14 @@
 		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
 		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 		  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-		
+
 		  ga('create', 'UA-78775395-1', 'auto');
 		  ga('send', 'pageview');
-		
+
 		</script>
 	    <script>
 	      $(document).foundation();
-	      $("body").toggleClass("no-js");	      
+	      $("body").toggleClass("no-js");
 	    </script>
 	    <script src="{{ url_for('home.static', filename='js/script.js') }}"></script>
 	    {% if page_id == 'homepage' %}
@@ -126,5 +127,3 @@
 	    <span id="button-error" class="button-message">&#xd7;</span>
 	</body>
 </html>
-
-
