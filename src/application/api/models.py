@@ -81,7 +81,7 @@ class AO3data:
     if self.htmlData == {}:            
       try:
           #pdb.set_trace()
-          print "url: {}".format(url) #TODO the API dies with an uncaught 500 error when it times out while accessing AO3
+          #print "url: {}".format(url) #TODO the API dies with an uncaught 500 error when it times out while accessing AO3
           #url = "https://archiveofourown.org/works?tag_id=Star+Wars"
           try:
 			  r = urllib2.urlopen(url)
@@ -96,7 +96,7 @@ class AO3data:
               soup = BeautifulSoup(r)
               soup.prettify()                
               self.htmlData = soup
-              print ">>>>>>GOT THE DATA"
+              #print ">>>>>>GOT THE DATA"
           else: #redirecting somewhere
 			  #it's a tag that can't be filtered on
 			  if (final_url.find("/works") == -1):
