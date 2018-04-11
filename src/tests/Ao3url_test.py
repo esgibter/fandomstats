@@ -22,7 +22,7 @@ class Ao3urlTestCase(unittest.TestCase):
               "tag_id":"Harry Potter"
             }
           }
-      expected = "http://archiveofourown.org/works?tag_id=Harry+Potter"
+      expected = "https://archiveofourown.org/works?tag_id=Harry+Potter"
       url = AO3url().getUrl(t)
       self.assertEqual(url, expected)
       
@@ -33,7 +33,7 @@ class Ao3urlTestCase(unittest.TestCase):
               "tag_id":"방탄소년단 | Bangtan Boys | BTS"
             }
           }
-      expected = "http://archiveofourown.org/works?tag_id=%EB%B0%A9%ED%83%84%EC%86%8C%EB%85%84%EB%8B%A8+%7C+Bangtan+Boys+%7C+BTS"
+      expected = "https://archiveofourown.org/works?tag_id=%EB%B0%A9%ED%83%84%EC%86%8C%EB%85%84%EB%8B%A8+%7C+Bangtan+Boys+%7C+BTS"
       url = AO3url().getUrl(t)
       self.assertEqual(url, expected)
     
@@ -48,7 +48,7 @@ class Ao3urlTestCase(unittest.TestCase):
                 }
               }
              }  
-        expected = "http://archiveofourown.org/works?work_search%5Bother_tag_names%5D=Angst&tag_id=Fluff"
+        expected = "https://archiveofourown.org/works?work_search%5Bother_tag_names%5D=Angst&tag_id=Fluff"
         url = AO3url().getUrl(t)
         self.assertEqual(url, expected)
           
@@ -65,7 +65,7 @@ class Ao3urlTestCase(unittest.TestCase):
               }
             }
           }
-      expected = "http://archiveofourown.org/works?work_search%5Bsort_column%5D=hits&work_search%5Bwarning_ids%5D=16%2C14%2C18&work_search%5Brating_ids%5D=11&work_search%5Bcomplete%5D=1&tag_id=Harry+Potter"
+      expected = "https://archiveofourown.org/works?work_search%5Bsort_column%5D=hits&work_search%5Bwarning_ids%5D=16%2C14%2C18&work_search%5Brating_ids%5D=11&work_search%5Bcomplete%5D=1&tag_id=Harry+Potter"
       url = AO3url().getUrl(t)
       self.assertEqual(url, expected)
 
@@ -86,7 +86,7 @@ class Ao3urlTestCase(unittest.TestCase):
               }
             }
           }
-      expected = 'http://archiveofourown.org/works?work_search%5Bcomplete%5D=0&work_search%5Bsort_column%5D=revised_at&work_search%5Bcategory_ids%5D=23&work_search%5Bcharacter_ids%5D=1803%2C1589%2C1048&work_search%5Bfandom_ids%5D=136512&work_search%5Bother_tag_names%5D=Draco+Malfoy%2CHarry+Potter&work_search%5Brating_ids%5D=13&page=3&tag_id=Draco+Malfoy%2FHarry+Potter'
+      expected = 'https://archiveofourown.org/works?work_search%5Bcomplete%5D=0&work_search%5Bsort_column%5D=revised_at&work_search%5Bcategory_ids%5D=23&work_search%5Bcharacter_ids%5D=1803%2C1589%2C1048&work_search%5Bfandom_ids%5D=136512&work_search%5Bother_tag_names%5D=Draco+Malfoy%2CHarry+Potter&work_search%5Brating_ids%5D=13&page=3&tag_id=Draco+Malfoy%2FHarry+Potter'
       url = AO3url().getUrl(t)
       self.assertEqual(url, expected)
 

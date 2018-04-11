@@ -80,9 +80,14 @@ class AO3data:
   def fetchHTML(self, url):
     if self.htmlData == {}:            
       try:
+          #pdb.set_trace()
           print "url: {}".format(url) #TODO the API dies with an uncaught 500 error when it times out while accessing AO3
           #url = "https://archiveofourown.org/works?tag_id=Star+Wars"
-          r = urllib2.urlopen(url)
+          try:
+			  r = urllib2.urlopen(url)
+          except ValueError:
+			  raise ValueError(400,"Malformed URL.")
+			  
           final_url = r.geturl()
             
           if final_url == url: #no redirection
@@ -93,16 +98,20 @@ class AO3data:
               self.htmlData = soup
               print ">>>>>>GOT THE DATA"
           else: #redirecting somewhere
-              if (final_url.find("/works") == -1): #it's a tag that can't be filtered on
-                  raise ValueError(404,"")
-              else: #it's a synned tag 
-                  canonical_url = final_url
-                  canonical_list = canonical_url.split("/") 
-                  canonical_tag = canonical_list[len(canonical_list)-2]
-                  canonical_tag = urllib.unquote_plus(canonical_tag)
-                  raise ValueError(302,canonical_tag)
-      except urllib2.URLError:
-          raise ValueError(400,"") #TODO fix this: this is not accurate - it would return 400 even if the API timed out - i.e. couldn't access AO3
+			  #it's a tag that can't be filtered on
+			  if (final_url.find("/works") == -1):
+				  raise ValueError(404,"")
+			  else: #it's a synned tag 
+				  canonical_url = final_url
+				  canonical_list = canonical_url.split("/") 
+				  canonical_tag = canonical_list[len(canonical_list)-2]
+				  canonical_tag = urllib.unquote_plus(canonical_tag)
+				  raise ValueError(302,canonical_tag)
+      except urllib2.URLError as e:
+		  if e.code == 404:
+			  raise ValueError(404,"")
+		  else:
+			  raise ValueError(400,"") #TODO fix this: this is not accurate - it would return 400 even if the API timed out - i.e. couldn't access AO3
       
       #Returning from the if DOES NOT WORK. It has to be here. I DON'T KNOW WHY. #blackmagiccode
       return self.htmlData
