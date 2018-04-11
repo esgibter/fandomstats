@@ -29,7 +29,7 @@ class AO3url:
     else:
       self.filters = filters
     # Creates URL from search parameters
-    url = "http://archiveofourown.org/"
+    url = "https://archiveofourown.org/"
     url += self.filters['type'] + "?"
     for k, v in self.filters['params'].iteritems():
       if type(v) is dict:
@@ -79,10 +79,10 @@ class AO3data:
   # METHOD: fetchHTML
   def fetchHTML(self, url):
     if self.htmlData == {}:            
-      http = urllib3.PoolManager()
+      http = urllib3.PoolManager(headers={'user-agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36'})
       r = {}
       try:
-          #print "url: {}".format(url) #TODO the API dies with an uncaught 500 error when it times out while accessing AO3
+          print "url: {}".format(url) #TODO the API dies with an uncaught 500 error when it times out while accessing AO3
           r = http.request('GET', url,redirect=False)
           redirect_loc = r.get_redirect_location()
             
@@ -92,6 +92,7 @@ class AO3data:
               soup = BeautifulSoup(r.data)
               soup.prettify()                
               self.htmlData = soup
+              print ">>>>>>GOT THE DATA"
           elif isinstance(redirect_loc,basestring): #redirecting somewhere
               if (redirect_loc.find("/works") == -1): #it's a tag that can't be filtered on
                   raise ValueError(404,"")

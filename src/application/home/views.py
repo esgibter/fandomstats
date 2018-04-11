@@ -1,6 +1,7 @@
 from flask import render_template, jsonify, request
 from application import app
 from application.home import home
+import urllib3
 
 # Homepage
 @home.route("/")
@@ -36,3 +37,15 @@ def howto():
 @home.route("/google137e022a821ce1e1.html")
 def GSC_file():
   return app.send_static_file('google137e022a821ce1e1.html')
+  
+  
+# Testing urllib3 fetch of a https site
+@home.route("/urllib3_test")
+def urllib3_test():
+  url = "http://portfolio.corvidism.com"
+  ssl_url = "https://crowdraws.tumblr.com/"
+  http = urllib3.PoolManager(headers={'user-agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36'})
+  r = {}
+  r = http.request('GET', ssl_url,redirect=False)
+  #eeeyup, this is borked on GAE.
+  return str(r.headers)
