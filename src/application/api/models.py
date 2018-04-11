@@ -3,7 +3,7 @@
 import sys
 import re
 from bs4 import BeautifulSoup
-import urllib3
+import urllib2
 import urllib
 import pdb
 import inspect
@@ -79,32 +79,29 @@ class AO3data:
   # METHOD: fetchHTML
   def fetchHTML(self, url):
     if self.htmlData == {}:            
-      http = urllib3.PoolManager(headers={'user-agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36'})
-      r = {}
       try:
           print "url: {}".format(url) #TODO the API dies with an uncaught 500 error when it times out while accessing AO3
-          r = http.request('GET', url,redirect=False)
-          redirect_loc = r.get_redirect_location()
+          #url = "https://archiveofourown.org/works?tag_id=Star+Wars"
+          r = urllib2.urlopen(url)
+          final_url = r.geturl()
             
-          if redirect_loc == False: #no redirection
-              if r.status == 404:
+          if final_url == url: #no redirection
+              if r.getcode() == 404:
                   raise ValueError(404,'')
-              soup = BeautifulSoup(r.data)
+              soup = BeautifulSoup(r)
               soup.prettify()                
               self.htmlData = soup
               print ">>>>>>GOT THE DATA"
-          elif isinstance(redirect_loc,basestring): #redirecting somewhere
-              if (redirect_loc.find("/works") == -1): #it's a tag that can't be filtered on
+          else: #redirecting somewhere
+              if (final_url.find("/works") == -1): #it's a tag that can't be filtered on
                   raise ValueError(404,"")
               else: #it's a synned tag 
-                  canonical_url = redirect_loc
+                  canonical_url = final_url
                   canonical_list = canonical_url.split("/") 
                   canonical_tag = canonical_list[len(canonical_list)-2]
                   canonical_tag = urllib.unquote_plus(canonical_tag)
                   raise ValueError(302,canonical_tag)
-          else: #???something else
-              raise ValueError(500,"")
-      except urllib3.exceptions.MaxRetryError:
+      except urllib2.URLError:
           raise ValueError(400,"") #TODO fix this: this is not accurate - it would return 400 even if the API timed out - i.e. couldn't access AO3
       
       #Returning from the if DOES NOT WORK. It has to be here. I DON'T KNOW WHY. #blackmagiccode
