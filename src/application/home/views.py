@@ -1,7 +1,8 @@
 from flask import render_template, jsonify, request
 from application import app
 from application.home import home
-import urllib3
+#import urllib3
+from google.appengine.api import urlfetch
 
 # Homepage
 @home.route("/")
@@ -44,8 +45,16 @@ def GSC_file():
 def urllib3_test():
   url = "http://portfolio.corvidism.com"
   ssl_url = "https://crowdraws.tumblr.com/"
-  http = urllib3.PoolManager(headers={'user-agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36'})
-  r = {}
-  r = http.request('GET', ssl_url,redirect=False)
-  #eeeyup, this is borked on GAE.
-  return str(r.headers)
+  #http = urllib3.PoolManager(headers={'user-agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36'})
+  #r = {}
+  #r = http.request('GET', ssl_url,redirect=False)
+  try:
+      result = urlfetch.fetch(ssl_url)
+      if result.status_code == 200:
+        output = str(result.headers)
+      else:
+          output = "error"
+  except urlfetch.Error:
+      logging.exception('Caught exception fetching url')
+
+  return str(output)
