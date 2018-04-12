@@ -2,7 +2,6 @@ import os,sys,json
 sys.path.insert(1, os.path.join(os.path.abspath('.'), 'lib'))
 import application as fandomstats
 import unittest
-import requests
 import tempfile
 from werkzeug import datastructures 
 
