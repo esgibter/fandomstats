@@ -53,7 +53,6 @@
 		<meta name="msapplication-square150x150logo" content="{{ url_for('static', filename='img/icons/mstile-150x150.png') }}" />
 		<meta name="msapplication-wide310x150logo" content="{{ url_for('static', filename='img/icons/mstile-310x150.png') }}" />
 		<meta name="msapplication-square310x310logo" content="{{ url_for('static', filename='img/icons/mstile-310x310.png') }}" />
-
 		<meta itemprop="image" content="{{ url_for('static', filename='img/preview-image.png',_external=True) }}">
 		<meta property="og:image" content="{{ url_for('static', filename='img/preview-image.png',_external=True) }}" />
 		<meta name="twitter:card" content="summary_large_image">
@@ -70,7 +69,8 @@
 		    ('ao3-tag-stats', 'AO3 Tag Stats API',false),
 		    ('ao3-bookmark-viewer', 'AO3 Bookmark Viewer',false),
 		    ('reading-the-data', 'Reading the Data',false),
-		    ('about', 'About Fandom Stats',true),
+		    ('resources', 'Resources',false),
+				('about', 'About Fandom Stats',true),
 		] -%}
 		{% set active_page = page_id|default('') -%}
 

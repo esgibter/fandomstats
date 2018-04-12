@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% set page_id = "ao3-activity-data" %}
+{% set title = "Resources: AO3 daily activity data" %}
+{% block content %}
+	<h2>Resources: AO3 daily activity data</h2>
+	<p>Author(s): AO3/OTW</p>
+
+<p>Want to know how many works are on AO3, or how many are added per week? Here are some data for you to play with yourself.</p>
+
+<p>The data files are comma separated lists of activity per day on AO3 as assessed on the date in the file name (20170415 is the 15th of April, 2017). The counts in these files are listed in reverse chronological order.</p>
+
+<p>The following two files are counts of the works currently available on AO3 on the dates of assessment. Each row consists of:
+   <code>date, count</code>
+with the date reported as an integer with YYYYMMDD.</p>
+
+<ul>
+<li><a href="https://drive.google.com/open?id=1wLxQpcZ1kN9gak-7_L--fdhw3_94zJ3Q">AO3_worksPosted_20170415.csv</a></li>
+<li><a href="https://drive.google.com/open?id=1hXBQLZSfSjSa_lT2rOG5SPUfN-WBnCJV">AO3_worksPosted_20170924.csv</a></li>
+</ul>
+
+<p>Also available are the number of works being updated per day. Each row consists of:
+<code>days prior to assessment, count</code>
+with days starting from 1.</p>
+
+<ul>
+	<li><a href="https://drive.google.com/open?id=1ijoH0uBetXUcan8cOpyNFsRPCk-M4Pfw">AO3_Updated_20170930.csv</a></li>
+</ul>
+
+<p>And the number of chapters added per day, Each row is consists of:
+	<code>days prior to assessment, count</code>
+with days starting from 1.</p>
+
+<ul>
+	<li><a href="https://drive.google.com/open?id=1_6-gzC0HuRseNzoBemtaOjWMdHdb2Fab">AO3_Chapters_20170930.csv</a></li>
+</ul>
+
+{% endblock %}
