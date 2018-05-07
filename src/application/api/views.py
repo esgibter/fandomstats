@@ -116,6 +116,8 @@ class MediaStats(Resource):
       self.parser = reqparse.RequestParser()
       self.parser.add_argument("num_fandoms", type=int, required=True, help="Please specify num_fandoms (the number of fandoms to return, integer).")
       self.parser.add_argument("include_umbrella_fandoms", type=int)
+      self.parser.add_argument("media_categories[]", type=unicode, action="append")
+      self.parser.add_argument("media_categories", type=unicode, action="append")
     except Exception as e:
       print e
 
@@ -125,9 +127,18 @@ class MediaStats(Resource):
     if (args['include_umbrella_fandoms'] is None):
       args['include_umbrella_fandoms'] = 0
 
-    args['min_fandom_size'] = 1000
-    args['media_categories'] = ["Books & Literature", "Celebrities & Real People", "Music & Bands", "Theater", "Video Games", "Anime & Manga", "Cartoons & Comics & Graphic Novels", "Movies", "Other Media", "TV Shows"]
+    if not (args['media_categories[]'] is None):
+      args['media_categories'] = args['media_categories[]']
+
+    args.pop('media_categories[]')
+
+    if (args['media_categories'] is None):
+      args['media_categories'] = ["Books & Literature", "Celebrities & Real People", "Music & Bands", "Theater", "Video Games", "Anime & Manga", "Cartoons & Comics & Graphic Novels", "Movies", "Other Media", "TV Shows"]
+
     args['umbrella_terms'] = ["Related Fandoms", "All Media Types", "Marvel Cinematic Universe", "DCU", "Jossverse", "Ambiguous Fandom", "Bandom", "K-pop", "Jpop", "Jrock", "Music RPF", "Actor RPF", "Sports RPF", "Blogging RPF", "Real Person Fiction", "Internet Personalities", "- Works", "Video Games", "MS Paint Adventures"]
+
+    args['min_fandom_size'] = 1000
+
     m = AO3Media(args)
     return m.getStats()
 

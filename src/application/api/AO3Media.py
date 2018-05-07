@@ -24,13 +24,20 @@ class AO3Media:
     self.fandomsByCategory = {}
     self.topFandoms = {}
     self.output = {
-        "fandoms_found": 0,
-        "stats": {}
+        "fandoms_found": {
+            "_all": 0
+        },
+        "works": {
+            "_all": 0
+        },
+        "top_fandoms": {}
     }
 
     for category in self.args['media_categories']:
       # SET UP THE DICTIONARY FOR THIS CATEGORY
       self.fandomsByCategory[category] = {}
+      self.output["fandoms_found"][category] = 0
+      self.output['works'][category] = 0
 
       # FETCH THE AO3 PAGE WITH ALL THE FANDOMS FOR THIS CATEGORY
       modifiedCategory = category.replace(" ", "%20")
@@ -60,6 +67,12 @@ class AO3Media:
         fandom = matchObj.group(1)
         # IF IT PASSES A THRESHOLD...
         numworks = int(matchObj.group(2))
+
+        self.output['works'][category] += numworks
+        self.output['works']['_all'] += numworks
+        self.output["fandoms_found"][category] += 1
+        self.output["fandoms_found"]['_all'] += 1
+
         if numworks >= self.args['min_fandom_size']:
           print "%s: %d" % (fandom, numworks)
         # PUT IT IN THE CATEGORY DICTIONARY
@@ -73,12 +86,11 @@ class AO3Media:
 
     for category in sorted(self.args['media_categories']):
       print "TOP FANDOMS: %s" % category
-      self.output["stats"][category] = {}
-      self.output["fandoms_found"] = self.output["fandoms_found"] + len(category)
+      self.output["top_fandoms"][category] = {}
       catFandoms = self.fandomsByCategory[category]
       i = 1
       for key, value in sorted(catFandoms.iteritems(), key=lambda(k, v): (v, k), reverse=True):
-          self.output["stats"][category][key] = value
+          self.output["top_fandoms"][category][key] = value
           print "%d) %s: %s" % (i, key, value)
           # PUT IT IN THE TOP FANDOM DICTIONARY
           self.topFandoms[key] = value
@@ -91,10 +103,10 @@ class AO3Media:
     # DISPLAY THE TOP FANDOMS OVERALL
     i = 1
     print "TOP FANDOMS OVERALL"
-    self.output["stats"]['_combined'] = {}
+    self.output["top_fandoms"]['_combined'] = {}
     for key, value in sorted(self.topFandoms.iteritems(), key=lambda(k, v): (v, k), reverse=True):
       print "%d) %s: %s" % (i, key, value)
-      self.output["stats"]['_combined'][key] = value
+      self.output["top_fandoms"]['_combined'][key] = value
       if i >= self.args['num_fandoms']:
           break
       i = i + 1
