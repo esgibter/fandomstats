@@ -84,9 +84,9 @@ class AO3data:
           #print "url: {}".format(url) #TODO the API dies with an uncaught 500 error when it times out while accessing AO3
           #url = "https://archiveofourown.org/works?tag_id=Star+Wars"
           try:
-			  r = urllib2.urlopen(url)
+            r = urllib2.urlopen(url)
           except ValueError:
-			  raise ValueError(400,"Malformed URL.")
+			      raise ValueError(400,"Malformed URL.")
 
           final_url = r.geturl()
 
