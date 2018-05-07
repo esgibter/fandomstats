@@ -2,15 +2,14 @@ from flask import render_template, jsonify, request
 from flask.ext.restful import reqparse, abort, Api, Resource
 from application.api import api
 from models import AO3data, AO3url
+import pdb
 
 version_base = '/v1.0'
 a = Api(api, prefix=version_base)
 
-class Stats(Resource):
+class TagStats(Resource):
   # Stats for any search filter
   def get(self):
-    print "==================="
-    print "trying to parse args..."
     try:
       # Arguments
       self.parser = reqparse.RequestParser()
@@ -60,8 +59,6 @@ class Stats(Resource):
       print e
 
     args = self.parser.parse_args()
-    print "args:"
-    print args
     #Returns stats for any list of search arguments
     #print "-------------------------"
     #print "======= NEW CYCLE ======="
@@ -99,28 +96,11 @@ class Stats(Resource):
         args[sArg] = args[sArg]+args[sArg + '[]']
         args.pop(sArg + '[]')
 
-      url.setFilters(args)
-      parsed_url = url.getUrl()
-      #print "parsed url:"
-      #print parsed_url
-      return s.getTopInfo(parsed_url)
-
-class TagStats(Resource):
-
-
-      # Stats for just a given tag id
-  def get(self, tag_id):
-    # todo: possibly remove completely? possibly unnecessary?
-    # todo: add error handling for empty tagid
-    params = {
-    "type": "works",
-    "params": {
-    "tag_id": tag_id
-    }
-    }
-    s = AO3data()
-    url = AO3url().getUrl(params)
-    return s.getTopInfo(url)
+    url.setFilters(args)
+    parsed_url = url.getUrl()
+    #print "parsed url:"
+    #print parsed_url
+    return s.getTopInfo(parsed_url)
 
 class MediaStats(Resource):
 
@@ -129,6 +109,5 @@ class MediaStats(Resource):
     return True
 
 # API routing
-a.add_resource(Stats, "/stats")
-a.add_resource(TagStats, "/stats/tag/<string:tag_id>")
+a.add_resource(TagStats,"/stats","/stats/tag/<string:tag_id>")
 a.add_resource(MediaStats, "/stats/media")
