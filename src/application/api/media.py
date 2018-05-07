@@ -5,7 +5,7 @@ import urllib2
 import re
 
 
-class AO3Media:
+class AO3MediaFandoms:
 
   def __init__(self, args):
     self.args = args
@@ -52,7 +52,6 @@ class AO3Media:
       if r.getcode() == 404:
           raise ValueError(404, '')
       soup = BeautifulSoup(r)
-      soup.prettify()
 
       # ITERATE THROUGH ALL FANDOMS LISTED ON THE PAGE AND SAVE THEIR NAMES AND
       # SIZES
@@ -112,3 +111,29 @@ class AO3Media:
       i = i + 1
 
     return self.output
+
+
+class AO3MediaList:
+
+  def getList(self):
+
+    url = 'https://archiveofourown.org/media'
+    try:
+      r = urllib2.urlopen(url)
+    except ValueError:
+      raise ValueError(400, "Bad URL: " + url)
+
+    if r.getcode() == 404:
+        raise ValueError(404, '')
+    soup = BeautifulSoup(r)
+    mediaList = []
+
+    # bs has a bug where it can't find an element by class if it has more then one. Therefore, regex.
+    mediaUl = soup.find(True, {'class': re.compile(r'\bmedia\b')})
+
+    mediaCats = mediaUl.find_all('h3')
+
+    for cat in mediaCats:
+      mediaList.append(unicode(cat.string))
+
+    return mediaList

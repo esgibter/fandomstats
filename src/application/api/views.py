@@ -1,8 +1,8 @@
 from flask import render_template, jsonify, request
 from flask.ext.restful import reqparse, abort, Api, Resource
 from application.api import api
-from models import AO3data, AO3url
-from AO3Media import AO3Media
+from tags import AO3data, AO3url
+from media import AO3MediaFandoms, AO3MediaList
 import pdb
 
 version_base = '/v1.0'
@@ -133,16 +133,25 @@ class MediaStats(Resource):
     args.pop('media_categories[]')
 
     if (args['media_categories'] is None):
-      args['media_categories'] = ["Books & Literature", "Celebrities & Real People", "Music & Bands", "Theater", "Video Games", "Anime & Manga", "Cartoons & Comics & Graphic Novels", "Movies", "Other Media", "TV Shows"]
+      args['media_categories'] = ["Anime & Manga", "Books & Literature", "Cartoons & Comics & Graphic Novels", "Celebrities & Real People", "Movies", "Music & Bands", "Other Media", "Theater", "TV Shows", "Video Games", "Uncategorized Fandoms"]
 
     args['umbrella_terms'] = ["Related Fandoms", "All Media Types", "Marvel Cinematic Universe", "DCU", "Jossverse", "Ambiguous Fandom", "Bandom", "K-pop", "Jpop", "Jrock", "Music RPF", "Actor RPF", "Sports RPF", "Blogging RPF", "Real Person Fiction", "Internet Personalities", "- Works", "Video Games", "MS Paint Adventures"]
 
     args['min_fandom_size'] = 1000
 
-    m = AO3Media(args)
+    m = AO3MediaFandoms(args)
     return m.getStats()
+
+
+# existing media categories (allows for making separate MediaStats queries for single cats client-side, which should be less fragile)
+class MediaCategories(Resource):
+
+  def get(self):
+    ml = AO3MediaList()
+    return ml.getList()
 
 
 # API routing
 a.add_resource(TagStats, "/stats", "/stats/tag/<string:tag_id>")
 a.add_resource(MediaStats, "/stats/media")
+a.add_resource(MediaCategories, "/stats/media/list")
