@@ -4,21 +4,21 @@
 {% block content %}
 	<h2>AO3 Bookmark Viewer</h2>
 	<p class="lead subheading">Show me recent public AO3 bookmarks of my fanworks</p>
-	
+
 	<div class="bigform">
 		<p>Your AO3 username:<br>
 		<input id="author" type="text"></p>
 		<div class="row collapse">
 			<div class="medium-10 column">
 				<input type="checkbox" id="recs" name="recs"><label for="recs">Recommendations only?</label> <br>
-				<input type="checkbox" id="notes" name="notes"><label for="notes">Bookmarks with notes only?</label>  
+				<input type="checkbox" id="notes" name="notes"><label for="notes">Bookmarks with notes only?</label>
 			</div>
 			<div class="medium-2 column textright">
 				<button type="button" class="small" onclick="showBookmarks()">Submit</button>
 			</div>
 		</div>
 	</div>
-    
+
 	<div id="bookmarks">&nbsp;</div>
 
 <script>
@@ -29,8 +29,8 @@
      authorName = document.getElementById("author").value;
 
      // Create URL
-     url = "http://archiveofourown.org/bookmarks/search?bookmark_search%5Bbookmarker%5D=-" + 
-     authorName + "&bookmark_search%5Bquery%5D=" + 
+     url = "http://archiveofourown.org/bookmarks/search?bookmark_search%5Bbookmarker%5D=-" +
+     authorName + "&bookmark_search%5Bbookmarkable_query%5D=" + 
      authorName + "&bookmark_search%5Bsort_column%5D=created_at";
      if (document.getElementById("recs").checked == true) {
      url = url + "&bookmark_search%5Brec%5D=1";
