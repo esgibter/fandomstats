@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% set page_id = "ao3-media-fandoms-stats" %}
+{% set title = "AO3 Fandoms in Media Stats API" %}
+{% block content %}
+	<h2>AO3 Media Stats API</h2>
+	<div class="row collapse">
+		<div class="small-12 columns">
+			<p>about media stats
+				derivative of tag stats
+				gets info about media categories
+			</p>
+			<h3>/stats/media/list</h3>
+			<p>
+				fetches the current list of media types - could be useful for fully automated parsing.
+			</p>
+			<h3>/stats/media</h3>
+			<p>
+				returns counts for media categories (from @@page)
+
+				parameters
+				[table]
+				num_fandoms - how many fandoms per media category to return. default: 10
+				media_categories - categories to return; expects names of categories from the website (you can use /stats/media/list to get them)
+
+				example calls:
+				@@ex1 - plain
+				@@ex2 - with all params
+			</p>
+		</div>
+	</div>
+
+{% endblock %}
