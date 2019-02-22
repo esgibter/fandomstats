@@ -32,6 +32,10 @@ class AO3MediaFandoms:
         },
         "top_fandoms": {}
     }
+    num_fandoms = self.args['num_fandoms']
+
+    if num_fandoms is None:
+        num_fandoms = 10
 
     for category in self.args['media_categories']:
       # SET UP THE DICTIONARY FOR THIS CATEGORY
@@ -93,7 +97,7 @@ class AO3MediaFandoms:
           print "%d) %s: %s" % (i, key, value)
           # PUT IT IN THE TOP FANDOM DICTIONARY
           self.topFandoms[key] = value
-          if i >= self.args['num_fandoms']:
+          if i >= num_fandoms:
               break
           i = i + 1
 
@@ -106,7 +110,7 @@ class AO3MediaFandoms:
     for key, value in sorted(self.topFandoms.iteritems(), key=lambda(k, v): (v, k), reverse=True):
       print "%d) %s: %s" % (i, key, value)
       self.output["top_fandoms"]['_combined'][key] = value
-      if i >= self.args['num_fandoms']:
+      if i >= num_fandoms:
           break
       i = i + 1
 

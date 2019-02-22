@@ -114,7 +114,7 @@ class MediaStats(Resource):
     try:
       # Arguments
       self.parser = reqparse.RequestParser()
-      self.parser.add_argument("num_fandoms", type=int, required=True, help="Please specify num_fandoms (the number of fandoms to return, integer).")
+      self.parser.add_argument("num_fandoms", type=int)
       self.parser.add_argument("include_umbrella_fandoms", type=int)
       self.parser.add_argument("media_categories[]", type=unicode, action="append")
       self.parser.add_argument("media_categories", type=unicode, action="append")
