@@ -17,6 +17,11 @@ def bookmark_viewer():
 def tag_stats():
   return render_template('tag-stats.html')
 
+# AO3 Media Stats
+@home.route("/ao3-media-stats")
+def media_stats():
+  return render_template('media-stats.html')
+
 # Fandom Research Directory
 @home.route("/fandom-research-directory")
 def linkspam():

@@ -1,31 +1,72 @@
 {% extends "base.html" %}
-{% set page_id = "ao3-media-fandoms-stats" %}
+{% set page_id = "ao3-media-stats" %}
 {% set title = "AO3 Fandoms in Media Stats API" %}
 {% block content %}
 	<h2>AO3 Media Stats API</h2>
 	<div class="row collapse">
 		<div class="small-12 columns">
-			<p>about media stats
-				derivative of tag stats
-				gets info about media categories
-			</p>
-			<h3>/stats/media/list</h3>
-			<p>
-				fetches the current list of media types - could be useful for fully automated parsing.
-			</p>
-			<h3>/stats/media</h3>
-			<p>
-				returns counts for media categories (from @@page)
+			<p>This API is a sibling to AO3 Tag Stats API - if you’re unfamiliar with it, we recommend reading its documentation first.</p>
+<p>AO3 Media API returns a list of fandom tags with most works on AO3 for each media “category” as seen on <a href="https://archiveofourown.org/media">archiveofourown.org/media</a>, e.g. “Books and Literature”, “TV Shows” and so on. Optionally, it can also return only selected media categories.</p>
+<p>The API has currently two endpoints:</p>
+<h3 id="statsmedialist">/stats/media/list</h3>
+<p>Returns a current list of media types on AO3. This can be used for automating tasks, generating GUI and so on.</p>
+<h4>Example call</h4>
+<div class="js-api-examples">
+	<span class="js-api-examples__call">
+		<a class="js-api-url" href="/api/v1.0/stats/media/list">http://fandomstats.org/api/v1.0/stats/media/list</a>
+		<button class="button--inline js-call-api">Execute</button>
+	</span>
+	<label for="result-field">API results:</label>
+	<textarea class="js-api-examples__result-field" name="result-field" readonly="readonly" placeholder="...">
+	</textarea>
+</div>
+<h3 id="statsmedia">/stats/media</h3>
+<p>Returns lists of fandoms per media category, as well as additional data, such as:</p>
+<ul>
+<li>number of works, per fandom, category and total</li>
+<li>number of fandoms found, per category and total</li>
+</ul>
+<h4 id="optional-parameters">Optional parameters</h4>
+<table>
+<thead>
+<tr class="header">
+<th align="left">parameter</th>
+<th align="left">expected</th>
+<th align="left">default</th>
+<th align="left">explanation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><em>num_fandoms</em></td>
+<td align="left">number</td>
+<td align="left">10</td>
+<td align="left">fandoms per media category to return</td>
+</tr>
+<tr class="even">
+<td align="left"><em>media_categories</em></td>
+<td align="left">string encoded in GET parameter format</td>
+<td align="left">all categories</td>
+<td align="left">media category to return; may be used multiple times</td>
+</tr>
+</tbody>
+</table>
+<h4>Example calls</h4>
+<div class="js-api-examples">
+	<span class="js-api-examples__call">
+		<a href="/api/v1.0/stats/media">http://fandomstats.org/api/v1.0/stats/media</a>
+		<button class="button--inline js-call-api">Execute</button>
+	</span>
 
-				parameters
-				[table]
-				num_fandoms - how many fandoms per media category to return. default: 10
-				media_categories - categories to return; expects names of categories from the website (you can use /stats/media/list to get them)
+	<span class="js-api-examples__call">
+		<a href="/api/v1.0/stats/media?num_fandoms=3&media_categories=Books+%26+Literature&media_categories=TV+Shows">http://fandomstats.org/api/v1.0/stats/media?num_fandoms=3&media_categories=Books+%26+Literature&media_categories=TV+Shows</a>
+		<button class="button--inline js-call-api">Execute</button>
+	</span>
 
-				example calls:
-				@@ex1 - plain
-				@@ex2 - with all params
-			</p>
+	<label for="result-field">API results:</label>
+	<textarea class="js-api-examples__result-field" name="result-field" readonly="readonly" placeholder="...">
+	</textarea>
+</div>
 		</div>
 	</div>
 
