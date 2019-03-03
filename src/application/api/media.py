@@ -3,7 +3,7 @@ import urllib2
 # import urllib
 # import urllib.parse
 import re
-
+from debug_tools import log
 
 class AO3MediaFandoms:
 
@@ -77,38 +77,38 @@ class AO3MediaFandoms:
         self.output["fandoms_found"]['_all'] += 1
 
         if numworks >= self.args['min_fandom_size']:
-          print "%s: %d" % (fandom, numworks)
+            log("%s: %d" % (fandom, numworks))
         # PUT IT IN THE CATEGORY DICTIONARY
-          if self.args['include_umbrella_fandoms']:
+        if self.args['include_umbrella_fandoms']:
             self.fandomsByCategory[category][fandom] = numworks
-          else:
+        else:
             if not self.isUmbrella(fandom):
-              self.fandomsByCategory[category][fandom] = numworks
+                self.fandomsByCategory[category][fandom] = numworks
 
-      print self.fandomsByCategory
+      log(self.fandomsByCategory)
 
     for category in sorted(self.args['media_categories']):
-      print "TOP FANDOMS: %s" % category
+      log("TOP FANDOMS: %s" % category)
       self.output["top_fandoms"][category] = {}
       catFandoms = self.fandomsByCategory[category]
       i = 1
       for key, value in sorted(catFandoms.iteritems(), key=lambda(k, v): (v, k), reverse=True):
           self.output["top_fandoms"][category][key] = value
-          print "%d) %s: %s" % (i, key, value)
+          log("%d) %s: %s" % (i, key, value))
           # PUT IT IN THE TOP FANDOM DICTIONARY
           self.topFandoms[key] = value
           if i >= num_fandoms:
               break
           i = i + 1
 
-      print " "
+      log(" ")
 
     # DISPLAY THE TOP FANDOMS OVERALL
     i = 1
-    print "TOP FANDOMS OVERALL"
+    log("TOP FANDOMS OVERALL")
     self.output["top_fandoms"]['_combined'] = {}
     for key, value in sorted(self.topFandoms.iteritems(), key=lambda(k, v): (v, k), reverse=True):
-      print "%d) %s: %s" % (i, key, value)
+      log("%d) %s: %s" % (i, key, value))
       self.output["top_fandoms"]['_combined'][key] = value
       if i >= num_fandoms:
           break
