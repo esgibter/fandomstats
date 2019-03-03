@@ -1,3 +1,22 @@
+$("button.js-call-api").click(function(e){
+	var jsExample = $(this).closest('.js-api-examples__call');
+	var apiLink = jsExample.find('a').first();
+	var url = apiLink.attr('href');
+	var resultField = jsExample.closest('.js-api-examples').find('.js-api-examples__result-field');
+	resultField.val("please wait, this might take several seconds...");
+
+	$.ajax({
+		url:url,
+		success: function(result, status, object){
+			console.log(result);
+			resultField.val(object.responseText);
+		},
+		error: function(object,exception) {
+			resultField.val("An error ocurred.");
+		}
+	});
+});
+
 $(".searchform").submit(function(e){
 	e.preventDefault();
 	searchform = $(this);

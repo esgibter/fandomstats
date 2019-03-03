@@ -5,8 +5,10 @@
 	<h2>AO3 Tag Stats API</h2>
 	<div class="row collapse">
 		<div class="small-12 columns">
-			<p>This is a tool we're building for programmers and fandom analysts to get data from Archive Of Our Own (AO3), and use it in their own project.
-				The data visualisations on the homepage will be an example of what you can do with the resulting dataset.
+			<p>The Tag Stats API is a tool we're building for programmers and fandom analysts to get data from Archive Of Our Own (AO3), and use it in their own project. The data visualisations on the homepage are an example of what you can do with the resulting dataset.
+			</p>
+			<p>
+				The API is one of 3 AO3 tools, alongside the <a href="/ao3-media-stats">Media Stats API</a> and the <a href="/ao3-bookmark-viewer">Bookmark Viewer</a>. 
 			</p>
 
 				<h3>So, how does it work?</h3>
@@ -42,8 +44,8 @@
 	<div id="graph-area" class="api-results">
 		<div id="api-export">
 			<p>… and we return to you data about how that tag is used on AO3, in JSON format.</p>
-			<label>API results:</label>
-			<textarea id="result-field" readonly="readonly" placeholder="(use the searchbar above)">
+			<label for="result-field">API results:</label>
+			<textarea id="result-field" name="result-field" readonly="readonly" placeholder="(use the searchbar above)">
 			</textarea>
 		</div>
 	</div>

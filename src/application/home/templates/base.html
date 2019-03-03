@@ -68,6 +68,7 @@
 		{% set navbar = [
 		    ('ao3-tag-stats', 'AO3 Tag Stats API',false),
 		    ('ao3-bookmark-viewer', 'AO3 Bookmark Viewer',false),
+				('ao3-media-stats','AO3 Media Stats API', false),
 		    ('reading-the-data', 'Reading the Data',false),
 		    ('resources', 'Resources',false),
 				('about', 'About Fandom Stats',true),
@@ -121,6 +122,8 @@
 	    	<script src="{{ url_for('home.static', filename='js/homepage.js') }}"></script>
 	    {% elif page_id == 'ao3-tag-stats' %}
 	    	<script src="{{ url_for('home.static', filename='js/tag-stats.js') }}"></script>
+			{% elif page_id == 'ao3-media-stats' %}
+		   	<script src="{{ url_for('home.static', filename='js/media-stats.js') }}"></script>
 	    {% endif %}
 	    <img id="spinner" src="{{ url_for('home.static', filename='img/spinner.gif') }}" class="button-message" />
 	    <span id="button-error" class="button-message">&#xd7;</span>
