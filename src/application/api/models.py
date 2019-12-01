@@ -86,7 +86,7 @@ class AO3data:
           try:
 			  r = urllib2.urlopen(url)
           except ValueError:
-			  raise ValueError(400,"Malformed URL.")
+			  raise ValueError(400,"")
 
           final_url = r.geturl()
 
@@ -111,7 +111,7 @@ class AO3data:
 		  if e.code == 404:
 			  raise ValueError(404,"")
 		  else:
-			  raise ValueError(400,"") #TODO fix this: this is not accurate - it would return 400 even if the API timed out - i.e. couldn't access AO3
+			  raise ValueError(500,"") #TODO fix this: this is not accurate - it would return 400 even if the API timed out - i.e. couldn't access AO3
 
       #Returning from the if DOES NOT WORK. It has to be here. I DON'T KNOW WHY. #blackmagiccode
       return self.htmlData
@@ -129,7 +129,7 @@ class AO3data:
             "Explicit": 0,
             "Not Rated": 0
             },
-        "warning": {
+        "archive_warning": {
             "Major Character Death": 0,
             "Graphic Depictions Of Violence": 0,
             "Underage": 0,
