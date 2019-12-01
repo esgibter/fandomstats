@@ -49,6 +49,12 @@ h4 {
 	padding:0;
 }
 
+.codeblock {
+	margin-top:0.5em;
+	display:block;
+	padding:0.5em;
+}
+
 #main p.intro {
 	margin-top:3rem;
 	margin-bottom:2rem;
