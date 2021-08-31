@@ -38,6 +38,7 @@ Or, if you want to build the static files: `cd src && python3 build.py`
 
 ```
 python apptest.py path/to/your/googleappengine/installation
+```
 
 If you want to run only one test class or only some of the tests (i.e. only the integration tests), you can use the --test-pattern argument, like this:
 
