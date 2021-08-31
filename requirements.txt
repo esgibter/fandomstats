@@ -1,0 +1,5 @@
+Flask==2.0.1
+Frozen-Flask==0.18
+urllib3
+beautifulsoup4
+flask-restful

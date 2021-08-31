@@ -61,8 +61,8 @@
 
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/normalize.css') }}" />
 	    <link rel="stylesheet" href="{{ url_for('static', filename='css/foundation.min.css') }}" />
-	    <link rel="stylesheet" href="{{ url_for('home.static', filename='css/home.css') }}" />
-	    <script src="{{ url_for('home.static', filename='js/vendor/modernizr.js') }}"></script>
+	    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}" />
+	    <script src="{{ url_for('static', filename='js/vendor/modernizr.js') }}"></script>
   </head>
 	<body class="no-js">
 		{% set navbar = [
@@ -81,7 +81,7 @@
 					{% for id, caption, last in navbar %}
 					  <li class="{% if id == active_page %}active{% endif %}
 					  {% if last %}last{% endif %}">
-					  <a href="{{ id|e }}">{{ caption|e }}</a></li>
+					  <a href="/{{ id|e }}">{{ caption|e }}</a></li>
 					{% endfor %}
 				</ul>
 			</div>
@@ -89,6 +89,11 @@
 		<div id="wrapper">
 			<div class="row">
 				<div id="main" class="large-12 columns {{ page_id|e }}">
+					<div class="row">
+						<div id="tmp-notice" class="small-12 columns">
+							The tag stats API is currently disabled due to technical problems. Thanks for understanding.
+						</div>
+					</div>
 					{% block content %}{% endblock %}
 				</div>
 
@@ -115,14 +120,14 @@
 	      $(document).foundation();
 	      $("body").toggleClass("no-js");
 	    </script>
-	    <script src="{{ url_for('home.static', filename='js/script.js') }}"></script>
+	    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 	    {% if page_id == 'homepage' %}
 	    	<script src="{{ url_for('static', filename='js/vendor/d3.min.js') }}"></script>
-	    	<script src="{{ url_for('home.static', filename='js/homepage.js') }}"></script>
+	    	<script src="{{ url_for('static', filename='js/homepage.js') }}"></script>
 	    {% elif page_id == 'ao3-tag-stats' %}
-	    	<script src="{{ url_for('home.static', filename='js/tag-stats.js') }}"></script>
+	    	<script src="{{ url_for('static', filename='js/tag-stats.js') }}"></script>
 	    {% endif %}
-	    <img id="spinner" src="{{ url_for('home.static', filename='img/spinner.gif') }}" class="button-message" />
+	    <img id="spinner" src="{{ url_for('static', filename='img/spinner.gif') }}" class="button-message" />
 	    <span id="button-error" class="button-message">&#xd7;</span>
 	</body>
 </html>

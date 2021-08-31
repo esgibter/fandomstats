@@ -3,11 +3,10 @@
 import sys
 import re
 from bs4 import BeautifulSoup
-import urllib2
+import requests
 import urllib
-import pdb
-import inspect
-from flask.ext.restful import abort
+from flask_restful import abort
+from flask import redirect
 
 
 class AO3url:
@@ -16,12 +15,9 @@ class AO3url:
     return self.filters
 
   def quote(self,input):
-      if type(input) == unicode:
-          stringed = input.encode('utf-8')
-      else:
-          stringed = str(input)
+      stringed = str(input)          
 
-      return urllib.quote_plus(stringed, '+')
+      return urllib.parse.quote_plus(stringed, '+')
 
   def getUrl(self, filters=None):
     if filters is None:
@@ -31,9 +27,9 @@ class AO3url:
     # Creates URL from search parameters
     url = "https://archiveofourown.org/"
     url += self.filters['type'] + "?"
-    for k, v in self.filters['params'].iteritems():
+    for k, v in self.filters['params'].items():
       if type(v) is dict:
-        for wk, wv in v.iteritems():
+        for wk, wv in v.items():
           if type(wv) is list:
             quoted_list = []
             for xv in wv:
@@ -60,7 +56,7 @@ class AO3url:
                           "work_search": {}
                           }
                }
-    for k, v in urlArgs.iteritems():
+    for k, v in urlArgs.items():
       if v != None:
         if k == "tag_id" or k == "page" or k == "sort_direction":
           self.filters["params"][k] = v
@@ -74,48 +70,38 @@ class AO3data:
 
   def __init__(self,req_url):
       self.request_url = req_url
-      #save the request url to generate proper API url if the tag is non-canonical. Currently not used.
+      #save the request url to generate proper API url if the tag is non-canonical.
 
   # METHOD: fetchHTML
   def fetchHTML(self, url):
     if self.htmlData == {}:
       try:
-          #pdb.set_trace()
-          #print "url: {}".format(url) #TODO the API dies with an uncaught 500 error when it times out while accessing AO3
-          #url = "https://archiveofourown.org/works?tag_id=Star+Wars"
-          try:
-			  r = urllib2.urlopen(url)
-          except ValueError:
-			  raise ValueError(400,"")
+          r = requests.get(url)
+      except ValueError:
+        raise ValueError(400,"")
 
-          final_url = r.geturl()
+      r.raise_for_status()
 
-          if final_url == url: #no redirection
-              if r.getcode() == 404:
-                  raise ValueError(404,'')
-              soup = BeautifulSoup(r)
-              soup.prettify()
-              self.htmlData = soup
-              #print ">>>>>>GOT THE DATA"
-          else: #redirecting somewhere
-			  #it's a tag that can't be filtered on
-			  if (final_url.find("/works") == -1):
-				  raise ValueError(404,"")
-			  else: #it's a synned tag
-				  canonical_url = final_url
-				  canonical_list = canonical_url.split("/")
-				  canonical_tag = canonical_list[len(canonical_list)-2]
-				  canonical_tag = urllib.unquote_plus(canonical_tag)
-				  raise ValueError(302,canonical_tag)
-      except urllib2.URLError as e:
-		  if e.code == 404:
-			  raise ValueError(404,"")
-		  else:
-			  raise ValueError(500,"") #TODO fix this: this is not accurate - it would return 400 even if the API timed out - i.e. couldn't access AO3
+      final_url = r.url
 
-      #Returning from the if DOES NOT WORK. It has to be here. I DON'T KNOW WHY. #blackmagiccode
-      return self.htmlData
-
+      if final_url == url:
+        soup = BeautifulSoup(r.text, "html.parser")
+        soup.prettify()
+        self.htmlData = soup
+        return self.htmlData
+      
+      # this tag cannot be filtered on
+      if (final_url.find("/works") == -1):
+        raise ValueError(404, "")
+      else:
+        #it's a "synned" tag (e.g. it's a synonym and AO3 automatically redirects)
+        # import pdb
+        # pdb.set_trace()
+        canonical_url = final_url
+        canonical_list = canonical_url.split("/")
+        canonical_tag = canonical_list[len(canonical_list)-2]
+        canonical_tag = urllib.parse.unquote_plus(canonical_tag)
+        raise ValueError(302,canonical_tag)
 
   # Scrape the top 10 ratings, etc from sidebar
   def getTopInfo(self, url):
@@ -158,15 +144,19 @@ class AO3data:
     except ValueError as err:
           code, canonical = err.args
           if code ==302:
-              #proper_api_request = re.sub("tag_id=(.*)&",canonical,self.request_url)
-              #The above is the proper API url with the canonical tag. In ideal world, we would return a 3xx page that would redirect to it. Sadly, Flask development isn't an ideal world. TODO: Rewrite this whole thing so we can throw our own response/abort pages.
-              abort(501, status=501, message="Cannot process non-canonical (redirecting) tag. Canonical tag: '{}'".format(canonical)); #HTTP Status Code: 501 Not Implemented.
+              proper_api_request = re.sub(
+                  "(?<=tag_id\=)(.*?)((?=&)|$)", urllib.parse.quote(canonical), self.request_url)
+              # redirect to correct tag
+              return redirect(proper_api_request)
           elif code == 404:
-              abort(404, status=404, message="This tag cannot be filtered on.") #HTTP Status Code: 404 Not Found
+              #HTTP Status Code: 404 Not Found
+              abort(404, status=404, message="This tag cannot be filtered on.")
           elif code == 400:
-              abort(400, status=400, message="Malformed Ao3 URL. No results found at {}".format(url)) #HTTP Status Code: 400 Bad request. Do not re-run again without modifying.
+              #HTTP Status Code: 400 Bad request. Do not re-run again without modifying.
+              abort(400, status=400, message="Malformed Ao3 URL. No results found at {}".format(url))
           else:
-              abort(500, status=500, message="HTTP request failed when trying to scrape Ao3!") #HTTP Status Code: 500 Internal Server Error. Something went wrong on our side.
+              #HTTP Status Code: 500 Internal Server Error. Something went wrong on our side.
+              abort(500, status=500, message="HTTP request failed when trying to scrape Ao3!")
 
     for k in topInfo["stats"].keys():
       idstring = "include_{}_tags".format(k)

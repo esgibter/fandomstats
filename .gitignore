@@ -5,3 +5,7 @@
 .settings
 /venv/
 secret_keys.py
+.vscode
+.tool-versions
+build
+__pycache__
