@@ -15,13 +15,13 @@ You can still clone the app and run it locally if you want to use the API or see
 ### Install
 
 1. Create a virtualenv
-  1. `python3 -m venv venv`
-  2. `. venv/bin/activate`
+    1. `python3 -m venv venv`
+    2. `. venv/bin/activate`
 2. Install dependencies: `pip install -r requirements.txt`
 3. Generate secret keys for CSRF protection by running `generate_keys.py` script at `src/application/generate_keys.py`, which will generate the secret keys module at `src/application/secret_keys.py`
 4. Set Flask environment variables:
-  * `FLASK_APP=src/app.py`
-  * `FLASK_ENV=development`
+    * `FLASK_APP=src/app.py`
+    * `FLASK_ENV=development`
 
 
 ### Run 
