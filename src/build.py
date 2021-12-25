@@ -1,7 +1,15 @@
 from flask_frozen import Freezer
 from application import create_app
+import os
 
-app = create_app(static=True)
+"""
+Build a static version of the fandomstats site.
+
+(no direct use anymore, retained as a backup option)
+"""
+
+os.environ['F_STATIC'] = 'True'
+app = create_app()
 
 app.config.update(
   FREEZER_RELATIVE_URLS=True,

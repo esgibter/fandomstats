@@ -90,10 +90,12 @@
 			<div class="row">
 				<div id="main" class="large-12 columns {{ page_id|e }}">
 					<div class="row">
+						{% if ('False'| env('F_STATIC')) == 'True' %}
 						<div id="tmp-notice" class="small-12 columns">
 							The tag stats API is currently disabled due to technical problems, but other resources like the Bookmark Viewer
 							still work. Thanks for understanding.
 						</div>
+						{% endif %}
 					</div>
 					{% block content %}{% endblock %}
 				</div>
