@@ -316,7 +316,7 @@ $(".searchform").submit(function(e){
 			}
 			if (FSTATS.graphInstances['warningGraph'] !== undefined) {
 				FSTATS.graphInstances['warningGraph'].setData({
-					values:result.stats.warning,
+					values:result.stats.archive_warning,
 					sum:result.numworks,
 				});
 				FSTATS.graphInstances['warningGraph'].redraw();
@@ -325,7 +325,7 @@ $(".searchform").submit(function(e){
 					type:'percentage',
 					container:warnings,
 					data: {
-						values:result.stats.warning,
+						values:result.stats.archive_warning,
 						sum:result.numworks,
 						color: FSTATS.palette.bland,
 						textColor:FSTATS.palette.bland,
@@ -1177,12 +1177,12 @@ FSTATS.PieChart = function(settings) {
 	};
 
 	this.redraw = function() {
-		console.log("redrawing PieChart");
+		// console.log("redrawing PieChart");
 
-		console.log("old dataset:");
-		console.log(self.oldDataset);
-		console.log("new dataset:");
-		console.log(self.dataset);
+		// console.log("old dataset:");
+		// console.log(self.oldDataset);
+		// console.log("new dataset:");
+		// console.log(self.dataset);
 
 		//reset left margin
 		self.margin.left = FSTATS.defaultMargin.left;
