@@ -1,6 +1,6 @@
 from flask_restful import Api
 from flask import Blueprint
-from .resource import Stats, MediaCategories, MediaStats
+from .resource import Stats, RandomWork
 
 api = Blueprint(
     'api',
@@ -18,5 +18,4 @@ a = Api(api, prefix=version_base)
 
 # API routing
 a.add_resource(Stats, "/stats")
-a.add_resource(MediaStats, "/stats/media")
-a.add_resource(MediaCategories, "/stats/media/list")
+a.add_resource(RandomWork,"/work/random")

@@ -6,6 +6,7 @@ import requests
 import urllib
 from flask_restful import abort
 from flask import redirect
+from . import AO3url
 
 
 class AO3data:
@@ -42,10 +43,7 @@ class AO3data:
         #it's a "synned" tag (e.g. it's a synonym and AO3 automatically redirects)
         # import pdb
         # pdb.set_trace()
-        canonical_url = final_url
-        canonical_list = canonical_url.split("/")
-        canonical_tag = canonical_list[len(canonical_list)-2]
-        canonical_tag = urllib.parse.unquote_plus(canonical_tag)
+        canonical_tag = AO3url.tag_from_url(final_url)
         raise ValueError(302,canonical_tag)
 
   # Scrape the top 10 ratings, etc from sidebar
@@ -89,8 +87,7 @@ class AO3data:
     except ValueError as err:
           code, canonical = err.args
           if code ==302:
-              proper_api_request = re.sub(
-                  "(?<=tag_id\=)(.*?)((?=&)|$)", urllib.parse.quote(canonical), self.request_url)
+              proper_api_request = AO3url.replace_tag_in_url(self.request_url, canonical)
               # redirect to correct tag
               return redirect(proper_api_request)
           elif code == 404:

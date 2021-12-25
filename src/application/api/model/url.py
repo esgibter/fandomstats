@@ -1,5 +1,6 @@
 # coding=utf-8
 import urllib
+import re
 
 class AO3url:
   # default filters object
@@ -26,15 +27,31 @@ class AO3url:
             quoted_list = []
             for xv in wv:
                 quoted_list.append(self.quote(xv))
-            url += urllib.quote_plus("work_search[" + wk + "]") + "=" + "%2C".join(quoted_list) + "&"
+            url += urllib.parse.quote_plus("work_search[" + wk + "]") + "=" + "%2C".join(quoted_list) + "&"
 
           else:
-            url += urllib.quote_plus("work_search[" + wk + "]") + "=" + self.quote(wv) + "&"
+            url += urllib.parse.quote_plus("work_search[" + wk + "]") + "=" + self.quote(wv) + "&"
       else:
           url += k + "=" + self.quote(v) + "&"
 
 
     return url[:-1]
+
+  @staticmethod
+  def tag_from_url(url):
+    url_parts = url.split("/")
+    tag = url_parts[len(url_parts)-2]
+    tag = urllib.parse.unquote_plus(tag)
+    return tag
+
+  @staticmethod
+  def replace_tag_in_url(url, tag):
+    return re.sub("(?<=tag_id\=)(.*?)((?=&)|$)", urllib.parse.quote(tag), url)
+
+  @staticmethod
+  def change_page(url, new_page):
+    return re.sub("(page=\d+)", f"page={new_page}", url)
+
 
   def setFilters(self, urlArgs):
     # This sets the filters object from a list of URL arguments
