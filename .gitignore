@@ -3,5 +3,9 @@
 .project
 .pydevproject
 .settings
-/venv/
+venv/
 secret_keys.py
+.vscode
+.tool-versions
+build
+__pycache__

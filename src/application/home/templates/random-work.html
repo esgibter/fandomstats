@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% set page_id = "ao3-random-work" %}
+{% set title = "Random AO3 work" %}
+{% block content %}
+	<h2>Random AO3 work</h2>
+    <form id="searchform" class="bigform searchform random-work__form">
+        <p>Choose a tag*:<br>
+            <input id="tags" type="text">
+        </p>
+        <div class="row collapse">
+            <div class="medium-12 column">
+                OR
+            </div>
+        </div>
+        <p>Enter URL of any AO3 page with a list of works:<br>
+            <input id="url" type="text">
+        </p>
+        <div class="row collapse submit-row">
+            <div class="medium-2 column">
+                <button type="submit" class="small" id="search-btn"><span class="button-text">Submit</span></button>
+            </div>
+        </div>
+    </form>
+
+	<div id="random-work">&nbsp;</div>
+    <div class="help">* Note that due to the intricate way AO3 handles tags, this might not always give you what you expect. If the results are odd, try using an URL instead.</div>
+{% endblock %}

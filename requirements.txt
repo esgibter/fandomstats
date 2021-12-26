@@ -1,0 +1,7 @@
+beautifulsoup4
+gunicorn
+Flask==2.0.1
+flask-restful
+Frozen-Flask==0.18
+requests
+urllib3
