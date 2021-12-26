@@ -1,9 +1,15 @@
 function renderWork(workDiv, work) {
     workTags = work.tags.map(tag =>{
-        return `<li class="work-card__tag word-card__tag--${tag.type}">${tag.name}</li>`
+        return `<li class="work-card__tag word-card__tag--${tag.type}">${tag.name}</li>`;
+    })
+    workFandoms = work.fandoms.map(fandom => {
+        return `<li class="work-card__fandom">${fandom}</li>`;
     })
     workCard = $(`<div class="work-card">
         <h4 class="work-card__heading"><a class="work-card__title" href="${work.url}">${work.title}</a> by ${work.author}</h4>
+        <ul class="work-card__fandoms">
+        ${workFandoms.join(', ')}
+        </ul>
         <ul class="work-card__tags">
         ${workTags.join(', ')}
         </ul>

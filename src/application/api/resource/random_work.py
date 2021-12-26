@@ -56,12 +56,13 @@ class RandomWork(Resource):
         random_work = works[random.randrange(1,len(works)-1)]
 
         work_dict = {
-            "title": "",
             "author": "",
-            "tags": [],
+            "fandoms": [],
             "summary": "",
+            "tags": [],
+            "title": "",
+            "url": "",
             "words": 0,
-            "url": ""
         }
 
         try:
@@ -74,6 +75,13 @@ class RandomWork(Resource):
             work_dict["url"] = f"https://archiveofourown.org{relative_work_path}"
 
             work_dict["author"] = heading_links[1].text
+
+            fandom_element = random_work.find("h5",class_="fandoms")
+            fandoms = fandom_element.findAll("a")
+
+            for fandom in fandoms:
+                work_dict["fandoms"].append(fandom.string)
+
 
             # FIXME add fandom
 

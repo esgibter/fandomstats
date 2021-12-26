@@ -338,8 +338,8 @@ svg {
 		color:#ddd;
 	}
 
-	.values {
-	}
+	/* .values {
+	} */
 
 	text {
 		font-family: "Open Sans", sans-serif;
@@ -394,14 +394,25 @@ svg {
 	padding: 1em;
 }
 
-.ao3-random-work .work-card__tags {
+.ao3-random-work .work-card__tags,
+.ao3-random-work .work-card__fandoms {
 	padding: 0;
 	margin: 0;
 	font-size: 0.9em;
 }
 
-.ao3-random-work .work-card__tag {
+.ao3-random-work .work-card__fandoms {
+	margin-bottom: 1em;
+}
+
+
+.ao3-random-work .work-card__tag,
+.ao3-random-work .work-card__fandom {
 	display: inline-block;
+}
+
+.ao3-random-work .work-card__fandom {
+	font-weight: bold;
 }
 
 .ao3-random-work .word-card__tag--warnings {
