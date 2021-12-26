@@ -74,9 +74,9 @@ $(".searchform").submit(function (e) {
 
     var permalink;
     if (searchUrl) {
-        permalink = `?url=${searchUrl}`
+        permalink = `?url=${fixedEncodeURIComponent(searchUrl)}`
     } else {
-        permalink = `?tags=${tagString}`
+        permalink = `?tags=${fixedEncodeURIComponent(tagString)}`
     }
 
     console.log(`permalink: ${permalink}`);
