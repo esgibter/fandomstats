@@ -383,6 +383,13 @@ svg {
 
 /*------------------------------ random work */
 
+.ao3-random-work .spinner-div {
+    height: 0;
+    overflow: visible;
+    position: relative;
+    top: -1em;
+}
+
 .ao3-random-work form.random-work__form {
 	margin-bottom: 1em;
 }

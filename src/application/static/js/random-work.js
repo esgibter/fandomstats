@@ -61,7 +61,9 @@ $(".searchform").submit(function (e) {
     var button = searchform.find("#search-btn");
     button.prop("disabled", true)
     var buttonContent = button.html();
-    button.html($("#spinner").clone().show());
+    button.find(".button-text").css("visibility", "hidden");
+    spinnerDiv = $(`<div class="spinner-div"></div>`).append($("#spinner").clone().show());
+    button.append(spinnerDiv);
 
     apiUrl = "/api/v1.0/work/random";
     var searchUrl = $("#url").val();
@@ -112,7 +114,8 @@ $(".searchform").submit(function (e) {
             searchform.append(`<p class="form-info">${error.message}</p>`);
         },
         complete: function (object, status) {
-            button.html(buttonContent); //loader back to text
+            button.find("#spinner").remove();
+            button.find(".button-text").css("visibility","visible");
             button.prop("disabled", false)
         }
     });
