@@ -6,15 +6,19 @@ a, h1 {
 	color:#900;
 }
 
-#main button, #main .button,#main .button:focus {
+.container-main button, .container-main .button,.container-main .button:focus {
 	background-color:#900;
+}
+
+.container-main button:disabled {
+	background-color: rgb(119, 87, 87);
 }
 
 a:hover, a:focus {
 	color:#c00;
 }
 
-#main button:hover,#main .button:hover {
+.container-main button:hover,.container-main .button:hover {
 	background-color:#c00;
 }
 
@@ -55,7 +59,7 @@ h4 {
 	padding:0.5em;
 }
 
-#main p.intro {
+.container-main p.intro {
 	margin-top:3rem;
 	margin-bottom:2rem;
 }
@@ -134,13 +138,13 @@ body {
 	font-weight:inherit;
 }
 
-#main {
+.container-main {
 	border:1px solid #ddd;
 	background-color:white;
 	padding:2rem;
 }
 
-#main ul {
+.container-main ul {
 	padding-left:1em;
 }
 
@@ -153,7 +157,7 @@ body {
 
 }
 
-#main.homepage hr.splitter {
+.container-main.homepage hr.splitter {
 	width:40%;
 	margin:3rem auto;
 	color:#900;
@@ -165,7 +169,7 @@ body {
 	text-align:center;
 }
 
-#main form.bigform, #main div.bigform {
+.container-main form.bigform, .container-main div.bigform {
 	width:70%;
 	margin:0 auto;
 	margin-top:1rem;
@@ -233,7 +237,7 @@ a.more {
 }
 /*--------------------------- graph area */
 
-#main-graphs {
+.container-main-graphs {
 	display:block;
 	visibility:hidden;
 }
@@ -244,7 +248,7 @@ a.more {
 	padding-top:1rem;
 }
 
-#main.ao3-tag-stats #graph-area {
+.container-main.ao3-tag-stats #graph-area {
 	display:block !important;
 	padding-top:0;
 	border:none;
@@ -334,8 +338,8 @@ svg {
 		color:#ddd;
 	}
 
-	.values {
-	}
+	/* .values {
+	} */
 
 	text {
 		font-family: "Open Sans", sans-serif;
@@ -377,9 +381,65 @@ svg {
 	font-size:0.8rem;
 }
 
+/*------------------------------ random work */
+
+.ao3-random-work form.random-work__form {
+	margin-bottom: 1em;
+}
+
+.ao3-random-work .work-card {
+	max-width: 70em;
+	background-color: #f0f0f0;
+	border: 1px solid #ddd;
+	padding: 1em;
+}
+
+.ao3-random-work .work-card__tags,
+.ao3-random-work .work-card__fandoms {
+	padding: 0;
+	margin: 0;
+	font-size: 0.9em;
+}
+
+.ao3-random-work .work-card__fandoms {
+	margin-bottom: 1em;
+}
 
 
+.ao3-random-work .work-card__tag,
+.ao3-random-work .work-card__fandom {
+	display: inline-block;
+}
 
+.ao3-random-work .work-card__fandom {
+	font-weight: bold;
+}
 
+.ao3-random-work .word-card__tag--warnings {
+	font-weight:bold;
+}
 
-/* missing javascript clean-up*/
+.ao3-random-work .word-card__tag--relationships {
+	background-color: #ddd;
+	padding: 0 3px;
+}
+
+.ao3-random-work .work-card__title {
+	font-weight:bold;
+}
+
+.ao3-random-work .row.work-controls {
+	margin-top: 1em;
+}
+
+.ao3-random-work .work-controls__redo {
+	background-color: transparent;
+	color: #333;
+}
+
+.ao3-random-work .work-controls__redo:hover,
+.ao3-random-work .work-controls__redo:active,
+.ao3-random-work .work-controls__redo:focus {
+	background-color: transparent;
+	color: #990000;
+}

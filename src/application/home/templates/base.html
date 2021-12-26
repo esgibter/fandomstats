@@ -88,7 +88,7 @@
 		</nav>
 		<div id="wrapper">
 			<div class="row">
-				<div id="main" class="large-12 columns {{ page_id|e }}">
+				<div id="main" class="large-12 columns container-main {{ page_id|e }}">
 					<div class="row">
 						{% if ('False'| env('F_STATIC')) == 'True' %}
 						<div id="tmp-notice" class="small-12 columns">
@@ -129,6 +129,8 @@
 	    	<script src="{{ url_for('static', filename='js/homepage.js') }}"></script>
 	    {% elif page_id == 'ao3-tag-stats' %}
 	    	<script src="{{ url_for('static', filename='js/tag-stats.js') }}"></script>
+		{% elif page_id == 'ao3-random-work' %}
+			<script src="{{ url_for('static', filename='js/random-work.js') }}"></script>
 	    {% endif %}
 	    <img id="spinner" src="{{ url_for('static', filename='img/spinner.gif') }}" class="button-message" />
 	    <span id="button-error" class="button-message">&#xd7;</span>
