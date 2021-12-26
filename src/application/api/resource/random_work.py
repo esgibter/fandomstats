@@ -42,16 +42,12 @@ class RandomWork(Resource):
             #it's a "synned" tag (e.g. it's a synonym and AO3 automatically redirects)
             # import pdb
             # pdb.set_trace()
-            print("this is a redirect...")
             canonical_tag = AO3url.tag_from_url(final_url)
             raise ValueError(302,canonical_tag)
 
 
     def get_work(self, soup):
-        print("----getting work?")
         works = soup.findAll("li",class_="work")
-
-        print(works)
 
         if len(works) == 0:
             abort(500, status=500, message="No works found")
@@ -165,11 +161,8 @@ class RandomWork(Resource):
                 abort(500, **payload)
  
         pagination = soup.find("ol",class_="pagination")
-
-        print(pagination)
     
         if not pagination:
-            print("NO PAGINATION!!!!!")
             meta = {
                 "total_pages": 1,
                 "chosen_page": 1,
