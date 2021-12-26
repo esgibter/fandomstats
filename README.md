@@ -1,9 +1,11 @@
 fandomstats
 ===========
 
-**UPDATE:** Fandomstats is currently in the process of migrating from Google App Engine to a different host. In the meantime, we're using Flask_Frozen to generate a static version, which we serve from a regular shared hosting.
+The primary feature of fandomstats is a JSON REST API that uses website scraping to gather information about works on the fannish website Archive Of Our Own.
 
-You can still clone the app and run it locally if you want to use the API or see the graphs - see steps below.
+Beside that, it also offers a graphing frontend for this API, some documentation, as well as other tools: the [AO3 bookmark viewer](https://fandomstats.org/ao3-bookmark-viewer/) and [Random AO3 work search](https://fandomstats.org/ao3-random-work/).
+
+The project is not in active development anymore, but the goal is to keep it running as long as possible - if you notice it's not working, or find a major bug, please [create an issue](https://github.com/esgibter/fandomstats/issues).
 
 ## Development
 
