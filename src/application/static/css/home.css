@@ -448,3 +448,10 @@ svg {
     font-size: 0.8em;
     margin-top: 2em;
 }
+
+.ao3-random-work .permalink {
+	display: inline-block;
+	font-size: 0.8em;
+	padding-left: 1em;
+	color: #999;
+}

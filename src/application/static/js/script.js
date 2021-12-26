@@ -21,3 +21,13 @@ $.each(addresses, function(elem) {
 	var addressLinkElem = $('<a href="mailto:'+address+'">'+address+'</a>');
 	addressPlaceholderElem.replaceWith(addressLinkElem);
 });
+
+fixedEncodeURIComponent = function (str) {
+	return encodeURIComponent(str).replace(/%20/g, '+').replace(/[!'()*]/g, function (c) {
+		return '%' + c.charCodeAt(0).toString(16);
+	});
+};
+
+fixedDecodeURIComponent = function (str) {
+	return decodeURIComponent(str.replace(/\+/g, '%20'));
+}

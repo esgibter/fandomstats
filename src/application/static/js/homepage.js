@@ -38,16 +38,6 @@ FSTATS.parseTags = function(string,taglist) {
 		return newString;
 	};
 
-FSTATS.fixedEncodeURIComponent = function(str) {
-  return encodeURIComponent(str).replace(/%20/g, '+').replace(/[!'()*]/g, function(c) {
-    return '%' + c.charCodeAt(0).toString(16);
-  });
-};
-
-FSTATS.fixedDecodeURIComponent = function(str) {
-	return decodeURIComponent(str.replace(/\+/g, '%20'));
-}
-
 FSTATS.defaultMargin = {
 		top:10,
 		left:10,
@@ -87,7 +77,7 @@ $(document).ready(function(){
 $(document).ready(function(){
 	var searchMatch = window.location.search.match(/^\?q=(.+)/i);
 	if (searchMatch != null) {
-			query = FSTATS.fixedDecodeURIComponent(searchMatch[1]);
+			query = fixedDecodeURIComponent(searchMatch[1]);
 			console.log("decoded query: "+query);
 			$("#search-string").val(query);
 			$(".searchform").submit();
@@ -514,7 +504,7 @@ FSTATS.Bookmark = function(settings) {
 
 	self.setBookmark = function(query) {
 		console.log("query: "+query);
-		self.bookmark = "/?q="+FSTATS.fixedEncodeURIComponent(query);
+		self.bookmark = "/?q="+fixedEncodeURIComponent(query);
 		console.log("bookmark: " + self.bookmark);
 	}
 

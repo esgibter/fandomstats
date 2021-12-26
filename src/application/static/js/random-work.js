@@ -1,3 +1,20 @@
+//QUERY GET PARAM PARSER
+$(document).ready(function () {
+    var tagMatch = window.location.search.match(/^\?tags=(.+)/i);
+    var urlMatch = window.location.search.match(/^\?url=(.+)/i);
+    if (urlMatch != null) {
+        query = fixedDecodeURIComponent(urlMatch[1]);
+        console.log("decoded query: " + query);
+        $("#url").val(query);
+        $(".searchform").submit();
+    } else if (tagMatch != null) {
+        query = fixedDecodeURIComponent(tagMatch[1]);
+        console.log("decoded query: " + query);
+        $("#tags").val(query);
+        $(".searchform").submit();
+    }
+});
+
 function renderWork(workDiv, work) {
     workTags = work.tags.map(tag =>{
         return `<li class="work-card__tag word-card__tag--${tag.type}">${tag.name}</li>`;
@@ -37,6 +54,7 @@ $(".searchform").submit(function (e) {
     e.preventDefault();
     searchform = $(this);
     searchform.find(".form-info").remove();
+    searchform.find(".permalink-div").remove();
     workDiv = $("#random-work");
     workDiv.html("");
 
@@ -54,6 +72,15 @@ $(".searchform").submit(function (e) {
     main_tag = tags[0];
     other_tags = tags.slice(1);
 
+    var permalink;
+    if (searchUrl) {
+        permalink = `?url=${searchUrl}`
+    } else {
+        permalink = `?tags=${tagString}`
+    }
+
+    console.log(`permalink: ${permalink}`);
+
     var data = {
         tag_id: main_tag,
         other_tag_names: other_tags,
@@ -66,7 +93,13 @@ $(".searchform").submit(function (e) {
         success: function (result, status, object) {
             $("#random-work").show('fast');
             if (result.item && typeof result.item === 'object') {
-                return renderWork(workDiv, result.item);
+                renderWork(workDiv, result.item);
+                
+                permalinkElement = $(`<div class="medium-10 column permalink-div textright">
+                <a href="${permalink}" class="permalink">(permalink)</a>
+            </div>`)
+                $('.submit-row').append(permalinkElement);
+                return;
             }
             console.log(result);
             var { error = {} } = object;
