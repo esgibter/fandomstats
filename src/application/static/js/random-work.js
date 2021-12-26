@@ -68,12 +68,14 @@ $(".searchform").submit(function (e) {
             if (result.item && typeof result.item === 'object') {
                 return renderWork(workDiv, result.item);
             }
-
+            console.log(result);
+            var { error = {} } = object;
             searchform.append(`<p class="form-info">${error.message}</p>`);
         },
         error: function (object, exception) {
+            console.log(object);
             $("#random-work").html("");
-            var {error = {}} = object;
+            var {error = {}} = object.responseJSON;
             searchform.append(`<p class="form-info">${error.message}</p>`);
         },
         complete: function (object, status) {

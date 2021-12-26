@@ -443,3 +443,8 @@ svg {
 	background-color: transparent;
 	color: #990000;
 }
+
+.ao3-random-work .help {
+    font-size: 0.8em;
+    margin-top: 2em;
+}

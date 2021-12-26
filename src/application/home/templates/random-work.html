@@ -4,7 +4,7 @@
 {% block content %}
 	<h2>Random AO3 work</h2>
     <form id="searchform" class="bigform searchform random-work__form">
-        <p>Choose a tag:<br>
+        <p>Choose a tag*:<br>
             <input id="tags" type="text">
         </p>
         <div class="row collapse">
@@ -23,4 +23,5 @@
     </form>
 
 	<div id="random-work">&nbsp;</div>
+    <div class="help">* Note that due to the intricate way AO3 handles tags, this might not always give you what you expect. If the results are odd, try using an URL instead.</div>
 {% endblock %}
