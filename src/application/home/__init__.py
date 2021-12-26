@@ -20,6 +20,10 @@ def index():
 def bookmark_viewer():
   return render_template('bookmark-viewer.html')
 
+@home.route("/ao3-random-work/")
+def random_work():
+  return render_template('random-work.html')
+
 # AO3 Tag Stats
 
 

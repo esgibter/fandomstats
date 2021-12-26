@@ -75,6 +75,8 @@ class RandomWork(Resource):
 
             work_dict["author"] = heading_links[1].text
 
+            # FIXME add fandom
+
             words_text = random_work.find("dd",class_="words").text
             work_dict["words"] = int(words_text.replace(",",""))
 
