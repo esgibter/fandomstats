@@ -52,11 +52,11 @@ class RandomWork(Resource):
         if len(works) == 0:
             abort(500, status=500, message="No works found")
         
-        if len(works) == 1:
-            random_work = works[0]
-        else:
-            random_work = works[random.randrange(1,len(works)-1)]
-
+        work_index = 0
+        if len(works) > 1:
+            work_index = random.randrange(len(works))
+        
+        random_work = works[work_index]
         work_dict = {
             "author": "",
             "fandoms": [],
@@ -65,6 +65,7 @@ class RandomWork(Resource):
             "title": "",
             "url": "",
             "words": 0,
+            "work_on_page": work_index,
         }
 
         try:
@@ -83,9 +84,6 @@ class RandomWork(Resource):
 
             for fandom in fandoms:
                 work_dict["fandoms"].append(fandom.string)
-
-
-            # FIXME add fandom
 
             words_text = random_work.find("dd",class_="words").text
             work_dict["words"] = int(words_text.replace(",",""))
@@ -163,19 +161,23 @@ class RandomWork(Resource):
         pagination = soup.find("ol",class_="pagination")
     
         if not pagination:
+            work = self.get_work(soup)
+
             meta = {
                 "total_pages": 1,
                 "chosen_page": 1,
+                "work_on_page": work["work_on_page"]
             }
+            work.pop("work_on_page", -1)
             payload["_meta"] = {**payload["_meta"],**meta}
-            payload["item"] = self.get_work(soup)
+            payload["work"] = work
             return payload
             # pick from works on the page
 
         pagination_buttons = pagination.findAll("li")
         last_button = pagination_buttons[len(pagination_buttons)-2] # the last is "Next"
         last_page = int(last_button.text)
-        random_page = random.randrange(1,last_page)
+        random_page = random.randint(1,last_page)
         page_url = AO3url.change_page(parsed_url,random_page)
 
         meta = {
@@ -189,7 +191,9 @@ class RandomWork(Resource):
         
         try:
             page_soup = self.fetchHTML(page_url)
-            payload["item"] = self.get_work(page_soup)
+            work = self.get_work(page_soup)
+            payload["_meta"]["work_on_page"] = work.pop("work_on_page",-1)
+            payload["item"] = work
             return payload
         except ValueError as err:
             payload["error"] = self.get_error(500, "Failed when looking up works")

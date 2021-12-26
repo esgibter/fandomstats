@@ -95,6 +95,8 @@ $(".searchform").submit(function (e) {
         success: function (result, status, object) {
             $("#random-work").show('fast');
             if (result.item && typeof result.item === 'object') {
+                console.log(result._meta);
+                console.log(result.item);
                 renderWork(workDiv, result.item);
                 
                 permalinkElement = $(`<div class="medium-10 column permalink-div textright">
@@ -110,7 +112,8 @@ $(".searchform").submit(function (e) {
         error: function (object, exception) {
             console.log(object);
             $("#random-work").html("");
-            var {error = {}} = object.responseJSON;
+            var {responseJSON = {}} = object;
+            var {error = {}} = responseJSON;
             searchform.append(`<p class="form-info">${error.message}</p>`);
         },
         complete: function (object, status) {
