@@ -48,12 +48,18 @@ class RandomWork(Resource):
 
 
     def get_work(self, soup):
+        print("----getting work?")
         works = soup.findAll("li",class_="work")
 
-        if not works:
-            abort(500, status=500, message="No works found")
+        print(works)
 
-        random_work = works[random.randrange(1,len(works)-1)]
+        if len(works) == 0:
+            abort(500, status=500, message="No works found")
+        
+        if len(works) == 1:
+            random_work = works[0]
+        else:
+            random_work = works[random.randrange(1,len(works)-1)]
 
         work_dict = {
             "author": "",
@@ -88,7 +94,9 @@ class RandomWork(Resource):
             words_text = random_work.find("dd",class_="words").text
             work_dict["words"] = int(words_text.replace(",",""))
 
-            work_dict["summary"] = random_work.find("blockquote", class_="summary").prettify()
+            summary = random_work.find("blockquote", class_="summary")
+            if summary:
+                work_dict["summary"] = summary.prettify()
 
             tag_list = random_work.find("ul", class_="tags")
             tags = tag_list.findAll("li")
@@ -156,9 +164,12 @@ class RandomWork(Resource):
                 payload["error"] = self.get_error(500, "HTTP request failed when trying to scrape Ao3!")
                 abort(500, **payload)
  
-        pagination = soup.findAll("ol",class_="pagination")[0]
+        pagination = soup.find("ol",class_="pagination")
+
+        print(pagination)
     
         if not pagination:
+            print("NO PAGINATION!!!!!")
             meta = {
                 "total_pages": 1,
                 "chosen_page": 1,
