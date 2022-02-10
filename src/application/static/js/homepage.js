@@ -117,7 +117,7 @@ $(".searchform").submit(function(e){
 		},
 		success: function(result, status, object){
 			//LIVE*/
-			$(".api-results").show('fast');
+			$(".api-results").show(0);
 
 			var graphs = $("#main-graphs");
 			graphs.css("visibility","visible");
@@ -684,8 +684,9 @@ FSTATS.BarGraph = function(settings) {
 	this.setData(this.data);
 
 	this.plot = function() {
-		//console.log("---------------------");
+		// console.log("---------------------");
 		var svgWidth = this.container.width();
+		console.log(svgWidth);
 		this.width = this.container.width() - this.margin.left - this.margin.right;
 
 		var height = this.width*this.ratio - this.margin.top - this.margin.bottom;
